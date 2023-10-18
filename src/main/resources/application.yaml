@@ -18,3 +18,10 @@ spring:
       database: strong
       port: 27017
       host: localhost
+
+storage:
+  file:
+    path:
+      trainee:
+      trainer:
+      training:

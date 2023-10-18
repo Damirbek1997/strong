@@ -3,7 +3,7 @@ package com.gym.strong.models;
 import lombok.*;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ public class TraineeModel {
     private UserModel userModel;
     private Date birthday;
     private String address;
-    private Set<TrainerModel> trainerModels;
+    private List<TrainerModel> trainerModels;
 }

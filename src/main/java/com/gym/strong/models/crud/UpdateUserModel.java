@@ -1,4 +1,4 @@
-package com.gym.strong.entities;
+package com.gym.strong.models.crud;
 
 import lombok.*;
 
@@ -7,11 +7,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UpdateUserModel {
     private Long id;
     private String firstName;
     private String lastName;
-    private String username;
-    private String password;
     private Boolean isActive;
 }

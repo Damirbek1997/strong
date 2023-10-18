@@ -1,17 +1,19 @@
-package com.gym.strong.entities;
+package com.gym.strong.models.crud;
 
 import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    private Long id;
+public class CreateUserModel {
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
-    private String username;
-    private String password;
+    @NotNull
     private Boolean isActive;
 }

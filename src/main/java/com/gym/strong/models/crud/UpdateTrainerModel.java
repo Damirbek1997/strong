@@ -1,9 +1,9 @@
 package com.gym.strong.models.crud;
 
+import com.gym.strong.models.TrainingTypeModel;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -11,11 +11,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTraineeModel {
+public class UpdateTrainerModel {
     @NotNull
     private Long id;
     private UpdateUserModel updateUserModel;
-    private Date birthday;
-    private String address;
-    private List<Long> trainerIds;
+    private TrainingTypeModel trainingTypeModel;
+    private List<Long> traineeIds;
 }
