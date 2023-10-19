@@ -42,7 +42,7 @@ public class TrainerServiceImpl implements TrainerService {
     public TrainerModel create(CreateTrainerModel createTrainerModel) {
         Trainer trainer = trainerMapper.toEntity(createTrainerModel);
 
-        if (trainerDao.isTrainerExistWith(trainer.getUsername())) {
+        if (userService.isUsernameBusy(trainer.getUsername())) {
             trainer.setUsername(userService.regenerateUsername(trainer.getFirstName(), trainer.getLastName(), 1L));
         }
 

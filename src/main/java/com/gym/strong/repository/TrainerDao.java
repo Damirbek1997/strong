@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -45,17 +44,5 @@ public class TrainerDao extends AbstractDao<Trainer> {
             log.error("Error while trying to read from the file location: {}, error: {}, message: {}", filePath, e, e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public boolean isTrainerExistWith(String username) {
-        List<Trainer> trainerList = getAll();
-
-        for (Trainer trainer : trainerList) {
-            if (trainer.getUsername().equals(username)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -46,17 +45,5 @@ public class TraineeDao extends AbstractDao<Trainee> {
             log.error("Error while trying to read from the file location: {}, error: {}, message: {}", filePath, e, e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public boolean isTraineeExistWith(String username) {
-        List<Trainee> traineeList = getAll();
-
-        for (Trainee trainee : traineeList) {
-            if (trainee.getUsername().equals(username)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

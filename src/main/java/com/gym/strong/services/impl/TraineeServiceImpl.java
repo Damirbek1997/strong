@@ -48,7 +48,7 @@ public class TraineeServiceImpl implements TraineeService {
     public TraineeModel create(CreateTraineeModel createTraineeModel) {
         Trainee trainee = traineeMapper.toEntity(createTraineeModel);
 
-        if (traineeDao.isTraineeExistWith(trainee.getUsername())) {
+        if (userService.isUsernameBusy(trainee.getUsername())) {
             trainee.setUsername(userService.regenerateUsername(trainee.getFirstName(), trainee.getLastName(), 1L));
         }
 
