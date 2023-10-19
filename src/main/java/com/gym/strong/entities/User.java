@@ -1,14 +1,11 @@
 package com.gym.strong.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
-    private Long id;
     private String firstName;
     private String lastName;
     private String username;

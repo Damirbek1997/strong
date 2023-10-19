@@ -2,13 +2,13 @@ package com.gym.strong.services.impl;
 
 import com.gym.strong.entities.Trainer;
 import com.gym.strong.mappers.impl.TrainerMapper;
-import com.gym.strong.mappers.impl.TrainingTypeMapper;
-import com.gym.strong.mappers.impl.UserMapper;
 import com.gym.strong.models.TrainerModel;
 import com.gym.strong.models.crud.CreateTrainerModel;
 import com.gym.strong.models.crud.UpdateTrainerModel;
 import com.gym.strong.repository.TrainerDao;
 import com.gym.strong.services.TrainerService;
+import com.gym.strong.services.UserService;
+import com.gym.strong.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,7 @@ import java.util.List;
 public class TrainerServiceImpl implements TrainerService {
     private final TrainerDao trainerDao;
     private final TrainerMapper trainerMapper;
-    private final UserMapper userMapper;
-    private final TrainingTypeMapper trainingTypeMapper;
+    private final UserService userService;
 
     @Override
     public List<TrainerModel> getAll() {
@@ -41,49 +40,47 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerModel create(CreateTrainerModel createTrainerModel) {
-        log.info("Creating trainer with model {}", createTrainerModel);
-        Trainer trainer = new Trainer();
-        trainer.setUser(userMapper.toEntity(createTrainerModel.getCreateUserModel()));
-        trainer.setTrainingType(trainingTypeMapper.toEntity(createTrainerModel.getTrainingTypeModel()));
+        Trainer trainer = trainerMapper.toEntity(createTrainerModel);
 
-        if (trainerDao.isTrainerExistWith(trainer.getUser().getFirstName(), trainer.getUser().getLastName())) {
-            trainer.getUser().setUsername(regenerateUsername(trainer.getUser().getFirstName(), trainer.getUser().getLastName(), 1L));
+        if (trainerDao.isTrainerExistWith(trainer.getUsername())) {
+            trainer.setUsername(userService.regenerateUsername(trainer.getFirstName(), trainer.getLastName(), 1L));
         }
 
         trainerDao.save(trainer);
+        log.info("Created trainer with model {}", createTrainerModel);
         return trainerMapper.toModel(trainer);
     }
 
     @Override
-    public TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel) {
-        log.info("Updating trainer with model {}", updateTrainerModel);
-        Trainer trainer = trainerDao.getById(id);
-        trainerDao.delete(id);
+    public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
+        Trainer trainer = trainerDao.getById(updateTrainerModel.getId());
+        String username = userService.regenerateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
+                trainer.getFirstName(), trainer.getLastName());
 
-        if (updateTrainerModel.getUpdateUserModel() != null) {
-            trainer.setUser(userMapper.updateUserData(trainer.getUser(), updateTrainerModel.getUpdateUserModel()));
-
-            if (trainerDao.isTrainerExistWith(trainer.getUser().getFirstName(), trainer.getUser().getLastName())) {
-                trainer.getUser().setUsername(regenerateUsername(trainer.getUser().getFirstName(), trainer.getUser().getLastName(), 1L));
-            }
+        if (updateTrainerModel.getFirstName() != null && updateTrainerModel.getLastName() != null) {
+            trainer.setFirstName(updateTrainerModel.getFirstName());
+            trainer.setLastName(updateTrainerModel.getLastName());
         }
 
-        if (updateTrainerModel.getTrainingTypeModel() != null) {
-            trainer.setTrainingType(trainingTypeMapper.toEntity(updateTrainerModel.getTrainingTypeModel()));
+        if (updateTrainerModel.getFirstName() == null) {
+            trainer.setLastName(updateTrainerModel.getLastName());
         }
 
-        trainerDao.save(trainer);
+        if (updateTrainerModel.getLastName() == null) {
+            trainer.setFirstName(updateTrainerModel.getFirstName());
+        }
+
+        trainer.setUsername(UserUtil.generateUsername(trainer.getFirstName(), trainer.getLastName()));
+
+        if (username != null) {
+            trainer.setUsername(username);
+        }
+
+        if (updateTrainerModel.getIsActive() != null) {
+            trainer.setIsActive(updateTrainerModel.getIsActive());
+        }
+
+        log.info("Updated trainer with model {}", updateTrainerModel);
         return trainerMapper.toModel(trainer);
-    }
-
-    private String regenerateUsername(String firstName, String lastName, Long count) {
-        String username = firstName + "." + lastName + count;
-
-        if (trainerDao.isTrainerExistWith(firstName, lastName)) {
-            count++;
-            regenerateUsername(firstName, lastName, count);
-        }
-
-        return username;
     }
 }

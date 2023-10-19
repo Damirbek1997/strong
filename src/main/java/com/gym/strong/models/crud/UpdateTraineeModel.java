@@ -11,10 +11,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTraineeModel {
+public class UpdateTraineeModel extends UpdateUserModel {
     @NotNull
     private Long id;
-    private UpdateUserModel updateUserModel;
     private Date birthday;
     private String address;
     private List<Long> trainerIds;

@@ -48,11 +48,11 @@ public class TraineeDao extends AbstractDao<Trainee> {
         }
     }
 
-    public boolean isTraineeExistWith(String firstName, String lastName) {
+    public boolean isTraineeExistWith(String username) {
         List<Trainee> traineeList = getAll();
 
         for (Trainee trainee : traineeList) {
-            if (trainee.getUser().getFirstName().equals(firstName) && trainee.getUser().getLastName().equals(lastName)) {
+            if (trainee.getUsername().equals(username)) {
                 return true;
             }
         }

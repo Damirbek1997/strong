@@ -10,9 +10,8 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trainee {
+public class Trainee extends User {
     private Long id;
-    private User user;
     private Date birthday;
     private String address;
     private Set<Trainer> trainers;

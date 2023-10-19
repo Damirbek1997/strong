@@ -11,6 +11,6 @@ public interface TraineeService {
     List<TraineeModel> getAll(List<Long> ids);
     TraineeModel getById(Long id);
     TraineeModel create(CreateTraineeModel createTraineeModel);
-    TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel);
+    TraineeModel update(UpdateTraineeModel updateTraineeModel);
     void deleteById(Long id);
 }

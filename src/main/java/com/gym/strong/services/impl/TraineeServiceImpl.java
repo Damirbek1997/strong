@@ -3,7 +3,6 @@ package com.gym.strong.services.impl;
 import com.gym.strong.entities.Trainee;
 import com.gym.strong.mappers.impl.TraineeMapper;
 import com.gym.strong.mappers.impl.TrainerMapper;
-import com.gym.strong.mappers.impl.UserMapper;
 import com.gym.strong.models.TraineeModel;
 import com.gym.strong.models.TrainerModel;
 import com.gym.strong.models.crud.CreateTraineeModel;
@@ -11,6 +10,8 @@ import com.gym.strong.models.crud.UpdateTraineeModel;
 import com.gym.strong.repository.TraineeDao;
 import com.gym.strong.services.TraineeService;
 import com.gym.strong.services.TrainerService;
+import com.gym.strong.services.UserService;
+import com.gym.strong.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ public class TraineeServiceImpl implements TraineeService {
     private final TraineeDao traineeDao;
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
-    private final UserMapper userMapper;
     private final TrainerService trainerService;
+    private final UserService userService;
 
     @Override
     public List<TraineeModel> getAll() {
@@ -45,37 +46,52 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public TraineeModel create(CreateTraineeModel createTraineeModel) {
-        log.info("Creating trainee with model {}", createTraineeModel);
-        Trainee trainee = new Trainee();
-        trainee.setUser(userMapper.toEntity(createTraineeModel.getCreateUserModel()));
-        trainee.setBirthday(createTraineeModel.getBirthday());
-        trainee.setAddress(createTraineeModel.getAddress());
-        List<TrainerModel> trainerModels = trainerService.getAllIn(createTraineeModel.getTrainerIds());
-        trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
+        Trainee trainee = traineeMapper.toEntity(createTraineeModel);
 
-        if (traineeDao.isTraineeExistWith(trainee.getUser().getFirstName(), trainee.getUser().getLastName())) {
-            trainee.getUser().setUsername(regenerateUsername(trainee.getUser().getFirstName(), trainee.getUser().getLastName(), 1L));
+        if (traineeDao.isTraineeExistWith(trainee.getUsername())) {
+            trainee.setUsername(userService.regenerateUsername(trainee.getFirstName(), trainee.getLastName(), 1L));
+        }
+
+        if (createTraineeModel.getTrainerIds() != null) {
+            List<TrainerModel> trainerModels = trainerService.getAllIn(createTraineeModel.getTrainerIds());
+            trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
         traineeDao.save(trainee);
+        log.info("Created trainee with model {}", createTraineeModel);
         return traineeMapper.toModel(trainee);
     }
 
     @Override
-    public TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel) {
-        log.info("Updating trainee with model {}", updateTraineeModel);
-        Trainee trainee = traineeDao.getById(id);
-        traineeDao.delete(id);
+    public TraineeModel update(UpdateTraineeModel updateTraineeModel) {
+        Trainee trainee = traineeDao.getById(updateTraineeModel.getId());
+        String username = userService.regenerateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+                trainee.getFirstName(), trainee.getLastName());
 
-        if (updateTraineeModel.getUpdateUserModel() != null) {
-            trainee.setUser(userMapper.updateUserData(trainee.getUser(), updateTraineeModel.getUpdateUserModel()));
-
-            if (traineeDao.isTraineeExistWith(trainee.getUser().getFirstName(), trainee.getUser().getLastName())) {
-                trainee.getUser().setUsername(regenerateUsername(trainee.getUser().getFirstName(), trainee.getUser().getLastName(), 1L));
-            }
+        if (updateTraineeModel.getFirstName() != null && updateTraineeModel.getLastName() != null) {
+            trainee.setFirstName(updateTraineeModel.getFirstName());
+            trainee.setLastName(updateTraineeModel.getLastName());
         }
 
-        if (updateTraineeModel.getBirthday() != null) {
+        if (updateTraineeModel.getFirstName() == null) {
+            trainee.setLastName(updateTraineeModel.getLastName());
+        }
+
+        if (updateTraineeModel.getLastName() == null) {
+            trainee.setFirstName(updateTraineeModel.getFirstName());
+        }
+
+        trainee.setUsername(UserUtil.generateUsername(trainee.getFirstName(), trainee.getLastName()));
+
+        if (username != null) {
+            trainee.setUsername(username);
+        }
+
+        if (updateTraineeModel.getIsActive() != null) {
+            trainee.setIsActive(updateTraineeModel.getIsActive());
+        }
+
+        if (updateTraineeModel.getBirthday() == null) {
             trainee.setBirthday(updateTraineeModel.getBirthday());
         }
 
@@ -88,24 +104,13 @@ public class TraineeServiceImpl implements TraineeService {
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
-        traineeDao.save(trainee);
+        log.info("Updated trainee with model {}", updateTraineeModel);
         return traineeMapper.toModel(trainee);
     }
 
     @Override
     public void deleteById(Long id) {
-        log.info("Deleting trainee with id {}", id);
         traineeDao.delete(id);
-    }
-
-    private String regenerateUsername(String firstName, String lastName, Long count) {
-        String username = firstName + "." + lastName + count;
-
-        if (traineeDao.isTraineeExistWith(firstName, lastName)) {
-            count++;
-            regenerateUsername(firstName, lastName, count);
-        }
-
-        return username;
+        log.info("Deleted trainee with id {}", id);
     }
 }

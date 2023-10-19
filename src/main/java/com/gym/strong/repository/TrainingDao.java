@@ -4,7 +4,6 @@ import com.gym.strong.entities.Training;
 import com.gym.strong.exceptions.InsertStorageFromFileException;
 import com.gym.strong.mappers.impl.TraineeMapper;
 import com.gym.strong.mappers.impl.TrainerMapper;
-import com.gym.strong.mappers.impl.TrainingTypeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,12 +22,10 @@ public class TrainingDao extends AbstractDao<Training> {
     private String filePath;
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
-    private final TrainingTypeMapper trainingTypeMapper;
 
-    public TrainingDao(TraineeMapper traineeMapper, TrainerMapper trainerMapper, TrainingTypeMapper trainingTypeMapper) {
+    public TrainingDao(TraineeMapper traineeMapper, TrainerMapper trainerMapper) {
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
-        this.trainingTypeMapper = trainingTypeMapper;
     }
 
     @Override
@@ -51,7 +48,6 @@ public class TrainingDao extends AbstractDao<Training> {
                     training.setTrainee(traineeMapper.fromString(parts[0]));
                     training.setTrainer(trainerMapper.fromString(parts[1]));
                     training.setTrainingName(parts[2]);
-                    training.setTrainingType(trainingTypeMapper.fromString(parts[3]));
                     training.setTrainingDate(new SimpleDateFormat("yyyy-MM-dd").parse(parts[4]));
                     training.setTrainingDuration(Long.valueOf(parts[5]));
 

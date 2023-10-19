@@ -10,9 +10,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TraineeModel {
+public class TraineeModel extends UserModel {
     private Long id;
-    private UserModel userModel;
     private Date birthday;
     private String address;
     private List<TrainerModel> trainerModels;

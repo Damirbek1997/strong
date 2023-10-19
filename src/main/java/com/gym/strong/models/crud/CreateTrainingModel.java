@@ -1,6 +1,5 @@
 package com.gym.strong.models.crud;
 
-import com.gym.strong.models.TrainingTypeModel;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -18,8 +17,6 @@ public class CreateTrainingModel {
     private Long trainerId;
     @NotNull
     private String trainingName;
-    @NotNull
-    private TrainingTypeModel trainingTypeModel;
     @NotNull
     private Date trainingDate;
     @NotNull

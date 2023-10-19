@@ -14,7 +14,6 @@ public class Training {
     private Trainee trainee;
     private Trainer trainer;
     private String trainingName;
-    private TrainingType trainingType;
     private Date trainingDate;
     private Long trainingDuration;
 }

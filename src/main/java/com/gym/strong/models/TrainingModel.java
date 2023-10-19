@@ -14,7 +14,6 @@ public class TrainingModel {
     private TraineeModel traineeModel;
     private TrainerModel trainerModel;
     private String trainingName;
-    private TrainingTypeModel trainingTypeModel;
     private Date trainingDate;
     private Long trainingDuration;
 }

@@ -1,12 +1,12 @@
 package com.gym.strong.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractDao<T> {
-    private final Map<Long, T> dataMap = new HashMap<>();
+    private final Map<Long, T> dataMap = new ConcurrentHashMap<>();
     private long nextId = 1;
 
     public void save(T entity) {

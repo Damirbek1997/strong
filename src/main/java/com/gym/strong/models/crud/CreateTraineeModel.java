@@ -11,9 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateTraineeModel {
-    @NotNull
-    private CreateUserModel createUserModel;
+public class CreateTraineeModel extends CreateUserModel {
     @NotNull
     private Date birthday;
     @NotNull

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
-    private final TrainingTypeMapper trainingTypeMapper;
 
     @Override
     public TrainingModel toModel(Training entity) {
@@ -20,7 +19,6 @@ public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
         trainingModel.setTraineeModel(traineeMapper.toModel(entity.getTrainee()));
         trainingModel.setTrainerModel(trainerMapper.toModel(entity.getTrainer()));
         trainingModel.setTrainingName(entity.getTrainingName());
-        trainingModel.setTrainingTypeModel(trainingTypeMapper.toModel(entity.getTrainingType()));
         trainingModel.setTrainingDate(entity.getTrainingDate());
         trainingModel.setTrainingDuration(entity.getTrainingDuration());
         return trainingModel;
@@ -33,7 +31,6 @@ public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
         trainee.setTrainee(traineeMapper.toEntity(model.getTraineeModel()));
         trainee.setTrainer(trainerMapper.toEntity(model.getTrainerModel()));
         trainee.setTrainingName(model.getTrainingName());
-        trainee.setTrainingType(trainingTypeMapper.toEntity(model.getTrainingTypeModel()));
         trainee.setTrainingDate(model.getTrainingDate());
         trainee.setTrainingDuration(model.getTrainingDuration());
         return trainee;

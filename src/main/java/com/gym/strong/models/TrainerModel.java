@@ -2,13 +2,14 @@ package com.gym.strong.models;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerModel {
+public class TrainerModel extends UserModel {
     private Long id;
-    private UserModel userModel;
-    private TrainingTypeModel trainingTypeModel;
+    private List<TraineeModel> traineeModelList;
 }

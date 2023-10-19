@@ -11,5 +11,5 @@ public interface TrainerService {
     List<TrainerModel> getAllIn(List<Long> ids);
     TrainerModel getById(Long id);
     TrainerModel create(CreateTrainerModel createTrainerModel);
-    TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel);
+    TrainerModel update(UpdateTrainerModel updateTrainerModel);
 }
