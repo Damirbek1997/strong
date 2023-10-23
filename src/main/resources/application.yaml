@@ -1,27 +1,6 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/strong
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-  data:
-    mongodb:
-      authentication-database: admin
-      username: damir
-      password: damir
-      database: strong
-      port: 27017
-      host: localhost
+log4j:
+  rootLogger: DEBUG
 
 storage:
   file:
     path:
-      trainee:
-      trainer:
-      training:

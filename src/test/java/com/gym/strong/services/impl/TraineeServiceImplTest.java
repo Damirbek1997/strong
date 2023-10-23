@@ -172,60 +172,15 @@ class TraineeServiceImplTest {
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
-        when(traineeMapper.toEntity(createTraineeModel))
-                .thenReturn(trainee);
-        when(userService.isUsernameBusy(trainee.getUsername()))
-                .thenReturn(false);
+        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
+                .thenReturn(trainee.getUsername());
+        when(userService.generatePassword())
+                .thenReturn("asdasd");
 
         doNothing()
                 .when(traineeDao)
-                .save(trainee);
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
-
-        TraineeModel response = traineeService.create(createTraineeModel);
-        assertEquals(traineeModel, response);
-    }
-
-    @Test
-    void createAndRegenerateUsername_withValidData_shouldReturnTraineeModel() {
-        Date birthDate = new Date();
-
-        CreateTraineeModel createTraineeModel = new CreateTraineeModel();
-        createTraineeModel.setFirstName("Ivan");
-        createTraineeModel.setLastName("Ivanov");
-        createTraineeModel.setAddress("Moscow");
-        createTraineeModel.setBirthday(birthDate);
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov1");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov1");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        when(traineeMapper.toEntity(createTraineeModel))
-                .thenReturn(trainee);
-        when(userService.isUsernameBusy(trainee.getUsername()))
-                .thenReturn(true);
-        when(userService.regenerateUsername(trainee.getFirstName(), trainee.getLastName(), 1L))
-                .thenReturn(trainee.getUsername() + 1);
-
-        doNothing()
-                .when(traineeDao)
-                .save(trainee);
-        when(traineeMapper.toModel(trainee))
+                .save(any());
+        when(traineeMapper.toModel(any()))
                 .thenReturn(traineeModel);
 
         TraineeModel response = traineeService.create(createTraineeModel);
@@ -270,7 +225,7 @@ class TraineeServiceImplTest {
         trainee.setId(1L);
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov1");
+        trainee.setUsername("Ivan.Ivanov");
         trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
@@ -280,16 +235,16 @@ class TraineeServiceImplTest {
         traineeModel.setId(1L);
         traineeModel.setFirstName("Ivan");
         traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov1");
+        traineeModel.setUsername("Ivan.Ivanov");
         traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
         traineeModel.setTrainerModels(trainerModels);
 
-        when(traineeMapper.toEntity(createTraineeModel))
-                .thenReturn(trainee);
-        when(userService.isUsernameBusy(trainee.getUsername()))
-                .thenReturn(false);
+        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
+                .thenReturn(trainee.getUsername());
+        when(userService.generatePassword())
+                .thenReturn("asdsa");
         when(trainerService.getAllIn(trainerIds))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
@@ -297,8 +252,8 @@ class TraineeServiceImplTest {
 
         doNothing()
                 .when(traineeDao)
-                .save(trainee);
-        when(traineeMapper.toModel(trainee))
+                .save(any());
+        when(traineeMapper.toModel(any()))
                 .thenReturn(traineeModel);
 
         TraineeModel response = traineeService.create(createTraineeModel);
@@ -336,50 +291,9 @@ class TraineeServiceImplTest {
 
         when(traineeDao.getById(updateTraineeModel.getId()))
                 .thenReturn(trainee);
-        when(userService.regenerateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+        when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
                 trainee.getFirstName(), trainee.getLastName()))
-                .thenReturn(null);
-
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
-
-        TraineeModel response = traineeService.update(updateTraineeModel);
-        assertEquals(traineeModel, response);
-    }
-
-    @Test
-    void updateAndRegenerateUsername_withValidData_shouldReturnTraineeModel() {
-        Date birthDate = new Date();
-
-        UpdateTraineeModel updateTraineeModel = new UpdateTraineeModel();
-        updateTraineeModel.setId(1L);
-        updateTraineeModel.setFirstName("Petya");
-        updateTraineeModel.setBirthday(birthDate);
-        updateTraineeModel.setAddress("Bishkek");
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Petya");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Petya.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Bishkek");
-
-        when(traineeDao.getById(updateTraineeModel.getId()))
-                .thenReturn(trainee);
-        when(userService.regenerateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
-                trainee.getFirstName(), trainee.getLastName()))
-                .thenReturn("Petya.Ivanov");
+                .thenReturn(trainee.getUsername());
 
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
@@ -445,7 +359,7 @@ class TraineeServiceImplTest {
 
         when(traineeDao.getById(updateTraineeModel.getId()))
                 .thenReturn(trainee);
-        when(userService.regenerateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+        when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
                 trainee.getFirstName(), trainee.getLastName()))
                 .thenReturn(null);
 

@@ -4,13 +4,9 @@ import com.gym.strong.entities.Trainer;
 import com.gym.strong.exceptions.InsertStorageFromFileException;
 import com.gym.strong.mappers.AbstractMapper;
 import com.gym.strong.models.TrainerModel;
-import com.gym.strong.models.crud.CreateTrainerModel;
-import com.gym.strong.util.UserUtil;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 
-@Component
 public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
     @Override
     public TrainerModel toModel(Trainer entity) {
@@ -31,16 +27,6 @@ public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
         trainer.setLastName(model.getLastName());
         trainer.setUsername(model.getUsername());
         trainer.setIsActive(model.getIsActive());
-        return trainer;
-    }
-
-    public Trainer toEntity(CreateTrainerModel model) {
-        Trainer trainer = new Trainer();
-        trainer.setFirstName(model.getFirstName());
-        trainer.setLastName(model.getLastName());
-        trainer.setUsername(UserUtil.generateUsername(model.getFirstName(), model.getLastName()));
-        trainer.setPassword(UserUtil.generatePassword());
-        trainer.setIsActive(true);
         return trainer;
     }
 

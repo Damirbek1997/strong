@@ -4,20 +4,18 @@ import com.gym.strong.entities.Trainee;
 import com.gym.strong.exceptions.InsertStorageFromFileException;
 import com.gym.strong.mappers.AbstractMapper;
 import com.gym.strong.models.TraineeModel;
-import com.gym.strong.models.crud.CreateTraineeModel;
-import com.gym.strong.util.UserUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-@Component
-@RequiredArgsConstructor
 public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
     private final TrainerMapper trainerMapper;
+
+    public TraineeMapper(TrainerMapper trainerMapper) {
+        this.trainerMapper = trainerMapper;
+    }
 
     @Override
     public TraineeModel toModel(Trainee entity) {
@@ -56,18 +54,6 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(model.getTrainerModels())));
         }
 
-        return trainee;
-    }
-
-    public Trainee toEntity(CreateTraineeModel model) {
-        Trainee trainee = new Trainee();
-        trainee.setFirstName(model.getFirstName());
-        trainee.setLastName(model.getLastName());
-        trainee.setUsername(UserUtil.generateUsername(model.getFirstName(), model.getLastName()));
-        trainee.setPassword(UserUtil.generatePassword());
-        trainee.setIsActive(true);
-        trainee.setBirthday(model.getBirthday());
-        trainee.setAddress(model.getAddress());
         return trainee;
     }
 
