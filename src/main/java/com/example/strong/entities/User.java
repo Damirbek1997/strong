@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Builder
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,10 +30,4 @@ public class User {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Trainee trainee;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Trainer trainer;
 }

@@ -10,14 +10,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
     private final UserMapper userMapper;
-    private final TrainingTypeMapper trainingTypeMapper;
 
     @Override
     public TrainerModel toModel(Trainer entity) {
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(entity.getId());
         trainerModel.setUserModel(userMapper.toModel(entity.getUser()));
-        trainerModel.setTrainingTypeModel(trainingTypeMapper.toModel(entity.getTrainingType()));
         return trainerModel;
     }
 
@@ -26,7 +24,6 @@ public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
         Trainer trainer = new Trainer();
         trainer.setId(model.getId());
         trainer.setUser(userMapper.toEntity(model.getUserModel()));
-        trainer.setTrainingType(trainingTypeMapper.toEntity(model.getTrainingTypeModel()));
         return trainer;
     }
 }

@@ -14,19 +14,18 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "trainers")
 @NamedEntityGraph(name = "trainer_entity-graph", attributeNodes = {
-        @NamedAttributeNode("user"),
-        @NamedAttributeNode("trainingType")
+        @NamedAttributeNode("user")
 })
-public class Trainer {
+public class Trainer extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TrainingType trainingType;
 
     @ManyToMany(mappedBy = "trainers")

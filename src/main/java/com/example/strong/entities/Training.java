@@ -33,16 +33,16 @@ public class Training {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Trainee trainee;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Trainer trainer;
 
     @Column(name = "training_name", nullable = false)
     private String trainingName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private TrainingType trainingType;
 
     @Column(name = "training_date", nullable = false)

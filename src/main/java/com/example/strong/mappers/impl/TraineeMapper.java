@@ -6,13 +6,9 @@ import com.example.strong.models.TraineeModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 @Component
 @RequiredArgsConstructor
 public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
-    private final TrainerMapper trainerMapper;
     private final UserMapper userMapper;
 
     @Override
@@ -22,10 +18,6 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
         traineeModel.setUserModel(userMapper.toModel(entity.getUser()));
         traineeModel.setBirthday(entity.getBirthday());
         traineeModel.setAddress(entity.getAddress());
-
-        if (entity.getTrainers() != null) {
-            traineeModel.setTrainerModels(trainerMapper.toModelList(new ArrayList<>(entity.getTrainers())));
-        }
 
         return traineeModel;
     }
@@ -37,10 +29,6 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
         trainee.setUser(userMapper.toEntity(model.getUserModel()));
         trainee.setBirthday(model.getBirthday());
         trainee.setAddress(model.getAddress());
-
-        if (model.getTrainerModels() != null) {
-            trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(model.getTrainerModels())));
-        }
 
         return trainee;
     }

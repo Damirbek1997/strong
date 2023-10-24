@@ -16,17 +16,10 @@ import java.util.Set;
 @Table(name = "trainees")
 @NamedEntityGraph(name = "trainee_entity-graph",
         attributeNodes = {
-                @NamedAttributeNode("user"),
-                @NamedAttributeNode(value = "trainers", subgraph = "trainer-subgraph"),
-        },
-        subgraphs = {
-                @NamedSubgraph(name = "trainer-subgraph", attributeNodes = {
-                        @NamedAttributeNode("user"),
-                        @NamedAttributeNode("trainingType")
-                })
+                @NamedAttributeNode("user")
         }
 )
-public class Trainee {
+public class Trainee extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
