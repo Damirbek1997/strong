@@ -1,29 +1,28 @@
 package com.gym.strong.services.impl;
 
-import com.gym.strong.entities.Trainee;
-import com.gym.strong.entities.Trainer;
 import com.gym.strong.repository.TraineeDao;
-import com.gym.strong.repository.TrainerDao;
 import com.gym.strong.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
 
+@Service
 public class UserServiceImpl implements UserService {
-    private final TrainerDao trainerDao;
     private final TraineeDao traineeDao;
 
-    public UserServiceImpl(TrainerDao trainerDao, TraineeDao traineeDao) {
-        this.trainerDao = trainerDao;
+    @Autowired
+    public UserServiceImpl(TraineeDao traineeDao) {
         this.traineeDao = traineeDao;
     }
 
     @Override
     public String generateUsername(String firstName, String lastName) {
         String username = unionTwoStrings(firstName, lastName);
+        int countOfUsers = traineeDao.countByUsername(username);
 
-        if (isUsernameBusy(username)) {
-            return regenerateUsername(firstName, lastName, 1L);
+        if (countOfUsers > 0) {
+            return username + countOfUsers;
         }
 
         return username;
@@ -63,34 +62,6 @@ public class UserServiceImpl implements UserService {
         return generateUsername(finalFirstName, finalLastName);
     }
 
-    private String regenerateUsername(String firstName, String lastName, Long count) {
-        String username = unionTwoStrings(firstName, lastName) + count;
-
-        if (isUsernameBusy(username)) {
-            username = regenerateUsername(firstName, lastName, count + 1);
-        }
-
-        return username;
-    }
-
-    private boolean isUsernameBusy(String username) {
-        List<Trainee> traineeList = traineeDao.getAll();
-        List<Trainer> trainerList = trainerDao.getAll();
-
-        for (Trainee trainee : traineeList) {
-            if (trainee.getUsername().equals(username)) {
-                return true;
-            }
-        }
-
-        for (Trainer trainer : trainerList) {
-            if (trainer.getUsername().equals(username)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     private String unionTwoStrings(String firstName, String lastName) {
         return firstName + "." + lastName;

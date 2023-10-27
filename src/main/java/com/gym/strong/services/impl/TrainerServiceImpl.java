@@ -9,15 +9,19 @@ import com.gym.strong.repository.TrainerDao;
 import com.gym.strong.services.TrainerService;
 import com.gym.strong.services.UserService;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Log4j
+@Service
 public class TrainerServiceImpl implements TrainerService {
     private final TrainerDao trainerDao;
     private final TrainerMapper trainerMapper;
     private final UserService userService;
 
+    @Autowired
     public TrainerServiceImpl(TrainerDao trainerDao, TrainerMapper trainerMapper, UserService userService) {
         this.trainerDao = trainerDao;
         this.trainerMapper = trainerMapper;
@@ -26,23 +30,23 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public List<TrainerModel> getAll() {
-        List<Trainer> trainers = trainerDao.getAll();
-        log.debug("Getting all Trainers: " + trainers);
-        return trainerMapper.toModelList(trainers);
+        List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerDao.getAll());
+        log.debug("Getting all Trainers: " + trainerModels);
+        return trainerModels;
     }
 
     @Override
     public List<TrainerModel> getAllIn(List<Long> ids) {
-        List<Trainer> trainers = trainerDao.getAllIn(ids);
-        log.debug("Getting all Trainers: " + trainers + " by their ids: " + ids);
-        return trainerMapper.toModelList(trainers);
+        List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerDao.getAllByIds(ids));
+        log.debug("Getting all Trainers: " + trainerModels + " by their ids: " + ids);
+        return trainerModels;
     }
 
     @Override
     public TrainerModel getById(Long id) {
-        Trainer trainer = trainerDao.getById(id);
-        log.debug("Getting Trainer: " + trainer + " by his id: " + id);
-        return trainerMapper.toModel(trainer);
+        TrainerModel trainerModel = trainerMapper.toModel(trainerDao.getById(id));
+        log.debug("Getting Trainer: " + trainerModel + " by his id: " + id);
+        return trainerModel;
     }
 
     @Override
@@ -56,17 +60,18 @@ public class TrainerServiceImpl implements TrainerService {
 
         trainerDao.save(trainer);
         log.info("Created Trainer with model " + createTrainerModel);
-        log.debug("Generated username - " + trainer.getUsername() + " and password - " + trainer.getPassword() + " for Trainer: " + trainer.getId());
+        log.debug("Generated username - " + trainer.getUsername() + " for Trainer: " + trainer.getId());
         return trainerMapper.toModel(trainer);
     }
 
     @Override
     public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
         Trainer trainer = trainerDao.getById(updateTrainerModel.getId());
-        String username = userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
-                trainer.getFirstName(), trainer.getLastName());
 
-        trainer.setUsername(username);
+        if (updateTrainerModel.getFirstName() != null || updateTrainerModel.getLastName() != null) {
+            trainer.setUsername(userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName()));
+        }
+
         if (updateTrainerModel.getIsActive() != null) {
             trainer.setIsActive(updateTrainerModel.getIsActive());
         }

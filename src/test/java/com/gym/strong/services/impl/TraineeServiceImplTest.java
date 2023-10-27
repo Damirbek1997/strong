@@ -102,7 +102,7 @@ class TraineeServiceImplTest {
         List<Long> traineeIds = new ArrayList<>();
         traineeIds.add(1L);
 
-        when(traineeDao.getAllIn(traineeIds))
+        when(traineeDao.getAllByIds(traineeIds))
                 .thenReturn(Collections.singletonList(trainee));
         when(traineeMapper.toModelList(trainees))
                 .thenReturn(Collections.singletonList(traineeModel));
@@ -110,7 +110,7 @@ class TraineeServiceImplTest {
         List<TraineeModel> traineeModelList = traineeService.getAll(traineeIds);
 
         assertEquals(1, traineeModelList.size());
-        verify(traineeDao).getAllIn(traineeIds);
+        verify(traineeDao).getAllByIds(traineeIds);
     }
 
     @Test
@@ -379,8 +379,8 @@ class TraineeServiceImplTest {
     void deleteById_withValidId_shouldReturnVoid() {
         doNothing()
                 .when(traineeDao)
-                .delete(1L);
+                .deleteById(1L);
         traineeService.deleteById(1L);
-        verify(traineeDao).delete(1L);
+        verify(traineeDao).deleteById(1L);
     }
 }

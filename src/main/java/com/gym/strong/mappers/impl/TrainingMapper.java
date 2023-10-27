@@ -4,18 +4,16 @@ import com.gym.strong.entities.Training;
 import com.gym.strong.exceptions.InsertStorageFromFileException;
 import com.gym.strong.mappers.AbstractMapper;
 import com.gym.strong.models.TrainingModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+@Component
 public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
-    private final TraineeMapper traineeMapper;
-    private final TrainerMapper trainerMapper;
-
-    public TrainingMapper(TraineeMapper traineeMapper, TrainerMapper trainerMapper) {
-        this.traineeMapper = traineeMapper;
-        this.trainerMapper = trainerMapper;
-    }
+    private TraineeMapper traineeMapper;
+    private TrainerMapper trainerMapper;
 
     @Override
     public TrainingModel toModel(Training entity) {
@@ -56,5 +54,15 @@ public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
         }
 
         throw new InsertStorageFromFileException("Error while parsing string to entity: all fields of User must be filled!");
+    }
+
+    @Autowired
+    public void setTraineeMapper(TraineeMapper traineeMapper) {
+        this.traineeMapper = traineeMapper;
+    }
+
+    @Autowired
+    public void setTrainerMapper(TrainerMapper trainerMapper) {
+        this.trainerMapper = trainerMapper;
     }
 }

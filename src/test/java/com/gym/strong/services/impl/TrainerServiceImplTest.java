@@ -83,7 +83,7 @@ class TrainerServiceImplTest {
         List<Long> trainerIds = new ArrayList<>();
         trainerIds.add(1L);
 
-        when(trainerDao.getAllIn(trainerIds))
+        when(trainerDao.getAllByIds(trainerIds))
                 .thenReturn(Collections.singletonList(trainer));
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
@@ -91,7 +91,7 @@ class TrainerServiceImplTest {
         List<TrainerModel> trainerModelList = trainerService.getAllIn(trainerIds);
 
         assertEquals(1, trainerModelList.size());
-        verify(trainerDao).getAllIn(trainerIds);
+        verify(trainerDao).getAllByIds(trainerIds);
     }
 
     @Test

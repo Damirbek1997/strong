@@ -12,6 +12,8 @@ import com.gym.strong.repository.TrainerDao;
 import com.gym.strong.repository.TrainingDao;
 import com.gym.strong.services.FileService;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 @Log4j
+@Service
 public class FIleServiceImpl implements FileService {
     private TraineeMapper traineeMapper;
     private TrainerMapper trainerMapper;
@@ -34,6 +37,7 @@ public class FIleServiceImpl implements FileService {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -64,26 +68,32 @@ public class FIleServiceImpl implements FileService {
         }
     }
 
+    @Autowired
     public void setTraineeMapper(TraineeMapper traineeMapper) {
         this.traineeMapper = traineeMapper;
     }
 
+    @Autowired
     public void setTrainerMapper(TrainerMapper trainerMapper) {
         this.trainerMapper = trainerMapper;
     }
 
+    @Autowired
     public void setTrainingMapper(TrainingMapper trainingMapper) {
         this.trainingMapper = trainingMapper;
     }
 
+    @Autowired
     public void setTraineeDao(TraineeDao traineeDao) {
         this.traineeDao = traineeDao;
     }
 
+    @Autowired
     public void setTrainerDao(TrainerDao trainerDao) {
         this.trainerDao = trainerDao;
     }
 
+    @Autowired
     public void setTrainingDao(TrainingDao trainingDao) {
         this.trainingDao = trainingDao;
     }

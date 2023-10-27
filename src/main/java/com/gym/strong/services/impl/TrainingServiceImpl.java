@@ -13,10 +13,13 @@ import com.gym.strong.services.TraineeService;
 import com.gym.strong.services.TrainerService;
 import com.gym.strong.services.TrainingService;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Log4j
+@Service
 public class TrainingServiceImpl implements TrainingService {
     private final TrainingDao trainingDao;
     private final TraineeService traineeService;
@@ -25,6 +28,7 @@ public class TrainingServiceImpl implements TrainingService {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
 
+    @Autowired
     public TrainingServiceImpl(TrainingDao trainingDao, TraineeService traineeService, TrainerService trainerService, TrainingMapper trainingMapper,
                                TraineeMapper traineeMapper, TrainerMapper trainerMapper) {
         this.trainingDao = trainingDao;

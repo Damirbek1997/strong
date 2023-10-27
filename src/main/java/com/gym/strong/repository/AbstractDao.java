@@ -23,7 +23,7 @@ public abstract class AbstractDao<T> {
         return new ArrayList<>(dataMap.values());
     }
 
-    public List<T> getAllIn(List<Long> ids) {
+    public List<T> getAllByIds(List<Long> ids) {
         List<T> list = new ArrayList<>();
 
         for (Long id : ids) {
@@ -33,7 +33,7 @@ public abstract class AbstractDao<T> {
         return list;
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         dataMap.remove(id);
     }
 

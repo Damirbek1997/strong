@@ -4,9 +4,11 @@ import com.gym.strong.entities.Trainer;
 import com.gym.strong.exceptions.InsertStorageFromFileException;
 import com.gym.strong.mappers.AbstractMapper;
 import com.gym.strong.models.TrainerModel;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 
+@Component
 public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
     @Override
     public TrainerModel toModel(Trainer entity) {
