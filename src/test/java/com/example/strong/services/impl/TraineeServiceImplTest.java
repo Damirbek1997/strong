@@ -7,11 +7,10 @@ import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.TrainerModel;
+import com.example.strong.models.UserCredentialsModel;
 import com.example.strong.models.UserModel;
 import com.example.strong.models.crud.CreateTraineeModel;
-import com.example.strong.models.crud.CreateUserModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
-import com.example.strong.models.crud.UpdateUserModel;
 import com.example.strong.repository.TraineeRepository;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.UserService;
@@ -41,34 +40,25 @@ class TraineeServiceImplTest {
     @Mock
     UserService userService;
 
-    // cucumber, spok посмотреть на структуру тестов
     @Test
     void getAll_shouldReturnAllTraineeModels() {
         Date birthDate = new Date();
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
@@ -87,32 +77,24 @@ class TraineeServiceImplTest {
     }
 
     @Test
-    void getAllByIn_withValidListOfTrainerIds_shouldReturnAllTraineeModels() {
+    void getAllByIds_withValidListOfTrainerIds_shouldReturnAllTraineeModels() {
         Date birthDate = new Date();
-
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
 
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
@@ -137,23 +119,12 @@ class TraineeServiceImplTest {
     void getById_withValidId_shouldReturnTraineeModel() {
         Date birthDate = new Date();
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -161,7 +132,10 @@ class TraineeServiceImplTest {
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
@@ -180,31 +154,29 @@ class TraineeServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
 
         UserModel userModel = new UserModel();
         userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
 
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
-        when(traineeRepository.findByUserUsername("Ivan.Ivanov"))
+        when(traineeRepository.findByUsername("Ivan.Ivanov"))
                 .thenReturn(trainee);
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
@@ -217,43 +189,37 @@ class TraineeServiceImplTest {
     void create_withValidData_shouldReturnTraineeModel() {
         Date birthDate = new Date();
 
-        CreateUserModel createUserModel = new CreateUserModel();
-        createUserModel.setFirstName("Ivan");
-        createUserModel.setLastName("Ivanov");
-
         CreateTraineeModel createTraineeModel = new CreateTraineeModel();
-        createTraineeModel.setCreateUserModel(createUserModel);
+        createTraineeModel.setFirstName("Ivan");
+        createTraineeModel.setLastName("Ivanov");
         createTraineeModel.setAddress("Moscow");
         createTraineeModel.setBirthday(birthDate);
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov1");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
-        when(userService.create(createUserModel))
-                .thenReturn(user);
+        when(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()))
+                .thenReturn(trainee.getUsername());
+        when(userService.generatePassword())
+                .thenReturn(any());
+
+        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
+                .thenReturn(1L);
 
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
@@ -271,63 +237,44 @@ class TraineeServiceImplTest {
         List<Long> trainerIds = new ArrayList<>();
         trainerIds.add(1L);
 
-        CreateUserModel createUserModel = new CreateUserModel();
-        createUserModel.setFirstName("Ivan");
-        createUserModel.setLastName("Ivanov");
-
         CreateTraineeModel createTraineeModel = new CreateTraineeModel();
-        createTraineeModel.setCreateUserModel(createUserModel);
+        createTraineeModel.setFirstName("Ivan");
+        createTraineeModel.setLastName("Ivanov");
         createTraineeModel.setAddress("Moscow");
         createTraineeModel.setBirthday(birthDate);
         createTraineeModel.setTrainerIds(trainerIds);
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
-        User user2 = new User();
-        user2.setId(1L);
-        user2.setFirstName("Trainer");
-        user2.setLastName("Trainer");
-        user2.setUsername("Trainer.Trainer");
-        user2.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setId(1L);
-        userModel2.setFirstName("Trainer");
-        userModel2.setLastName("Trainer");
-        userModel2.setUsername("Trainer.Trainer");
-        userModel2.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
 
         TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
 
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
@@ -335,8 +282,14 @@ class TraineeServiceImplTest {
         List<TrainerModel> trainerModels = new ArrayList<>();
         trainerModels.add(trainerModel);
 
-        when(userService.create(createUserModel))
-                .thenReturn(user);
+        when(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()))
+                .thenReturn(trainee.getUsername());
+        when(userService.generatePassword())
+                .thenReturn(any());
+
+        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
+                .thenReturn(0L);
+
         when(trainerService.getAllByIds(trainerIds))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
@@ -355,47 +308,38 @@ class TraineeServiceImplTest {
     void update_withValidDataAndUser_shouldReturnTraineeModel() {
         Date birthDate = new Date();
 
-        UpdateUserModel updateUserModel = new UpdateUserModel();
-        updateUserModel.setId(1L);
-        updateUserModel.setFirstName("Petya");
-        updateUserModel.setLastName("Petrov");
-
         UpdateTraineeModel updateTraineeModel = new UpdateTraineeModel();
         updateTraineeModel.setId(1L);
-        updateTraineeModel.setUpdateUserModel(updateUserModel);
+        updateTraineeModel.setFirstName("Petya");
+        updateTraineeModel.setLastName("Petrov");
         updateTraineeModel.setBirthday(birthDate);
         updateTraineeModel.setAddress("Bishkek");
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Petya");
+        traineeModel.setLastName("Petrov");
+        traineeModel.setUsername("Petya.Petrov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Bishkek");
 
         when(traineeRepository.findById(updateTraineeModel.getId()))
                 .thenReturn(Optional.of(trainee));
-        when(userService.update(updateUserModel))
-                .thenReturn(user);
+
+        when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName()))
+                .thenReturn("Ivan.Ivanov");
+        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
+                .thenReturn(0L);
 
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
@@ -419,53 +363,37 @@ class TraineeServiceImplTest {
         updateTraineeModel.setAddress("Bishkek");
         updateTraineeModel.setTrainerIds(trainerIds);
 
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setId(1L);
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
-        traineeModel.setUserModel(userModel);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Bishkek");
 
-        User trainerUser = new User();
-        trainerUser.setId(2L);
-        trainerUser.setFirstName("Vadim");
-        trainerUser.setLastName("Vadimov");
-        trainerUser.setUsername("Vadim.Vadimov");
-        trainerUser.setIsActive(true);
-
-        UserModel trainerUserModel = new UserModel();
-        trainerUserModel.setId(2L);
-        trainerUserModel.setFirstName("Vadim");
-        trainerUserModel.setLastName("Vadimov");
-        trainerUserModel.setUsername("Vadim.Vadimov");
-        trainerUserModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(trainerUser);
+        trainer.setId(2L);
+        trainer.setFirstName("Vadim");
+        trainer.setLastName("Vadimov");
+        trainer.setUsername("Vadim.Vadimov");
+        trainer.setIsActive(true);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(2L);
-        trainerModel.setUserModel(trainerUserModel);
+        trainerModel.setFirstName("Vadim");
+        trainerModel.setLastName("Vadimov");
+        trainerModel.setUsername("Vadim.Vadimov");
+        trainerModel.setIsActive(true);
 
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
@@ -480,6 +408,11 @@ class TraineeServiceImplTest {
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
                 .thenReturn(trainers);
+
+        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
+                .thenReturn(trainee.getUsername());
+        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
+                .thenReturn(0L);
 
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
@@ -504,8 +437,79 @@ class TraineeServiceImplTest {
         String username = "Ivan.Ivanov";
         doNothing()
                 .when(traineeRepository)
-                .deleteByUserUsername(username);
+                .deleteByUsername(username);
         traineeService.deleteByUsername(username);
-        verify(traineeRepository).deleteByUserUsername(username);
+        verify(traineeRepository).deleteByUsername(username);
+    }
+
+    @Test
+    void changePassword_withValidData_shouldReturnVoid() {
+        UserCredentialsModel userCredentialsModel = new UserCredentialsModel();
+        userCredentialsModel.setId(1L);
+        userCredentialsModel.setNewPassword("newPassword");
+
+        Trainee currentTrainee = new Trainee();
+        currentTrainee.setId(1L);
+        currentTrainee.setFirstName("Ivan");
+        currentTrainee.setLastName("Ivanov");
+        currentTrainee.setUsername("Ivan.Ivanov");
+        currentTrainee.setIsActive(true);
+        currentTrainee.setPassword("oldPassword");
+        currentTrainee.setAddress("Moscow");
+
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
+        trainee.setPassword("newPassword");
+        trainee.setAddress("Moscow");
+
+        when(traineeRepository.findById(1L))
+                .thenReturn(Optional.of(currentTrainee));
+        when(traineeRepository.save(any()))
+                .thenReturn(trainee);
+
+        traineeService.changePassword(userCredentialsModel);
+        assertEquals(userCredentialsModel.getNewPassword(), trainee.getPassword());
+    }
+
+    @Test
+    void activateById_withValidId_shouldReturnVoid() {
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(false);
+        trainee.setAddress("Moscow");
+
+        when(traineeRepository.findById(1L))
+                .thenReturn(Optional.of(trainee));
+        when(traineeRepository.save(any()))
+                .thenReturn(trainee);
+
+        traineeService.activateById(1L);
+        assertEquals(true, trainee.getIsActive());
+    }
+
+    @Test
+    void deactivateById_withValidId_shouldReturnVoid() {
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
+        trainee.setAddress("Moscow");
+
+        when(traineeRepository.findById(1L))
+                .thenReturn(Optional.of(trainee));
+        when(traineeRepository.save(any()))
+                .thenReturn(trainee);
+
+        traineeService.deactivateById(1L);
+        assertEquals(false, trainee.getIsActive());
     }
 }

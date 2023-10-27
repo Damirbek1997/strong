@@ -14,14 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "trainees")
 public class Trainee extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
-
     @Column(name = "birthday", nullable = false)
     private Date birthday;
 

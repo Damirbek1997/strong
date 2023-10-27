@@ -1,6 +1,7 @@
 package com.example.strong.services;
 
 import com.example.strong.models.TraineeModel;
+import com.example.strong.models.UserCredentialsModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
 
@@ -15,4 +16,7 @@ public interface TraineeService {
     TraineeModel update(UpdateTraineeModel updateTraineeModel);
     void deleteById(Long id);
     void deleteByUsername(String username);
+    void changePassword(UserCredentialsModel userCredentialsModel);
+    void activateById(Long id);
+    void deactivateById(Long id);
 }

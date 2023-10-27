@@ -4,6 +4,7 @@ import com.example.strong.entities.Trainer;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TrainerModel;
+import com.example.strong.models.UserCredentialsModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
 import com.example.strong.repository.TrainerRepository;
@@ -57,7 +58,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerModel getByUsername(String username) {
-        TrainerModel trainerModel = trainerMapper.toModel(trainerRepository.findByUserUsername(username));
+        TrainerModel trainerModel = trainerMapper.toModel(trainerRepository.findByUsername(username));
         log.debug("Getting Trainer: {} by username {}", trainerModel, username);
         return trainerModel;
     }
@@ -66,10 +67,20 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public TrainerModel create(CreateTrainerModel createTrainerModel) {
         Trainer trainer = new Trainer();
-        trainer.setUser(userService.create(createTrainerModel.getCreateUserModel()));
+        trainer.setFirstName(createTrainerModel.getFirstName());
+        trainer.setLastName(createTrainerModel.getLastName());
+        trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
+        trainer.setPassword(userService.generatePassword());
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
-        Trainer savedTrainer = trainerRepository.save(trainer);
 
+        Long amountOfUsers = trainerRepository.countByUsernameLike(trainer.getUsername());
+
+        if (amountOfUsers > 0) {
+            trainer.setUsername(trainer.getUsername() + amountOfUsers);
+        }
+
+        Trainer savedTrainer = trainerRepository.save(trainer);
         log.info("Created Trainer with model {}", createTrainerModel);
         return trainerMapper.toModel(savedTrainer);
     }
@@ -79,17 +90,55 @@ public class TrainerServiceImpl implements TrainerService {
     public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
         Trainer trainer = getEntityById(updateTrainerModel.getId());
 
-        if (updateTrainerModel.getUpdateUserModel() != null) {
-            trainer.setUser(userService.update(updateTrainerModel.getUpdateUserModel()));
-        }
-
         if (updateTrainerModel.getTrainingTypeId() != null) {
             trainer.setTrainingType(trainingTypeService.getById(updateTrainerModel.getTrainingTypeId()));
+        }
+
+        if (updateTrainerModel.getFirstName() != null) {
+            trainer.setFirstName(updateTrainerModel.getFirstName());
+        }
+
+        if (updateTrainerModel.getLastName() != null) {
+            trainer.setLastName(updateTrainerModel.getLastName());
+        }
+
+        String username = userService.generateUsername(trainer.getFirstName(), trainer.getLastName());
+        Long amountOfUsers = trainerRepository.countByUsernameLike(username);
+
+        if (amountOfUsers > 0) {
+            trainer.setUsername(username + amountOfUsers);
         }
 
         Trainer savedTrainer = trainerRepository.save(trainer);
         log.info("Updated Trainer with model {}", updateTrainerModel);
         return trainerMapper.toModel(savedTrainer);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(UserCredentialsModel userCredentialsModel) {
+        Trainer trainer = getEntityById(userCredentialsModel.getId());
+        trainer.setPassword(userCredentialsModel.getNewPassword());
+        trainerRepository.save(trainer);
+        log.debug("Changed password to User with username: {}", trainer.getUsername());
+    }
+
+    @Override
+    @Transactional
+    public void activateById(Long id) {
+        Trainer trainer = getEntityById(id);
+        trainer.setIsActive(true);
+        trainerRepository.save(trainer);
+        log.debug("Activated User with username: {}", trainer.getUsername());
+    }
+
+    @Override
+    @Transactional
+    public void deactivateById(Long id) {
+        Trainer trainer = getEntityById(id);
+        trainer.setIsActive(false);
+        trainerRepository.save(trainer);
+        log.debug("Activated User with username: {}", trainer.getUsername());
     }
 
     private Trainer getEntityById(Long id) {

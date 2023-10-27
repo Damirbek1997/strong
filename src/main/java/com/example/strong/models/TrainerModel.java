@@ -7,8 +7,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerModel {
-    private Long id;
-    private UserModel userModel;
+public class TrainerModel extends UserModel {
     private TrainingTypeModel trainingTypeModel;
 }

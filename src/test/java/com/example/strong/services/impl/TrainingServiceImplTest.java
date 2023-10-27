@@ -1,10 +1,16 @@
 package com.example.strong.services.impl;
 
-import com.example.strong.entities.*;
+import com.example.strong.entities.Trainee;
+import com.example.strong.entities.Trainer;
+import com.example.strong.entities.Training;
+import com.example.strong.entities.TrainingType;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.mappers.impl.TrainingMapper;
-import com.example.strong.models.*;
+import com.example.strong.models.TraineeModel;
+import com.example.strong.models.TrainerModel;
+import com.example.strong.models.TrainingModel;
+import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.repository.TrainingRepository;
 import com.example.strong.services.TraineeService;
@@ -45,49 +51,37 @@ class TrainingServiceImplTest {
         Date birthDate = new Date();
         Date trainingDate = new Date();
 
-        User user = new User();
-        user.setFirstName("Petya");
-        user.setLastName("Petrov");
-        user.setUsername("Petya.Petrov");
-        user.setIsActive(true);
-
-        User user2 = new User();
-        user2.setFirstName("Ivan");
-        user2.setLastName("Ivanov");
-        user2.setUsername("Ivan.Ivanov");
-        user2.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setFirstName("Ivan");
-        userModel2.setLastName("Ivanov");
-        userModel2.setUsername("Ivan.Ivanov");
-        userModel2.setIsActive(true);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-        traineeModel.setUserModel(userModel);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
+        traineeModel.setBirthday(birthDate);
+        traineeModel.setAddress("Moscow");
+
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
+
+        TrainerModel trainerModel = new TrainerModel();
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
 
         Training training = new Training();
         training.setId(1L);
@@ -124,49 +118,37 @@ class TrainingServiceImplTest {
         Date birthDate = new Date();
         Date trainingDate = new Date();
 
-        User user = new User();
-        user.setFirstName("Petya");
-        user.setLastName("Petrov");
-        user.setUsername("Petya.Petrov");
-        user.setIsActive(true);
-
-        User user2 = new User();
-        user2.setFirstName("Ivan");
-        user2.setLastName("Ivanov");
-        user2.setUsername("Ivan.Ivanov");
-        user2.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setFirstName("Ivan");
-        userModel2.setLastName("Ivanov");
-        userModel2.setUsername("Ivan.Ivanov");
-        userModel2.setIsActive(true);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-        traineeModel.setUserModel(userModel);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
+        traineeModel.setBirthday(birthDate);
+        traineeModel.setAddress("Moscow");
+
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
+
+        TrainerModel trainerModel = new TrainerModel();
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
 
         Training training = new Training();
         training.setId(1L);
@@ -204,50 +186,37 @@ class TrainingServiceImplTest {
         Date birthDate = new Date();
         Date trainingDate = new Date();
 
-        User user = new User();
-        user.setFirstName("Petya");
-        user.setLastName("Petrov");
-        user.setUsername("Petya.Petrov");
-        user.setIsActive(true);
-
-        User user2 = new User();
-        user2.setFirstName("Ivan");
-        user2.setLastName("Ivanov");
-        user2.setUsername("Ivan.Ivanov");
-        user2.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setFirstName("Ivan");
-        userModel2.setLastName("Ivanov");
-        userModel2.setUsername("Ivan.Ivanov");
-        userModel2.setIsActive(true);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-        traineeModel.setUserModel(userModel);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
-        Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
+        traineeModel.setBirthday(birthDate);
+        traineeModel.setAddress("Moscow");
 
+        Trainer trainer = new Trainer();
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
+
+        TrainerModel trainerModel = new TrainerModel();
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
         Training training = new Training();
         training.setId(1L);
         training.setTrainee(trainee);
@@ -284,49 +253,37 @@ class TrainingServiceImplTest {
         Date birthDate = new Date();
         Date trainingDate = new Date();
 
-        User user = new User();
-        user.setFirstName("Petya");
-        user.setLastName("Petrov");
-        user.setUsername("Petya.Petrov");
-        user.setIsActive(true);
-
-        User user2 = new User();
-        user2.setFirstName("Ivan");
-        user2.setLastName("Ivanov");
-        user2.setUsername("Ivan.Ivanov");
-        user2.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setFirstName("Ivan");
-        userModel2.setLastName("Ivanov");
-        userModel2.setUsername("Ivan.Ivanov");
-        userModel2.setIsActive(true);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-        traineeModel.setUserModel(userModel);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
+        traineeModel.setBirthday(birthDate);
+        traineeModel.setAddress("Moscow");
+
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
+
+        TrainerModel trainerModel = new TrainerModel();
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
 
         Training training = new Training();
         training.setId(1L);
@@ -366,49 +323,37 @@ class TrainingServiceImplTest {
         createTrainingModel.setTrainingName("Training");
         createTrainingModel.setTrainingDuration(10L);
 
-        User user = new User();
-        user.setFirstName("Petya");
-        user.setLastName("Petrov");
-        user.setUsername("Petya.Petrov");
-        user.setIsActive(true);
-
-        User user2 = new User();
-        user2.setFirstName("Ivan");
-        user2.setLastName("Ivanov");
-        user2.setUsername("Ivan.Ivanov");
-        user2.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
-        UserModel userModel2 = new UserModel();
-        userModel2.setFirstName("Ivan");
-        userModel2.setLastName("Ivanov");
-        userModel2.setUsername("Ivan.Ivanov");
-        userModel2.setIsActive(true);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-        traineeModel.setUserModel(userModel);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel2);
-
         Trainee trainee = new Trainee();
         trainee.setId(1L);
-        trainee.setUser(user);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setIsActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setIsActive(true);
+        traineeModel.setBirthday(birthDate);
+        traineeModel.setAddress("Moscow");
+
         Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setUser(user2);
+        trainer.setId(2L);
+        trainer.setFirstName("Trainer");
+        trainer.setLastName("Trainer");
+        trainer.setUsername("Trainer.Trainer");
+        trainer.setIsActive(true);
+
+        TrainerModel trainerModel = new TrainerModel();
+        trainerModel.setId(2L);
+        trainerModel.setFirstName("Trainer");
+        trainerModel.setLastName("Trainer");
+        trainerModel.setUsername("Trainer.Trainer");
+        trainerModel.setIsActive(true);
 
         TrainingType trainingType = new TrainingType();
         trainingType.setId(1L);

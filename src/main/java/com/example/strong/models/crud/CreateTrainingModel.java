@@ -1,15 +1,13 @@
 package com.example.strong.models.crud;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CreateTrainingModel {
     @NotNull
     private Long traineeId;

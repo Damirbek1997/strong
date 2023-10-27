@@ -10,7 +10,9 @@ import java.util.List;
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     List<Trainee> findAllByIdIn(List<Long> ids);
 
-    Trainee findByUserUsername(String username);
+    Trainee findByUsername(String username);
 
-    void deleteByUserUsername(String username);
+    void deleteByUsername(String username);
+
+    Long countByUsernameLike(String username);
 }

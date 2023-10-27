@@ -9,9 +9,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TraineeModel {
-    private Long id;
-    private UserModel userModel;
+public class TraineeModel extends UserModel {
     private Date birthday;
     private String address;
 }

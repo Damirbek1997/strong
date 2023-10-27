@@ -13,14 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "trainers")
 public class Trainer extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private TrainingType trainingType;
 

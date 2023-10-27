@@ -2,15 +2,12 @@ package com.example.strong.services.impl;
 
 import com.example.strong.entities.Trainer;
 import com.example.strong.entities.TrainingType;
-import com.example.strong.entities.User;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.TrainingTypeModel;
-import com.example.strong.models.UserModel;
+import com.example.strong.models.UserCredentialsModel;
 import com.example.strong.models.crud.CreateTrainerModel;
-import com.example.strong.models.crud.CreateUserModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
-import com.example.strong.models.crud.UpdateUserModel;
 import com.example.strong.repository.TrainerRepository;
 import com.example.strong.services.TrainingTypeService;
 import com.example.strong.services.UserService;
@@ -51,26 +48,20 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
         List<Trainer> trainers = new ArrayList<>();
@@ -97,26 +88,20 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
         List<Trainer> trainers = new ArrayList<>();
@@ -146,26 +131,20 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
         List<Trainer> trainers = new ArrayList<>();
@@ -192,26 +171,20 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
         when(trainerRepository.findById(1L))
@@ -233,29 +206,23 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
-        when(trainerRepository.findByUserUsername("Ivan.Ivanov"))
+        when(trainerRepository.findByUsername("Ivan.Ivanov"))
                 .thenReturn(trainer);
         when(trainerMapper.toModel(trainer))
                 .thenReturn(trainerModel);
@@ -266,13 +233,11 @@ class TrainerServiceImplTest {
 
     @Test
     void create_withValidData_shouldReturnTrainerModel() {
-        CreateUserModel createUserModel = new CreateUserModel();
-        createUserModel.setFirstName("Ivan");
-        createUserModel.setLastName("Ivanov");
-
         CreateTrainerModel createTrainerModel = new CreateTrainerModel();
-        createTrainerModel.setCreateUserModel(createUserModel);
+        createTrainerModel.setFirstName("Ivan");
+        createTrainerModel.setLastName("Ivanov");
         createTrainerModel.setTrainingTypeId(1L);
+
         TrainingType trainingType = new TrainingType();
         trainingType.setId(1L);
         trainingType.setTypeName("type");
@@ -281,32 +246,31 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Ivan");
-        userModel.setLastName("Ivanov");
-        userModel.setUsername("Ivan.Ivanov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Ivan");
+        trainerModel.setLastName("Ivanov");
+        trainerModel.setUsername("Ivan.Ivanov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
-        when(userService.create(createUserModel))
-                .thenReturn(user);
+        when(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()))
+                .thenReturn(trainer.getUsername());
+        when(userService.generatePassword())
+                .thenReturn(any());
+
         when(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()))
                 .thenReturn(trainingType);
+        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
+                .thenReturn(0L);
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
@@ -319,39 +283,32 @@ class TrainerServiceImplTest {
 
     @Test
     void update_withValidDataAnsUser_shouldReturnTrainerModel() {
-        UpdateUserModel updateUserModel = new UpdateUserModel();
-        updateUserModel.setId(1L);
-        updateUserModel.setFirstName("Petya");
-        updateUserModel.setLastName("Petrov");
-
         UpdateTrainerModel updateTrainerModel = new UpdateTrainerModel();
         updateTrainerModel.setId(1L);
-        updateTrainerModel.setUpdateUserModel(updateUserModel);
-
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
+        updateTrainerModel.setFirstName("Petya");
+        updateTrainerModel.setLastName("Petrov");
 
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Petya");
+        trainerModel.setLastName("Petrov");
+        trainerModel.setUsername("Petya.Petrov");
+        trainerModel.setIsActive(true);
 
         when(trainerRepository.findById(updateTrainerModel.getId()))
                 .thenReturn(Optional.of(trainer));
-        when(userService.update(updateUserModel))
-                .thenReturn(user);
+
+        when(userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName()))
+                .thenReturn(trainer.getUsername());
+        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
+                .thenReturn(0L);
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
@@ -376,32 +333,31 @@ class TrainerServiceImplTest {
         trainingTypeModel.setId(2L);
         trainingTypeModel.setTypeName("type2");
 
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
-
-        UserModel userModel = new UserModel();
-        userModel.setFirstName("Petya");
-        userModel.setLastName("Petrov");
-        userModel.setUsername("Petya.Petrov");
-        userModel.setIsActive(true);
-
         Trainer trainer = new Trainer();
         trainer.setId(1L);
-        trainer.setUser(user);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
         trainer.setTrainingType(trainingType);
 
         TrainerModel trainerModel = new TrainerModel();
         trainerModel.setId(1L);
-        trainerModel.setUserModel(userModel);
+        trainerModel.setFirstName("Petya");
+        trainerModel.setLastName("Petrov");
+        trainerModel.setUsername("Petya.Petrov");
+        trainerModel.setIsActive(true);
         trainerModel.setTrainingTypeModel(trainingTypeModel);
 
         when(trainerRepository.findById(updateTrainerModel.getId()))
                 .thenReturn(Optional.of(trainer));
         when(trainingTypeService.getById(updateTrainerModel.getTrainingTypeId()))
                 .thenReturn(trainingType);
+
+        when(userService.generateUsername(trainer.getFirstName(), trainer.getLastName()))
+                .thenReturn(trainer.getUsername());
+        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
+                .thenReturn(0L);
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
@@ -410,5 +366,72 @@ class TrainerServiceImplTest {
 
         TrainerModel response = trainerService.update(updateTrainerModel);
         assertEquals(trainerModel, response);
+    }
+
+    @Test
+    void changePassword_withValidData_shouldReturnVoid() {
+        UserCredentialsModel userCredentialsModel = new UserCredentialsModel();
+        userCredentialsModel.setId(1L);
+        userCredentialsModel.setNewPassword("newPassword");
+
+        Trainer currentTrainer = new Trainer();
+        currentTrainer.setId(1L);
+        currentTrainer.setFirstName("Ivan");
+        currentTrainer.setLastName("Ivanov");
+        currentTrainer.setUsername("Ivan.Ivanov");
+        currentTrainer.setIsActive(true);
+        currentTrainer.setPassword("oldPassword");
+
+        Trainer trainer = new Trainer();
+        trainer.setId(1L);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
+        trainer.setPassword("newPassword");
+
+        when(trainerRepository.findById(1L))
+                .thenReturn(Optional.of(currentTrainer));
+        when(trainerRepository.save(any()))
+                .thenReturn(trainer);
+
+        trainerService.changePassword(userCredentialsModel);
+        assertEquals(userCredentialsModel.getNewPassword(), trainer.getPassword());
+    }
+
+    @Test
+    void activateById_withValidId_shouldReturnVoid() {
+        Trainer trainer = new Trainer();
+        trainer.setId(1L);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(false);
+
+        when(trainerRepository.findById(1L))
+                .thenReturn(Optional.of(trainer));
+        when(trainerRepository.save(any()))
+                .thenReturn(trainer);
+
+        trainerService.activateById(1L);
+        assertEquals(true, trainer.getIsActive());
+    }
+
+    @Test
+    void deactivateById_withValidId_shouldReturnVoid() {
+        Trainer trainer = new Trainer();
+        trainer.setId(1L);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setIsActive(true);
+
+        when(trainerRepository.findById(1L))
+                .thenReturn(Optional.of(trainer));
+        when(trainerRepository.save(any()))
+                .thenReturn(trainer);
+
+        trainerService.deactivateById(1L);
+        assertEquals(false, trainer.getIsActive());
     }
 }

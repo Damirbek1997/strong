@@ -1,6 +1,7 @@
 package com.example.strong.models.crud;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -8,12 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class CreateTraineeModel {
-    @NotNull
-    private CreateUserModel createUserModel;
+public class CreateTraineeModel extends CreateUserModel {
     @NotNull
     private Date birthday;
     @NotNull
