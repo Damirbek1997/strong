@@ -13,17 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Table(name = "trainings")
 @NamedEntityGraph(name = "training_entity-graph", attributeNodes = {
-        @NamedAttributeNode(value = "trainee", subgraph = "trainee-subgraph"),
-        @NamedAttributeNode(value = "trainer", subgraph = "trainer-subgraph"),
-        @NamedAttributeNode("trainingType")},
-        subgraphs = {
-                @NamedSubgraph(name = "trainee-subgraph", attributeNodes = {
-                        @NamedAttributeNode("user")
-                }),
-                @NamedSubgraph(name = "trainer-subgraph", attributeNodes = {
-                        @NamedAttributeNode("user")
-                })
-        }
+        @NamedAttributeNode(value = "trainee"),
+        @NamedAttributeNode(value = "trainer"),
+        @NamedAttributeNode(value = "trainingType")}
 )
 public class Training {
     @Id

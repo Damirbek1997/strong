@@ -23,14 +23,12 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
     @EntityGraph(value = "training_entity-graph")
     @Query(value = "select p from Training p\n" +
             "            join Trainer t on p.trainer.id = t.id\n" +
-            "            join User u on t.user.id = u.id\n" +
-            "            where u.username = :username")
+            "            where t.username = :username")
     List<Training> getAllTrainersByUsername(String username);
 
     @EntityGraph(value = "training_entity-graph")
     @Query(value = "select p from Training p\n" +
             "            join Trainee t on p.trainee.id = t.id\n" +
-            "            join User u on t.user.id = u.id\n" +
-            "            where u.username = :username")
+            "            where t.username = :username")
     List<Training> getAllTraineesByUsername(String username);
 }
