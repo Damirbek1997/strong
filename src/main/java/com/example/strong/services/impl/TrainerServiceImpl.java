@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,36 +29,37 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public List<TrainerModel> getAll() {
-        return trainerMapper.toModelList(trainerRepository.findAll());
+        List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.findAll());
+        log.debug("Getting all Trainers: {}", trainerModels);
+        return trainerModels;
     }
 
     @Override
-    public List<TrainerModel> getAllIn(List<Long> ids) {
-        return trainerMapper.toModelList(trainerRepository.findAllByIdIn(ids));
+    public List<TrainerModel> getAllByIds(List<Long> ids) {
+        List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.findAllByIdIn(ids));
+        log.debug("Getting all Trainers: {}, by ids", trainerModels);
+        return trainerModels;
     }
 
     @Override
     public List<TrainerModel> getAllNotBusyTrainers() {
-        List<Trainer> response = new ArrayList<>();
-        List<Trainer> trainers = trainerRepository.findAllByUserIsActiveIsTrue();
-
-        for (Trainer trainer : trainers) {
-            if (trainer.getTrainings() == null || trainer.getTrainings().isEmpty()) {
-                response.add(trainer);
-            }
-        }
-
-        return trainerMapper.toModelList(response);
+        List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.getAllNotBusyTrainers());
+        log.debug("Getting all not busy Trainers: {}", trainerModels);
+        return trainerModels;
     }
 
     @Override
     public TrainerModel getById(Long id) {
-        return trainerMapper.toModel(getEntityById(id));
+        TrainerModel trainerModel = trainerMapper.toModel(getEntityById(id));
+        log.debug("Getting Trainer: {} by id", trainerModel);
+        return trainerModel;
     }
 
     @Override
     public TrainerModel getByUsername(String username) {
-        return trainerMapper.toModel(trainerRepository.findByUserUsername(username));
+        TrainerModel trainerModel = trainerMapper.toModel(trainerRepository.findByUserUsername(username));
+        log.debug("Getting Trainer: {} by username {}", trainerModel, username);
+        return trainerModel;
     }
 
     @Override

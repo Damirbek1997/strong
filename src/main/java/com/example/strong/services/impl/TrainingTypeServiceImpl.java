@@ -21,6 +21,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
         Optional<TrainingType> trainingTypeOptional = trainingTypeRepository.findById(id);
 
         if (trainingTypeOptional.isPresent()) {
+            log.debug("Getting TrainingType with id: {}", id);
             return trainingTypeOptional.get();
         }
 

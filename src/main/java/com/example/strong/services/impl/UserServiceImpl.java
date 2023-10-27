@@ -7,13 +7,13 @@ import com.example.strong.models.crud.CreateUserModel;
 import com.example.strong.models.crud.UpdateUserModel;
 import com.example.strong.repository.UserRepository;
 import com.example.strong.services.UserService;
-import com.example.strong.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -26,12 +26,14 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setFirstName(createUserModel.getFirstName());
         user.setLastName(createUserModel.getLastName());
-        user.setUsername(UserUtil.generateUsername(createUserModel.getFirstName(), createUserModel.getLastName()));
-        user.setPassword(UserUtil.generatePassword());
+        user.setUsername(generateUsername(createUserModel.getFirstName(), createUserModel.getLastName()));
+        user.setPassword(generatePassword());
         user.setIsActive(true);
 
-        if (isUsernameBusy(user.getUsername())) {
-            user.setUsername(regenerateUsername(user.getFirstName(), user.getLastName(), 1L));
+        Long amountOfUsers = userRepository.countByUsernameLike(user.getUsername());
+
+        if (amountOfUsers > 0) {
+            user.setUsername(user.getUsername() + amountOfUsers);
         }
 
         User savedUser = userRepository.save(user);
@@ -42,24 +44,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(UpdateUserModel updateUserModel) {
         User user = getEntityById(updateUserModel.getId());
-        boolean regenerateUsername = false;
 
-        if (updateUserModel.getFirstName() == null) {
-            user.setLastName(updateUserModel.getLastName());
-            regenerateUsername = true;
-        }
-
-        if (updateUserModel.getLastName() == null) {
+        if (updateUserModel.getFirstName() != null) {
             user.setFirstName(updateUserModel.getFirstName());
-            regenerateUsername = true;
         }
 
-        if (regenerateUsername) {
-            user.setUsername(UserUtil.generateUsername(user.getFirstName(), user.getLastName()));
+        if (updateUserModel.getLastName() != null) {
+            user.setLastName(updateUserModel.getLastName());
+        }
 
-            if (isUsernameBusy(user.getUsername())) {
-                user.setUsername(regenerateUsername(user.getFirstName(), user.getLastName(), 1L));
-            }
+        String username = generateUsername(user.getFirstName(), user.getLastName());
+        Long amountOfUsers = userRepository.countByUsernameLike(username);
+
+        if (amountOfUsers > 0) {
+            user.setUsername(username + amountOfUsers);
         }
 
         User savedUser = userRepository.save(user);
@@ -69,35 +67,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String changePassword(UserCredentialsModel userCredentialsModel) {
+    public void changePassword(UserCredentialsModel userCredentialsModel) {
         User user = getEntityById(userCredentialsModel.getId());
         user.setPassword(userCredentialsModel.getNewPassword());
         userRepository.save(user);
-        return "OK";
+        log.debug("Changed password to User with username: {}", user.getUsername());
     }
 
     @Override
     @Transactional
-    public String changeStatus(Long id, Boolean isActive) {
+    public void activateById(Long id) {
         User user = getEntityById(id);
-        user.setIsActive(isActive);
+        user.setIsActive(true);
         userRepository.save(user);
-        return "OK";
+        log.debug("Activated User with username: {}", user.getUsername());
     }
 
-    private String regenerateUsername(String firstName, String lastName, Long count) {
-        String username = firstName + "." + lastName + count;
-
-        if (isUsernameBusy(username)) {
-            count++;
-            regenerateUsername(firstName, lastName, count);
-        }
-
-        return username;
-    }
-
-    private boolean isUsernameBusy(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    @Override
+    @Transactional
+    public void deactivateById(Long id) {
+        User user = getEntityById(id);
+        user.setIsActive(false);
+        userRepository.save(user);
+        log.debug("Deactivated User with username: {}", user.getUsername());
     }
 
     private User getEntityById(Long id) {
@@ -109,5 +101,21 @@ public class UserServiceImpl implements UserService {
 
         log.error("There is no User with id {}", id);
         throw new BadRequestException("There is no User with id: " + id);
+    }
+
+    private String generateUsername(String firstName, String lastName) {
+        return firstName + "." + lastName;
+    }
+
+    private String generatePassword() {
+        Random random = new Random();
+        String alphabet = "qwertyuiopasdfghjklzxcvbnm";
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 10; i++) {
+            password.append(alphabet.charAt(random.nextInt(alphabet.length())));
+        }
+
+        return password.toString();
     }
 }

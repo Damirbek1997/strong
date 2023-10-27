@@ -3,7 +3,6 @@ package com.example.strong.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -13,9 +12,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "trainers")
-@NamedEntityGraph(name = "trainer_entity-graph", attributeNodes = {
-        @NamedAttributeNode("user")
-})
 public class Trainer extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +26,4 @@ public class Trainer extends User {
 
     @ManyToMany(mappedBy = "trainers")
     private Set<Trainee> trainees;
-
-    @OneToMany(mappedBy = "trainer")
-    private List<Training> trainings;
 }

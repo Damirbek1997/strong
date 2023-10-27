@@ -18,12 +18,10 @@ import java.util.Date;
         @NamedAttributeNode("trainingType")},
         subgraphs = {
                 @NamedSubgraph(name = "trainee-subgraph", attributeNodes = {
-                        @NamedAttributeNode("user"),
-                        @NamedAttributeNode(value = "trainers", subgraph = "trainer-subgraph")
+                        @NamedAttributeNode("user")
                 }),
                 @NamedSubgraph(name = "trainer-subgraph", attributeNodes = {
-                        @NamedAttributeNode("user"),
-                        @NamedAttributeNode("trainingType")
+                        @NamedAttributeNode("user")
                 })
         }
 )

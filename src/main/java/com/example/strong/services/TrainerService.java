@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TrainerService {
     List<TrainerModel> getAll();
-    List<TrainerModel> getAllIn(List<Long> ids);
+    List<TrainerModel> getAllByIds(List<Long> ids);
     List<TrainerModel> getAllNotBusyTrainers();
     TrainerModel getById(Long id);
     TrainerModel getByUsername(String username);

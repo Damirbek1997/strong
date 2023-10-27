@@ -8,6 +8,7 @@ import com.example.strong.models.crud.UpdateUserModel;
 public interface UserService {
     User create(CreateUserModel createUserModel);
     User update(UpdateUserModel updateUserModel);
-    String changePassword(UserCredentialsModel userCredentialsModel);
-    String changeStatus(Long id, Boolean isActive);
+    void changePassword(UserCredentialsModel userCredentialsModel);
+    void activateById(Long id);
+    void deactivateById(Long id);
 }

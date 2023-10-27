@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TraineeService {
     List<TraineeModel> getAll();
-    List<TraineeModel> getAllByIn(List<Long> ids);
+    List<TraineeModel> getAllByIds(List<Long> ids);
     TraineeModel getById(Long id);
     TraineeModel getByUsername(String username);
     TraineeModel create(CreateTraineeModel createTraineeModel);

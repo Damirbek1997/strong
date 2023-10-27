@@ -130,7 +130,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
 
-        List<TrainerModel> trainerModelList = trainerService.getAllIn(trainerIds);
+        List<TrainerModel> trainerModelList = trainerService.getAllByIds(trainerIds);
 
         assertEquals(1, trainerModelList.size());
         verify(trainerRepository).findAllByIdIn(trainerIds);
@@ -171,7 +171,7 @@ class TrainerServiceImplTest {
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
 
-        when(trainerRepository.findAllByUserIsActiveIsTrue())
+        when(trainerRepository.getAllNotBusyTrainers())
                 .thenReturn(Collections.singletonList(trainer));
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
@@ -179,7 +179,7 @@ class TrainerServiceImplTest {
         List<TrainerModel> trainerModelList = trainerService.getAllNotBusyTrainers();
 
         assertEquals(1, trainerModelList.size());
-        verify(trainerRepository).findAllByUserIsActiveIsTrue();
+        verify(trainerRepository).getAllNotBusyTrainers();
     }
 
     @Test

@@ -127,7 +127,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModelList(trainees))
                 .thenReturn(Collections.singletonList(traineeModel));
 
-        List<TraineeModel> traineeModelList = traineeService.getAllByIn(traineeIds);
+        List<TraineeModel> traineeModelList = traineeService.getAllByIds(traineeIds);
 
         assertEquals(1, traineeModelList.size());
         verify(traineeRepository).findAllByIdIn(traineeIds);
@@ -337,7 +337,7 @@ class TraineeServiceImplTest {
 
         when(userService.create(createUserModel))
                 .thenReturn(user);
-        when(trainerService.getAllIn(trainerIds))
+        when(trainerService.getAllByIds(trainerIds))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
                 .thenReturn(trainers);
@@ -476,7 +476,7 @@ class TraineeServiceImplTest {
         when(traineeRepository.findById(updateTraineeModel.getId()))
                 .thenReturn(Optional.of(trainee));
 
-        when(trainerService.getAllIn(trainerIds))
+        when(trainerService.getAllByIds(trainerIds))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
                 .thenReturn(trainers);

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -14,11 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "trainees")
-@NamedEntityGraph(name = "trainee_entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode("user")
-        }
-)
 public class Trainee extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +35,4 @@ public class Trainee extends User {
             inverseJoinColumns = @JoinColumn(name = "trainer_id")
     )
     private Set<Trainer> trainers;
-
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Training> trainings;
 }

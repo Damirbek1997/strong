@@ -30,13 +30,6 @@ class UserServiceImplTest {
         createUserModel.setFirstName("Ivan");
         createUserModel.setLastName("Ivanov");
 
-        User userInDb = new User();
-        userInDb.setId(1L);
-        userInDb.setFirstName("Ivan");
-        userInDb.setLastName("Ivanov");
-        userInDb.setUsername("Ivan.Ivanov");
-        userInDb.setIsActive(true);
-
         User user = new User();
         user.setId(1L);
         user.setFirstName("Ivan");
@@ -44,8 +37,8 @@ class UserServiceImplTest {
         user.setUsername("Ivan.Ivanov1");
         user.setIsActive(true);
 
-        when(userRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(Optional.of(userInDb));
+        when(userRepository.countByUsernameLike("Ivan.Ivanov"))
+                .thenReturn(1L);
         when(userRepository.save(any()))
                 .thenReturn(user);
 
@@ -75,8 +68,8 @@ class UserServiceImplTest {
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(currentUser));
-        when(userRepository.findByUsername("Petya.Ivanov"))
-                .thenReturn(Optional.of(user));
+        when(userRepository.countByUsernameLike("Petya.Ivanov"))
+                .thenReturn(0L);
         when(userRepository.save(any()))
                 .thenReturn(user);
 
@@ -85,7 +78,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void changePassword_withValidData_shouldReturnStringOK() {
+    void changePassword_withValidData_shouldReturnVoid() {
         UserCredentialsModel userCredentialsModel = new UserCredentialsModel();
         userCredentialsModel.setId(1L);
         userCredentialsModel.setNewPassword("testpassword");
@@ -110,20 +103,12 @@ class UserServiceImplTest {
         when(userRepository.save(any()))
                 .thenReturn(user);
 
-        String response = userService.changePassword(userCredentialsModel);
-        assertEquals("OK", response);
+        userService.changePassword(userCredentialsModel);
         assertEquals(userCredentialsModel.getNewPassword(), user.getPassword());
     }
 
     @Test
-    void changeStatus_withValidData_shouldReturnStringOK() {
-        User currentUser = new User();
-        currentUser.setId(1L);
-        currentUser.setFirstName("Ivan");
-        currentUser.setLastName("Ivanov");
-        currentUser.setUsername("Ivan.Ivanov");
-        currentUser.setIsActive(true);
-
+    void activateById_withValidData_shouldReturnVoid() {
         User user = new User();
         user.setId(1L);
         user.setFirstName("Petya");
@@ -132,12 +117,29 @@ class UserServiceImplTest {
         user.setIsActive(false);
 
         when(userRepository.findById(1L))
-                .thenReturn(Optional.of(currentUser));
+                .thenReturn(Optional.of(user));
         when(userRepository.save(any()))
                 .thenReturn(user);
 
-        String response = userService.changeStatus(1L, false);
-        assertEquals("OK", response);
+        userService.activateById(1L);
+        assertEquals(true, user.getIsActive());
+    }
+
+    @Test
+    void deactivateById_withValidData_shouldReturnVoid() {
+        User user = new User();
+        user.setId(1L);
+        user.setFirstName("Petya");
+        user.setLastName("Ivanov");
+        user.setUsername("Petya.Ivanov");
+        user.setIsActive(true);
+
+        when(userRepository.findById(1L))
+                .thenReturn(Optional.of(user));
+        when(userRepository.save(any()))
+                .thenReturn(user);
+
+        userService.deactivateById(1L);
         assertEquals(false, user.getIsActive());
     }
 }

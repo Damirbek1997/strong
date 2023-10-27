@@ -36,17 +36,23 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public List<TrainingModel> getAll() {
-        return trainingMapper.toModelList(trainingRepository.findAll());
+        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.findAll());
+        log.debug("Getting all Trainings: {}", trainingModels);
+        return trainingModels;
     }
 
     @Override
     public List<TrainingModel> getAllTrainersByUsername(String username) {
-        return trainingMapper.toModelList(trainingRepository.getAllTrainersByUsername(username));
+        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTrainersByUsername(username));
+        log.debug("Getting all Trainings: {}, by trainer username: {}", trainingModels, username);
+        return trainingModels;
     }
 
     @Override
     public List<TrainingModel> getAllTraineesByUsername(String username) {
-        return trainingMapper.toModelList(trainingRepository.getAllTraineesByUsername(username));
+        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTraineesByUsername(username));
+        log.debug("Getting all Trainings: {}, by trainee username: {}", trainingModels, username);
+        return trainingModels;
     }
 
     @Override
@@ -54,7 +60,9 @@ public class TrainingServiceImpl implements TrainingService {
         Optional<Training> trainingOptional = trainingRepository.findById(id);
 
         if (trainingOptional.isPresent()) {
-            return trainingMapper.toModel(trainingOptional.get());
+            TrainingModel trainingModel = trainingMapper.toModel(trainingOptional.get());
+            log.debug("Getting Training: {}, by id: {}", trainingModel, id);
+            return trainingModel;
         }
 
         log.error("There is no Training with id {}", id);

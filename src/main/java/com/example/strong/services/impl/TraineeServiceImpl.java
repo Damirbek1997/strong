@@ -33,22 +33,30 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public List<TraineeModel> getAll() {
-        return traineeMapper.toModelList(traineeRepository.findAll());
+        List<TraineeModel> traineeModels = traineeMapper.toModelList(traineeRepository.findAll());
+        log.debug("Getting all Trainees: {}", traineeModels);
+        return traineeModels;
     }
 
     @Override
-    public List<TraineeModel> getAllByIn(List<Long> ids) {
-        return traineeMapper.toModelList(traineeRepository.findAllByIdIn(ids));
+    public List<TraineeModel> getAllByIds(List<Long> ids) {
+        List<TraineeModel> traineeModels = traineeMapper.toModelList(traineeRepository.findAllByIdIn(ids));
+        log.debug("Getting all Trainees: {} by ids {}", traineeModels, ids);
+        return traineeModels;
     }
 
     @Override
     public TraineeModel getById(Long id) {
-        return traineeMapper.toModel(getEntityById(id));
+        TraineeModel traineeModel = traineeMapper.toModel(getEntityById(id));
+        log.debug("Getting Trainee: {} by id", traineeModel);
+        return traineeModel;
     }
 
     @Override
     public TraineeModel getByUsername(String username) {
-        return traineeMapper.toModel(traineeRepository.findByUserUsername(username));
+        TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.findByUserUsername(username));
+        log.debug("Getting Trainee: {} by username {}", traineeModel, username);
+        return traineeModel;
     }
 
     @Override
@@ -60,7 +68,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setAddress(createTraineeModel.getAddress());
 
         if (createTraineeModel.getTrainerIds() != null) {
-            List<TrainerModel> trainerModels = trainerService.getAllIn(createTraineeModel.getTrainerIds());
+            List<TrainerModel> trainerModels = trainerService.getAllByIds(createTraineeModel.getTrainerIds());
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
@@ -87,7 +95,7 @@ public class TraineeServiceImpl implements TraineeService {
         }
 
         if (updateTraineeModel.getTrainerIds() != null) {
-            List<TrainerModel> trainerModels = trainerService.getAllIn(updateTraineeModel.getTrainerIds());
+            List<TrainerModel> trainerModels = trainerService.getAllByIds(updateTraineeModel.getTrainerIds());
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
