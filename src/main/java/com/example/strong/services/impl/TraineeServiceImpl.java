@@ -1,6 +1,8 @@
 package com.example.strong.services.impl;
 
+import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.entities.Trainee;
+import com.example.strong.enums.SecurityAuthentication;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
@@ -15,6 +17,7 @@ import com.example.strong.services.TrainerService;
 import com.example.strong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,28 +36,32 @@ public class TraineeServiceImpl implements TraineeService {
     private final UserService userService;
 
     @Override
-    public List<TraineeModel> getAll() {
+    @PreAuthenticated
+    public List<TraineeModel> getAll(SecurityAuthentication authentication) {
         List<TraineeModel> traineeModels = traineeMapper.toModelList(traineeRepository.findAll());
         log.debug("Getting all Trainees: {}", traineeModels);
         return traineeModels;
     }
 
     @Override
-    public List<TraineeModel> getAllByIds(List<Long> ids) {
+    @PreAuthenticated
+    public List<TraineeModel> getAllByIds(List<Long> ids, SecurityAuthentication authentication) {
         List<TraineeModel> traineeModels = traineeMapper.toModelList(traineeRepository.findAllByIdIn(ids));
         log.debug("Getting all Trainees: {} by ids {}", traineeModels, ids);
         return traineeModels;
     }
 
     @Override
-    public TraineeModel getById(Long id) {
+    @PreAuthenticated
+    public TraineeModel getById(Long id, SecurityAuthentication authentication) {
         TraineeModel traineeModel = traineeMapper.toModel(getEntityById(id));
         log.debug("Getting Trainee: {} by id", traineeModel);
         return traineeModel;
     }
 
     @Override
-    public TraineeModel getByUsername(String username) {
+    @PreAuthenticated
+    public TraineeModel getByUsername(String username, SecurityAuthentication authentication) {
         TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.findByUsername(username));
         log.debug("Getting Trainee: {} by username {}", traineeModel, username);
         return traineeModel;
@@ -79,7 +86,7 @@ public class TraineeServiceImpl implements TraineeService {
         }
 
         if (createTraineeModel.getTrainerIds() != null) {
-            List<TrainerModel> trainerModels = trainerService.getAllByIds(createTraineeModel.getTrainerIds());
+            List<TrainerModel> trainerModels = trainerService.getAllByIds(createTraineeModel.getTrainerIds(), null);
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
@@ -90,7 +97,8 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public TraineeModel update(UpdateTraineeModel updateTraineeModel) {
+    @PreAuthenticated
+    public TraineeModel update(UpdateTraineeModel updateTraineeModel, SecurityAuthentication authentication) {
         Trainee trainee = getEntityById(updateTraineeModel.getId());
 
         if (updateTraineeModel.getBirthday() == null) {
@@ -102,7 +110,7 @@ public class TraineeServiceImpl implements TraineeService {
         }
 
         if (updateTraineeModel.getTrainerIds() != null) {
-            List<TrainerModel> trainerModels = trainerService.getAllByIds(updateTraineeModel.getTrainerIds());
+            List<TrainerModel> trainerModels = trainerService.getAllByIds(updateTraineeModel.getTrainerIds(), null);
             trainee.setTrainers(new HashSet<>(trainerMapper.toEntityList(trainerModels)));
         }
 
@@ -128,21 +136,24 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    @PreAuthenticated
+    public void deleteById(Long id, SecurityAuthentication authentication) {
         traineeRepository.deleteById(id);
         log.info("Deleted Trainee with id {}", id);
     }
 
     @Override
     @Transactional
-    public void deleteByUsername(String username) {
+    @PreAuthenticated
+    public void deleteByUsername(String username, SecurityAuthentication authentication) {
         traineeRepository.deleteByUsername(username);
         log.info("Deleted Trainee with username {}", username);
     }
 
     @Override
     @Transactional
-    public void changePassword(UserCredentialsModel userCredentialsModel) {
+    @PreAuthenticated
+    public void changePassword(UserCredentialsModel userCredentialsModel, SecurityAuthentication authentication) {
         Trainee trainee = getEntityById(userCredentialsModel.getId());
         trainee.setPassword(userCredentialsModel.getNewPassword());
         traineeRepository.save(trainee);
@@ -151,7 +162,8 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void activateById(Long id) {
+    @PreAuthenticated
+    public void activateById(Long id, SecurityAuthentication authentication) {
         Trainee trainee = getEntityById(id);
         trainee.setIsActive(true);
         traineeRepository.save(trainee);
@@ -160,11 +172,24 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void deactivateById(Long id) {
+    @PreAuthenticated
+    public void deactivateById(Long id, SecurityAuthentication authentication) {
         Trainee trainee = getEntityById(id);
         trainee.setIsActive(false);
         traineeRepository.save(trainee);
         log.debug("Activated User with username: {}", trainee.getUsername());
+    }
+
+    @Override
+    public String authentication(String username, String password) {
+        Trainee trainee = traineeRepository.findByUsernameAndPassword(username, password);
+
+        if (trainee == null) {
+            log.error("Incorrect username or password!");
+            throw new BadRequestException("Incorrect username or password!");
+        }
+
+        return RandomString.make();
     }
 
     private Trainee getEntityById(Long id) {

@@ -72,7 +72,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
 
-        List<TrainerModel> trainerModelList = trainerService.getAll();
+        List<TrainerModel> trainerModelList = trainerService.getAll(null);
 
         assertEquals(1, trainerModelList.size());
         verify(trainerRepository).findAll();
@@ -115,7 +115,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
 
-        List<TrainerModel> trainerModelList = trainerService.getAllByIds(trainerIds);
+        List<TrainerModel> trainerModelList = trainerService.getAllByIds(trainerIds, null);
 
         assertEquals(1, trainerModelList.size());
         verify(trainerRepository).findAllByIdIn(trainerIds);
@@ -155,7 +155,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModelList(trainers))
                 .thenReturn(Collections.singletonList(trainerModel));
 
-        List<TrainerModel> trainerModelList = trainerService.getAllNotBusyTrainers();
+        List<TrainerModel> trainerModelList = trainerService.getAllNotBusyTrainers(null);
 
         assertEquals(1, trainerModelList.size());
         verify(trainerRepository).getAllNotBusyTrainers();
@@ -192,7 +192,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModel(trainer))
                 .thenReturn(trainerModel);
 
-        TrainerModel response = trainerService.getById(1L);
+        TrainerModel response = trainerService.getById(1L, null);
         assertEquals(trainerModel, response);
     }
 
@@ -227,7 +227,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModel(trainer))
                 .thenReturn(trainerModel);
 
-        TrainerModel response = trainerService.getByUsername("Ivan.Ivanov");
+        TrainerModel response = trainerService.getByUsername("Ivan.Ivanov", null);
         assertEquals(trainerModel, response);
     }
 
@@ -315,7 +315,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModel(trainer))
                 .thenReturn(trainerModel);
 
-        TrainerModel response = trainerService.update(updateTrainerModel);
+        TrainerModel response = trainerService.update(updateTrainerModel, null);
         assertEquals(trainerModel, response);
     }
 
@@ -364,7 +364,7 @@ class TrainerServiceImplTest {
         when(trainerMapper.toModel(trainer))
                 .thenReturn(trainerModel);
 
-        TrainerModel response = trainerService.update(updateTrainerModel);
+        TrainerModel response = trainerService.update(updateTrainerModel, null);
         assertEquals(trainerModel, response);
     }
 
@@ -395,7 +395,7 @@ class TrainerServiceImplTest {
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
 
-        trainerService.changePassword(userCredentialsModel);
+        trainerService.changePassword(userCredentialsModel, null);
         assertEquals(userCredentialsModel.getNewPassword(), trainer.getPassword());
     }
 
@@ -413,7 +413,7 @@ class TrainerServiceImplTest {
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
 
-        trainerService.activateById(1L);
+        trainerService.activateById(1L, null);
         assertEquals(true, trainer.getIsActive());
     }
 
@@ -431,7 +431,24 @@ class TrainerServiceImplTest {
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
 
-        trainerService.deactivateById(1L);
+        trainerService.deactivateById(1L, null);
         assertEquals(false, trainer.getIsActive());
+    }
+
+    @Test
+    void authentication_withValidId_shouldReturnString() {
+        Trainer trainer = new Trainer();
+        trainer.setId(1L);
+        trainer.setFirstName("Ivan");
+        trainer.setLastName("Ivanov");
+        trainer.setUsername("Ivan.Ivanov");
+        trainer.setPassword("123456");
+        trainer.setIsActive(true);
+
+        when(trainerRepository.findByUsernameAndPassword(trainer.getUsername(), trainer.getPassword()))
+                .thenReturn(trainer);
+
+        trainerService.authentication(trainer.getUsername(), trainer.getPassword());
+        verify(trainerRepository).findByUsernameAndPassword(trainer.getUsername(), trainer.getPassword());
     }
 }

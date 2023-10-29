@@ -70,7 +70,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModelList(trainees))
                 .thenReturn(Collections.singletonList(traineeModel));
 
-        List<TraineeModel> traineeModelList = traineeService.getAll();
+        List<TraineeModel> traineeModelList = traineeService.getAll(null);
 
         assertEquals(1, traineeModelList.size());
         verify(traineeRepository).findAll();
@@ -109,7 +109,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModelList(trainees))
                 .thenReturn(Collections.singletonList(traineeModel));
 
-        List<TraineeModel> traineeModelList = traineeService.getAllByIds(traineeIds);
+        List<TraineeModel> traineeModelList = traineeService.getAllByIds(traineeIds, null);
 
         assertEquals(1, traineeModelList.size());
         verify(traineeRepository).findAllByIdIn(traineeIds);
@@ -144,7 +144,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.getById(1L);
+        TraineeModel response = traineeService.getById(1L, null);
         assertEquals(traineeModel, response);
     }
 
@@ -181,7 +181,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.getByUsername("Ivan.Ivanov");
+        TraineeModel response = traineeService.getByUsername("Ivan.Ivanov", null);
         assertEquals(traineeModel, response);
     }
 
@@ -290,7 +290,7 @@ class TraineeServiceImplTest {
         when(traineeRepository.countByUsernameLike(trainee.getUsername()))
                 .thenReturn(0L);
 
-        when(trainerService.getAllByIds(trainerIds))
+        when(trainerService.getAllByIds(trainerIds, null))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
                 .thenReturn(trainers);
@@ -346,7 +346,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.update(updateTraineeModel);
+        TraineeModel response = traineeService.update(updateTraineeModel, null);
         assertEquals(traineeModel, response);
     }
 
@@ -404,7 +404,7 @@ class TraineeServiceImplTest {
         when(traineeRepository.findById(updateTraineeModel.getId()))
                 .thenReturn(Optional.of(trainee));
 
-        when(trainerService.getAllByIds(trainerIds))
+        when(trainerService.getAllByIds(trainerIds, null))
                 .thenReturn(trainerModels);
         when(trainerMapper.toEntityList(trainerModels))
                 .thenReturn(trainers);
@@ -419,7 +419,7 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.update(updateTraineeModel);
+        TraineeModel response = traineeService.update(updateTraineeModel, null);
         assertEquals(traineeModel, response);
     }
 
@@ -428,7 +428,7 @@ class TraineeServiceImplTest {
         doNothing()
                 .when(traineeRepository)
                 .deleteById(1L);
-        traineeService.deleteById(1L);
+        traineeService.deleteById(1L, null);
         verify(traineeRepository).deleteById(1L);
     }
 
@@ -438,7 +438,7 @@ class TraineeServiceImplTest {
         doNothing()
                 .when(traineeRepository)
                 .deleteByUsername(username);
-        traineeService.deleteByUsername(username);
+        traineeService.deleteByUsername(username, null);
         verify(traineeRepository).deleteByUsername(username);
     }
 
@@ -471,7 +471,7 @@ class TraineeServiceImplTest {
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
 
-        traineeService.changePassword(userCredentialsModel);
+        traineeService.changePassword(userCredentialsModel, null);
         assertEquals(userCredentialsModel.getNewPassword(), trainee.getPassword());
     }
 
@@ -490,7 +490,7 @@ class TraineeServiceImplTest {
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
 
-        traineeService.activateById(1L);
+        traineeService.activateById(1L, null);
         assertEquals(true, trainee.getIsActive());
     }
 
@@ -509,7 +509,25 @@ class TraineeServiceImplTest {
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
 
-        traineeService.deactivateById(1L);
+        traineeService.deactivateById(1L, null);
         assertEquals(false, trainee.getIsActive());
+    }
+
+    @Test
+    void authentication_withValidId_shouldReturnString() {
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setPassword("123456");
+        trainee.setIsActive(true);
+        trainee.setAddress("Moscow");
+
+        when(traineeRepository.findByUsernameAndPassword(trainee.getUsername(), trainee.getPassword()))
+                .thenReturn(trainee);
+
+        traineeService.authentication(trainee.getUsername(), trainee.getPassword());
+        verify(traineeRepository).findByUsernameAndPassword(trainee.getUsername(), trainee.getPassword());
     }
 }

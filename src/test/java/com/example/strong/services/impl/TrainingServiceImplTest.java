@@ -107,7 +107,7 @@ class TrainingServiceImplTest {
         when(trainingMapper.toModelList(trainings))
                 .thenReturn(Collections.singletonList(trainingModel));
 
-        List<TrainingModel> trainingModels = trainingService.getAll();
+        List<TrainingModel> trainingModels = trainingService.getAll(null);
 
         assertEquals(1, trainingModels.size());
         verify(trainingRepository).findAll();
@@ -175,7 +175,7 @@ class TrainingServiceImplTest {
         when(trainingMapper.toModelList(trainings))
                 .thenReturn(Collections.singletonList(trainingModel));
 
-        List<TrainingModel> trainingModels = trainingService.getAllTraineesByUsername(username);
+        List<TrainingModel> trainingModels = trainingService.getAllTraineesByUsername(username, null);
 
         assertEquals(1, trainingModels.size());
         verify(trainingRepository).getAllTraineesByUsername(username);
@@ -217,6 +217,7 @@ class TrainingServiceImplTest {
         trainerModel.setLastName("Trainer");
         trainerModel.setUsername("Trainer.Trainer");
         trainerModel.setIsActive(true);
+
         Training training = new Training();
         training.setId(1L);
         training.setTrainee(trainee);
@@ -237,15 +238,15 @@ class TrainingServiceImplTest {
         trainings.add(training);
         String username = "Ivan.Ivanov";
 
-        when(trainingRepository.getAllTraineesByUsername(username))
+        when(trainingRepository.getAllTrainersByUsername(username))
                 .thenReturn(Collections.singletonList(training));
         when(trainingMapper.toModelList(trainings))
                 .thenReturn(Collections.singletonList(trainingModel));
 
-        List<TrainingModel> trainingModels = trainingService.getAllTraineesByUsername(username);
+        List<TrainingModel> trainingModels = trainingService.getAllTrainersByUsername(username, null);
 
         assertEquals(1, trainingModels.size());
-        verify(trainingRepository).getAllTraineesByUsername(username);
+        verify(trainingRepository).getAllTrainersByUsername(username);
     }
 
     @Test
@@ -306,7 +307,7 @@ class TrainingServiceImplTest {
         when(trainingMapper.toModel(training))
                 .thenReturn(trainingModel);
 
-        TrainingModel response = trainingService.getById(1L);
+        TrainingModel response = trainingService.getById(1L, null);
         assertEquals(trainingModel, response);
     }
 
@@ -381,9 +382,9 @@ class TrainingServiceImplTest {
         trainingModel.setTrainingDate(trainingDate);
         trainingModel.setTrainingDuration(10L);
 
-        when(traineeService.getById(1L))
+        when(traineeService.getById(1L, null))
                 .thenReturn(traineeModel);
-        when(trainerService.getById(1L))
+        when(trainerService.getById(1L, null))
                 .thenReturn(trainerModel);
         when(traineeMapper.toEntity(traineeModel))
                 .thenReturn(trainee);
@@ -397,7 +398,7 @@ class TrainingServiceImplTest {
         when(trainingMapper.toModel(any()))
                 .thenReturn(trainingModel);
 
-        TrainingModel response = trainingService.create(createTrainingModel);
+        TrainingModel response = trainingService.create(createTrainingModel, null);
         assertEquals(trainingModel, response);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.strong.services.impl;
 
+import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.entities.Training;
+import com.example.strong.enums.SecurityAuthentication;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
@@ -35,28 +37,32 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainerMapper trainerMapper;
 
     @Override
-    public List<TrainingModel> getAll() {
+    @PreAuthenticated
+    public List<TrainingModel> getAll(SecurityAuthentication authentication) {
         List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.findAll());
         log.debug("Getting all Trainings: {}", trainingModels);
         return trainingModels;
     }
 
     @Override
-    public List<TrainingModel> getAllTrainersByUsername(String username) {
+    @PreAuthenticated
+    public List<TrainingModel> getAllTrainersByUsername(String username, SecurityAuthentication authentication) {
         List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTrainersByUsername(username));
         log.debug("Getting all Trainings: {}, by trainer username: {}", trainingModels, username);
         return trainingModels;
     }
 
     @Override
-    public List<TrainingModel> getAllTraineesByUsername(String username) {
+    @PreAuthenticated
+    public List<TrainingModel> getAllTraineesByUsername(String username, SecurityAuthentication authentication) {
         List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTraineesByUsername(username));
         log.debug("Getting all Trainings: {}, by trainee username: {}", trainingModels, username);
         return trainingModels;
     }
 
     @Override
-    public TrainingModel getById(Long id) {
+    @PreAuthenticated
+    public TrainingModel getById(Long id, SecurityAuthentication authentication) {
         Optional<Training> trainingOptional = trainingRepository.findById(id);
 
         if (trainingOptional.isPresent()) {
@@ -71,10 +77,11 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     @Transactional
-    public TrainingModel create(CreateTrainingModel createTrainingModel) {
+    @PreAuthenticated
+    public TrainingModel create(CreateTrainingModel createTrainingModel, SecurityAuthentication authentication) {
         Training training = new Training();
-        TraineeModel traineeModel = traineeService.getById(createTrainingModel.getTraineeId());
-        TrainerModel trainerModel = trainerService.getById(createTrainingModel.getTrainerId());
+        TraineeModel traineeModel = traineeService.getById(createTrainingModel.getTraineeId(), null);
+        TrainerModel trainerModel = trainerService.getById(createTrainingModel.getTrainerId(), null);
         training.setTrainee(traineeMapper.toEntity(traineeModel));
         training.setTrainer(trainerMapper.toEntity(trainerModel));
         training.setTrainingName(createTrainingModel.getTrainingName());

@@ -1,6 +1,8 @@
 package com.example.strong.services.impl;
 
+import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.entities.Trainer;
+import com.example.strong.enums.SecurityAuthentication;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TrainerModel;
@@ -13,6 +15,7 @@ import com.example.strong.services.TrainingTypeService;
 import com.example.strong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,35 +32,40 @@ public class TrainerServiceImpl implements TrainerService {
     private final TrainingTypeService trainingTypeService;
 
     @Override
-    public List<TrainerModel> getAll() {
+    @PreAuthenticated
+    public List<TrainerModel> getAll(SecurityAuthentication authentication) {
         List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.findAll());
         log.debug("Getting all Trainers: {}", trainerModels);
         return trainerModels;
     }
 
     @Override
-    public List<TrainerModel> getAllByIds(List<Long> ids) {
+    @PreAuthenticated
+    public List<TrainerModel> getAllByIds(List<Long> ids, SecurityAuthentication authentication) {
         List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.findAllByIdIn(ids));
         log.debug("Getting all Trainers: {}, by ids", trainerModels);
         return trainerModels;
     }
 
     @Override
-    public List<TrainerModel> getAllNotBusyTrainers() {
+    @PreAuthenticated
+    public List<TrainerModel> getAllNotBusyTrainers(SecurityAuthentication authentication) {
         List<TrainerModel> trainerModels = trainerMapper.toModelList(trainerRepository.getAllNotBusyTrainers());
         log.debug("Getting all not busy Trainers: {}", trainerModels);
         return trainerModels;
     }
 
     @Override
-    public TrainerModel getById(Long id) {
+    @PreAuthenticated
+    public TrainerModel getById(Long id, SecurityAuthentication authentication) {
         TrainerModel trainerModel = trainerMapper.toModel(getEntityById(id));
         log.debug("Getting Trainer: {} by id", trainerModel);
         return trainerModel;
     }
 
     @Override
-    public TrainerModel getByUsername(String username) {
+    @PreAuthenticated
+    public TrainerModel getByUsername(String username, SecurityAuthentication authentication) {
         TrainerModel trainerModel = trainerMapper.toModel(trainerRepository.findByUsername(username));
         log.debug("Getting Trainer: {} by username {}", trainerModel, username);
         return trainerModel;
@@ -87,7 +95,8 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
+    @PreAuthenticated
+    public TrainerModel update(UpdateTrainerModel updateTrainerModel, SecurityAuthentication authentication) {
         Trainer trainer = getEntityById(updateTrainerModel.getId());
 
         if (updateTrainerModel.getTrainingTypeId() != null) {
@@ -116,7 +125,8 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public void changePassword(UserCredentialsModel userCredentialsModel) {
+    @PreAuthenticated
+    public void changePassword(UserCredentialsModel userCredentialsModel, SecurityAuthentication authentication) {
         Trainer trainer = getEntityById(userCredentialsModel.getId());
         trainer.setPassword(userCredentialsModel.getNewPassword());
         trainerRepository.save(trainer);
@@ -125,7 +135,8 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public void activateById(Long id) {
+    @PreAuthenticated
+    public void activateById(Long id, SecurityAuthentication authentication) {
         Trainer trainer = getEntityById(id);
         trainer.setIsActive(true);
         trainerRepository.save(trainer);
@@ -134,11 +145,24 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public void deactivateById(Long id) {
+    @PreAuthenticated
+    public void deactivateById(Long id, SecurityAuthentication authentication) {
         Trainer trainer = getEntityById(id);
         trainer.setIsActive(false);
         trainerRepository.save(trainer);
         log.debug("Activated User with username: {}", trainer.getUsername());
+    }
+
+    @Override
+    public String authentication(String username, String password) {
+        Trainer trainer = trainerRepository.findByUsernameAndPassword(username, password);
+
+        if (trainer == null) {
+            log.error("Incorrect username or password!");
+            throw new BadRequestException("Incorrect username or password!");
+        }
+
+        return RandomString.make();
     }
 
     private Trainer getEntityById(Long id) {
