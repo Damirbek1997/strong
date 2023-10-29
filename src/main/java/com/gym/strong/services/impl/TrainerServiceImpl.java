@@ -67,10 +67,10 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
         Trainer trainer = trainerDao.getById(updateTrainerModel.getId());
+        String username = userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
+                trainer.getFirstName(), trainer.getLastName());
 
-        if (updateTrainerModel.getFirstName() != null || updateTrainerModel.getLastName() != null) {
-            trainer.setUsername(userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName()));
-        }
+        trainer.setUsername(username);
 
         if (updateTrainerModel.getIsActive() != null) {
             trainer.setIsActive(updateTrainerModel.getIsActive());
