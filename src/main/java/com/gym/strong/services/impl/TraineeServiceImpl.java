@@ -63,7 +63,7 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee trainee = new Trainee();
         trainee.setFirstName(createTraineeModel.getFirstName());
         trainee.setLastName(createTraineeModel.getLastName());
-        trainee.setUsername(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
+        trainee.setUsername(userService.generateAndCheckUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
         trainee.setPassword(userService.generatePassword());
         trainee.setIsActive(true);
 
@@ -81,7 +81,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public TraineeModel update(UpdateTraineeModel updateTraineeModel) {
         Trainee trainee = traineeDao.getById(updateTraineeModel.getId());
-        String username = userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+        String username = userService.generateAndCheckUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
                 trainee.getFirstName(), trainee.getLastName());
 
         trainee.setUsername(username);

@@ -30,7 +30,7 @@ class UserServiceImplTest {
         String firstName = "Ivan";
         String lastName = "Ivanov";
         String expectedUsername = firstName + "." + lastName;
-        String actualValue = userService.generateUsername(firstName, lastName);
+        String actualValue = userService.generateAndCheckUsername(firstName, lastName);
 
         assertEquals(expectedUsername, actualValue);
     }
@@ -62,7 +62,7 @@ class UserServiceImplTest {
         when(traineeDao.getAll()).thenReturn(Collections.singletonList(trainee));
         when(trainerDao.getAll()).thenReturn(Collections.singletonList(trainer));
 
-        String actualValue = userService.generateUsername(firstName, lastName);
+        String actualValue = userService.generateAndCheckUsername(firstName, lastName);
         assertEquals(expectedUsername, actualValue);
     }
 }

@@ -54,7 +54,7 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer trainer = new Trainer();
         trainer.setFirstName(createTrainerModel.getFirstName());
         trainer.setLastName(createTrainerModel.getLastName());
-        trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
+        trainer.setUsername(userService.generateAndCheckUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
         trainer.setPassword(userService.generatePassword());
         trainer.setIsActive(true);
 
@@ -67,7 +67,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public TrainerModel update(UpdateTrainerModel updateTrainerModel) {
         Trainer trainer = trainerDao.getById(updateTrainerModel.getId());
-        String username = userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
+        String username = userService.generateAndCheckUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
                 trainer.getFirstName(), trainer.getLastName());
 
         trainer.setUsername(username);

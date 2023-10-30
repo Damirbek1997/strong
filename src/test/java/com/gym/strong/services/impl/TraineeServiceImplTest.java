@@ -172,7 +172,7 @@ class TraineeServiceImplTest {
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
-        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
+        when(userService.generateAndCheckUsername(trainee.getFirstName(), trainee.getLastName()))
                 .thenReturn(trainee.getUsername());
         when(userService.generatePassword())
                 .thenReturn("asdasd");
@@ -241,7 +241,7 @@ class TraineeServiceImplTest {
         traineeModel.setAddress("Moscow");
         traineeModel.setTrainerModels(trainerModels);
 
-        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
+        when(userService.generateAndCheckUsername(trainee.getFirstName(), trainee.getLastName()))
                 .thenReturn(trainee.getUsername());
         when(userService.generatePassword())
                 .thenReturn("asdsa");
@@ -291,7 +291,7 @@ class TraineeServiceImplTest {
 
         when(traineeDao.getById(updateTraineeModel.getId()))
                 .thenReturn(trainee);
-        when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+        when(userService.generateAndCheckUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
                 trainee.getFirstName(), trainee.getLastName()))
                 .thenReturn(trainee.getUsername());
 
@@ -359,7 +359,7 @@ class TraineeServiceImplTest {
 
         when(traineeDao.getById(updateTraineeModel.getId()))
                 .thenReturn(trainee);
-        when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
+        when(userService.generateAndCheckUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName(),
                 trainee.getFirstName(), trainee.getLastName()))
                 .thenReturn(null);
 

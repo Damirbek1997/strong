@@ -1,7 +1,7 @@
 package com.gym.strong.services;
 
 public interface UserService {
-    String generateUsername(String firstName, String lastName);
+    String generateAndCheckUsername(String firstName, String lastName);
     String generatePassword();
-    String generateUsername(String firstName, String lastName, String oldFirstName, String oldLastName);
+    String generateAndCheckUsername(String firstName, String lastName, String oldFirstName, String oldLastName);
 }

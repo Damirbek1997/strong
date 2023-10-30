@@ -139,7 +139,7 @@ class TrainerServiceImplTest {
         trainerModel.setUsername("Ivan.Ivanov");
         trainerModel.setIsActive(true);
 
-        when(userService.generateUsername(trainer.getFirstName(), trainer.getLastName()))
+        when(userService.generateAndCheckUsername(trainer.getFirstName(), trainer.getLastName()))
                 .thenReturn(trainer.getUsername());
         when(userService.generatePassword())
                 .thenReturn("asdas");
@@ -177,7 +177,7 @@ class TrainerServiceImplTest {
 
         when(trainerDao.getById(updateTrainerModel.getId()))
                 .thenReturn(trainer);
-        when(userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
+        when(userService.generateAndCheckUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName(),
                 trainer.getFirstName(), trainer.getLastName()))
                 .thenReturn(null);
 

@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String generateUsername(String firstName, String lastName) {
-        String username = unionTwoStrings(firstName, lastName);
+    public String generateAndCheckUsername(String firstName, String lastName) {
+        String username = generateUsername(firstName, lastName);
         int counter = countByUsername(username);
 
         if (counter > 0) {
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String generateUsername(String firstName, String lastName, String oldFirstName, String oldLastName) {
+    public String generateAndCheckUsername(String firstName, String lastName, String oldFirstName, String oldLastName) {
         String finalFirstName = oldFirstName;
         String finalLastName = oldFirstName;
 
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         return generateUsername(finalFirstName, finalLastName);
     }
 
-    private String unionTwoStrings(String firstName, String lastName) {
+    private String generateUsername(String firstName, String lastName) {
         return firstName + "." + lastName;
     }
 
