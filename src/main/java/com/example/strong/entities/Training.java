@@ -12,11 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "trainings")
-@NamedEntityGraph(name = "training_entity-graph", attributeNodes = {
-        @NamedAttributeNode(value = "trainee"),
-        @NamedAttributeNode(value = "trainer"),
-        @NamedAttributeNode(value = "trainingType")}
-)
 public class Training {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
