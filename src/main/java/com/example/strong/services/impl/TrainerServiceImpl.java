@@ -67,16 +67,14 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTrainerModel createTrainerModel) {
+        validateFields(createTrainerModel);
         Trainer trainer = new Trainer();
         trainer.setFirstName(createTrainerModel.getFirstName());
         trainer.setLastName(createTrainerModel.getLastName());
         trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
         trainer.setPassword(userService.generatePassword());
         trainer.setIsActive(true);
-
-        if (createTrainerModel.getTrainingTypeId() != null) {
-            trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
-        }
+        trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
 
         Long amountOfUsers = trainerRepository.countByUsernameLike(trainer.getUsername());
 
@@ -95,18 +93,15 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel) {
+        validateFields(updateTrainerModel);
+
         Trainer trainer = getEntityById(id);
+        trainer.setFirstName(updateTrainerModel.getFirstName());
+        trainer.setLastName(updateTrainerModel.getLastName());
+        trainer.setIsActive(updateTrainerModel.getActive());
 
         if (updateTrainerModel.getTrainingTypeId() != null) {
             trainer.setTrainingType(trainingTypeService.getById(updateTrainerModel.getTrainingTypeId()));
-        }
-
-        if (updateTrainerModel.getFirstName() != null) {
-            trainer.setFirstName(updateTrainerModel.getFirstName());
-        }
-
-        if (updateTrainerModel.getLastName() != null) {
-            trainer.setLastName(updateTrainerModel.getLastName());
         }
 
         String username = userService.generateUsername(trainer.getFirstName(), trainer.getLastName());
@@ -148,5 +143,33 @@ public class TrainerServiceImpl implements TrainerService {
 
         log.error("There is no Trainer with id {}", id);
         throw new BadRequestException("There is no Trainer with id: " + id);
+    }
+
+    private void validateFields(CreateTrainerModel createTrainerModel) {
+        if (createTrainerModel.getFirstName() == null) {
+            throw new BadRequestException("firstName must be filled!");
+        }
+
+        if (createTrainerModel.getLastName() == null) {
+            throw new BadRequestException("lastName must be filled!");
+        }
+
+        if (createTrainerModel.getTrainingTypeId() == null) {
+            throw new BadRequestException("training type must be filled!");
+        }
+    }
+
+    private void validateFields(UpdateTrainerModel updateTrainerModel) {
+        if (updateTrainerModel.getFirstName() == null) {
+            throw new BadRequestException("firstName must be filled!");
+        }
+
+        if (updateTrainerModel.getLastName() == null) {
+            throw new BadRequestException("lastName must be filled!");
+        }
+
+        if (updateTrainerModel.getActive() == null) {
+            throw new BadRequestException("active must be filled!");
+        }
     }
 }

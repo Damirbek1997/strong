@@ -43,13 +43,7 @@ public class TransactionLoggingFilter extends OncePerRequestFilter {
 
     private void logResponse(String transactionId, String requestURI, ContentCachingResponseWrapper responseWrapper) throws IOException {
         String responseBody = new String(responseWrapper.getContentAsByteArray());
-        Map<String, String> headers = new HashMap<>();
-
-        for (String headerName : responseWrapper.getHeaderNames()) {
-            headers.put(headerName, responseWrapper.getHeader(headerName));
-        }
-
-        log.info("Transaction ({}) ended: endpoint {} called; response headers {} and body {}", transactionId, requestURI, headers, responseBody);
+        log.info("Transaction ({}) ended: endpoint {} called; response code {}; body {}", transactionId, requestURI, responseWrapper.getStatus(), responseBody);
         responseWrapper.copyBodyToResponse(); // Restore the response body for further processing
     }
 

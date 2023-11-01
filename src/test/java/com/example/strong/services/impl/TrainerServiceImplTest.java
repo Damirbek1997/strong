@@ -123,34 +123,6 @@ class TrainerServiceImplTest {
         CreateTrainerModel createTrainerModel = new CreateTrainerModel();
         createTrainerModel.setFirstName("Ivan");
         createTrainerModel.setLastName("Ivanov");
-
-        Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setFirstName("Ivan");
-        trainer.setLastName("Ivanov");
-        trainer.setUsername("Ivan.Ivanov");
-        trainer.setIsActive(true);
-
-        when(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()))
-                .thenReturn(trainer.getUsername());
-        when(userService.generatePassword())
-                .thenReturn(any());
-
-        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
-                .thenReturn(0L);
-
-        when(trainerRepository.save(any()))
-                .thenReturn(trainer);
-
-        ResponseCredentialsModel responseCredentialsModel = trainerService.create(createTrainerModel);
-        assertEquals(responseCredentialsModel.getUsername(), trainer.getUsername());
-    }
-
-    @Test
-    void create_withValidDataAndTrainingType_shouldReturnTrainerModel() {
-        CreateTrainerModel createTrainerModel = new CreateTrainerModel();
-        createTrainerModel.setFirstName("Ivan");
-        createTrainerModel.setLastName("Ivanov");
         createTrainerModel.setTrainingTypeId(1L);
 
         TrainingType trainingType = new TrainingType();
@@ -189,6 +161,7 @@ class TrainerServiceImplTest {
         UpdateTrainerModel updateTrainerModel = new UpdateTrainerModel();
         updateTrainerModel.setFirstName("Petya");
         updateTrainerModel.setLastName("Petrov");
+        updateTrainerModel.setActive(true);
 
         Trainer trainer = new Trainer();
         trainer.setId(1L);
@@ -226,7 +199,10 @@ class TrainerServiceImplTest {
         Long id = 1L;
 
         UpdateTrainerModel updateTrainerModel = new UpdateTrainerModel();
+        updateTrainerModel.setFirstName("Ivan");
+        updateTrainerModel.setLastName("Ivanov");
         updateTrainerModel.setTrainingTypeId(2L);
+        updateTrainerModel.setActive(true);
 
         TrainingType trainingType = new TrainingType();
         trainingType.setId(1L);

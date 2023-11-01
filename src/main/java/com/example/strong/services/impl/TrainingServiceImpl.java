@@ -1,6 +1,7 @@
 package com.example.strong.services.impl;
 
 import com.example.strong.entities.Training;
+import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainingMapper;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.crud.CreateTrainingModel;
@@ -47,14 +48,39 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     @Transactional
     public TrainingModel create(CreateTrainingModel createTrainingModel) {
+        validateFields(createTrainingModel);
+
         Training training = new Training();
         training.setTrainee(traineeService.getEntityByUsername(createTrainingModel.getTraineeUsername()));
         training.setTrainer(trainerService.getEntityByUsername(createTrainingModel.getTrainerUsername()));
         training.setTrainingName(createTrainingModel.getTrainingName());
         training.setTrainingDate(createTrainingModel.getTrainingDate());
         training.setTrainingDuration(createTrainingModel.getTrainingDuration());
+
         trainingRepository.save(training);
         log.info("Created training with model {}", createTrainingModel);
         return trainingMapper.toModel(training);
+    }
+
+    private void validateFields(CreateTrainingModel createTrainingModel) {
+        if (createTrainingModel.getTraineeUsername() == null) {
+            throw new BadRequestException("trainee username must be filled!");
+        }
+
+        if (createTrainingModel.getTrainerUsername() == null) {
+            throw new BadRequestException("trainer username must be filled!");
+        }
+
+        if (createTrainingModel.getTrainingName() == null) {
+            throw new BadRequestException("training name must be filled!");
+        }
+
+        if (createTrainingModel.getTrainingDate() == null) {
+            throw new BadRequestException("training date must be filled!");
+        }
+
+        if (createTrainingModel.getTrainingDuration() == null) {
+            throw new BadRequestException("training duration must be filled!");
+        }
     }
 }

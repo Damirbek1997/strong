@@ -5,9 +5,9 @@ import com.example.strong.entities.Trainer;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
+import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
-import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
 import com.example.strong.repository.TraineeRepository;
@@ -56,6 +56,8 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTraineeModel createTraineeModel) {
+        validateFields(createTraineeModel);
+
         Trainee trainee = new Trainee();
         trainee.setFirstName(createTraineeModel.getFirstName());
         trainee.setLastName(createTraineeModel.getLastName());
@@ -88,7 +90,18 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel) {
+        validateFields(updateTraineeModel);
+
         Trainee trainee = getEntityById(id);
+        trainee.setFirstName(updateTraineeModel.getFirstName());
+        trainee.setLastName(updateTraineeModel.getLastName());
+
+        String username = userService.generateUsername(trainee.getFirstName(), trainee.getLastName());
+        Long amountOfUsers = traineeRepository.countByUsernameLike(username);
+
+        if (amountOfUsers > 0) {
+            trainee.setUsername(username + amountOfUsers);
+        }
 
         if (updateTraineeModel.getBirthday() == null) {
             trainee.setBirthday(updateTraineeModel.getBirthday());
@@ -96,21 +109,6 @@ public class TraineeServiceImpl implements TraineeService {
 
         if (updateTraineeModel.getAddress() != null) {
             trainee.setAddress(updateTraineeModel.getAddress());
-        }
-
-        if (updateTraineeModel.getFirstName() != null) {
-            trainee.setFirstName(updateTraineeModel.getFirstName());
-        }
-
-        if (updateTraineeModel.getLastName() != null) {
-            trainee.setLastName(updateTraineeModel.getLastName());
-        }
-
-        String username = userService.generateUsername(trainee.getFirstName(), trainee.getLastName());
-        Long amountOfUsers = traineeRepository.countByUsernameLike(username);
-
-        if (amountOfUsers > 0) {
-            trainee.setUsername(username + amountOfUsers);
         }
 
         TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.save(trainee));
@@ -166,5 +164,13 @@ public class TraineeServiceImpl implements TraineeService {
 
         log.error("There is no Trainee with id {}", id);
         throw new BadRequestException("There is no Trainee with id: " + id);
+    }
+
+    private void validateFields(CreateTraineeModel createTraineeModel) {
+        userService.validateFields(createTraineeModel);
+    }
+
+    private void validateFields(UpdateTraineeModel updateTraineeModel) {
+        userService.validateFields(updateTraineeModel);
     }
 }
