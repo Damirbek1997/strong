@@ -30,5 +30,5 @@ public class User {
     private String password;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private Boolean active;
 }

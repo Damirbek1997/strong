@@ -49,7 +49,7 @@ public class TrainingSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            Join<Training, Trainer> trainerJoin = root.join("trainee", JoinType.LEFT);
+            Join<Training, Trainer> trainerJoin = root.join("trainer", JoinType.LEFT);
             predicates.add(criteriaBuilder.equal(trainerJoin.get("username"), trainerUsername));
 
             if (periodFrom != null) {
@@ -61,7 +61,7 @@ public class TrainingSpecification {
             }
 
             if (traineeName != null) {
-                Join<Training, Trainee> traineeJoin = root.join("trainer", JoinType.LEFT);
+                Join<Training, Trainee> traineeJoin = root.join("trainee", JoinType.LEFT);
                 predicates.add(criteriaBuilder.equal(traineeJoin.get("firstName"), traineeName));
             }
 

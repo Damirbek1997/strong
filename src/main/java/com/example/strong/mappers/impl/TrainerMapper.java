@@ -20,7 +20,7 @@ public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
         trainerModel.setFirstName(entity.getFirstName());
         trainerModel.setLastName(entity.getLastName());
         trainerModel.setUsername(entity.getUsername());
-        trainerModel.setActive(entity.getIsActive());
+        trainerModel.setActive(entity.getActive());
 
         if (entity.getTrainees() != null) {
             List<ResponseTraineeModel> responseTraineeModels = new ArrayList<>();
@@ -46,7 +46,7 @@ public class TrainerMapper implements AbstractMapper<Trainer, TrainerModel> {
         trainer.setFirstName(model.getFirstName());
         trainer.setLastName(model.getLastName());
         trainer.setUsername(model.getUsername());
-        trainer.setIsActive(model.getActive());
+        trainer.setActive(model.getActive());
         return trainer;
     }
 

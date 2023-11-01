@@ -1,5 +1,6 @@
 package com.example.strong.controllers.impl;
 
+import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.controllers.TraineeController;
 import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.ResponseTrainerModel;
@@ -20,6 +21,7 @@ public class TraineeControllerImpl implements TraineeController {
     private final TraineeService traineeService;
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<TraineeModel> getProfile(String username) {
         return new ResponseEntity<>(traineeService.getByUsername(username), HttpStatus.OK);
     }
@@ -30,22 +32,26 @@ public class TraineeControllerImpl implements TraineeController {
     }
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<TraineeModel> update(Long id, UpdateTraineeModel updateTraineeModel) {
         return new ResponseEntity<>(traineeService.update(id, updateTraineeModel), HttpStatus.OK);
     }
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<List<ResponseTrainerModel>> updateTrainerList(Long id, List<String> usernames) {
         return new ResponseEntity<>(traineeService.updateTrainerList(id, usernames), HttpStatus.OK);
     }
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<String> deleteByUsername(String username) {
         traineeService.deleteById(traineeService.getByUsername(username).getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<String> updateStatus(String username, Boolean isActive) {
         if (isActive) {
             traineeService.activateByUsername(username);

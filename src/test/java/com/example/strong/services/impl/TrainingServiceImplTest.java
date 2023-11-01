@@ -55,7 +55,7 @@ class TrainingServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -64,7 +64,7 @@ class TrainingServiceImplTest {
         trainer.setFirstName("Trainer");
         trainer.setLastName("Trainer");
         trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
+        trainer.setActive(true);
 
         TrainingType trainingType = new TrainingType();
         trainingType.setId(1L);
@@ -123,7 +123,7 @@ class TrainingServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -132,7 +132,7 @@ class TrainingServiceImplTest {
         trainer.setFirstName("Trainer");
         trainer.setLastName("Trainer");
         trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
+        trainer.setActive(true);
 
         TrainingType trainingType = new TrainingType();
         trainingType.setId(1L);
@@ -195,7 +195,7 @@ class TrainingServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -204,7 +204,7 @@ class TrainingServiceImplTest {
         trainer.setFirstName("Trainer");
         trainer.setLastName("Trainer");
         trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
+        trainer.setActive(true);
 
         Training training = new Training();
         training.setId(1L);

@@ -1,8 +1,11 @@
 package com.example.strong.controllers;
 
-import com.example.strong.configs.annotations.PreAuthenticated;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public interface UserController {
     @GetMapping("/login")
     @Operation(summary = "Login")
+    @Parameters({
+            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
+            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully logged in"),
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
@@ -19,7 +26,6 @@ public interface UserController {
     })
     ResponseEntity<String> login();
 
-    @PreAuthenticated
     @PutMapping("/change-credentials")
     @Operation(summary = "Update user credentials")
     @ApiResponses(value = {

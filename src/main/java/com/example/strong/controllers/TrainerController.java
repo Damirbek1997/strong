@@ -1,13 +1,16 @@
 package com.example.strong.controllers;
 
-import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +20,9 @@ import java.util.List;
 
 @RequestMapping("/trainer")
 public interface TrainerController {
-    @PreAuthenticated
     @GetMapping("/profile")
     @Operation(summary = "Get profile of current trainer")
+    @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer profile"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
@@ -37,9 +40,12 @@ public interface TrainerController {
     })
     ResponseEntity<ResponseCredentialsModel> create(@RequestBody CreateTrainerModel createTrainerModel);
 
-    @PreAuthenticated
     @PutMapping("/{id:\\d+}")
     @Operation(summary = "Update a trainer")
+    @Parameters({
+            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
+            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated a trainer"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
@@ -48,9 +54,12 @@ public interface TrainerController {
     })
     ResponseEntity<TrainerModel> update(@PathVariable Long id, @RequestBody UpdateTrainerModel updateTrainerModel);
 
-    @PreAuthenticated
     @GetMapping("/not-busy")
     @Operation(summary = "Get all not busy trainers")
+    @Parameters({
+            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
+            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved not busy trainers list"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
@@ -59,9 +68,9 @@ public interface TrainerController {
     })
     ResponseEntity<List<ResponseTrainerModel>> getAllNotBusyTrainers();
 
-    @PreAuthenticated
     @PatchMapping("/status")
     @Operation(summary = "Update trainer status")
+    @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated status of a trainer"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),

@@ -1,5 +1,6 @@
 package com.example.strong.controllers.impl;
 
+import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.controllers.TrainingTypeController;
 import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.services.TrainingTypeService;
@@ -16,6 +17,7 @@ public class TrainingTypeControllerImpl implements TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
 
     @Override
+    @PreAuthenticated
     public ResponseEntity<List<TrainingTypeModel>> getAll() {
         return new ResponseEntity<>(trainingTypeService.getAll(), HttpStatus.OK);
     }

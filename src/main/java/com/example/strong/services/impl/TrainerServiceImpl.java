@@ -73,7 +73,7 @@ public class TrainerServiceImpl implements TrainerService {
         trainer.setLastName(createTrainerModel.getLastName());
         trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
         trainer.setPassword(userService.generatePassword());
-        trainer.setIsActive(true);
+        trainer.setActive(true);
         trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
 
         Long amountOfUsers = trainerRepository.countByUsernameLike(trainer.getUsername());
@@ -98,18 +98,16 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer trainer = getEntityById(id);
         trainer.setFirstName(updateTrainerModel.getFirstName());
         trainer.setLastName(updateTrainerModel.getLastName());
-        trainer.setIsActive(updateTrainerModel.getActive());
+        trainer.setActive(updateTrainerModel.getActive());
 
         if (updateTrainerModel.getTrainingTypeId() != null) {
             trainer.setTrainingType(trainingTypeService.getById(updateTrainerModel.getTrainingTypeId()));
         }
 
-        String username = userService.generateUsername(trainer.getFirstName(), trainer.getLastName());
+        String username = userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName());
         Long amountOfUsers = trainerRepository.countByUsernameLike(username);
 
-        if (amountOfUsers > 0) {
-            trainer.setUsername(username + amountOfUsers);
-        }
+        trainer.setUsername(amountOfUsers > 0 ? username + amountOfUsers : username);
 
         Trainer savedTrainer = trainerRepository.save(trainer);
         log.info("Updated Trainer with model {}", updateTrainerModel);
@@ -120,7 +118,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public void activateByUsername(String username) {
         Trainer trainer = getEntityByUsername(username);
-        trainer.setIsActive(true);
+        trainer.setActive(true);
         trainerRepository.save(trainer);
         log.debug("Activated User with username: {}", trainer.getUsername());
     }
@@ -129,7 +127,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public void deactivateByUsername(String username) {
         Trainer trainer = getEntityByUsername(username);
-        trainer.setIsActive(false);
+        trainer.setActive(false);
         trainerRepository.save(trainer);
         log.debug("Activated User with username: {}", trainer.getUsername());
     }

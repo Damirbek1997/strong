@@ -21,7 +21,7 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
         traineeModel.setFirstName(entity.getFirstName());
         traineeModel.setLastName(entity.getLastName());
         traineeModel.setUsername(entity.getUsername());
-        traineeModel.setActive(entity.getIsActive());
+        traineeModel.setActive(entity.getActive());
         traineeModel.setBirthday(entity.getBirthday());
         traineeModel.setAddress(entity.getAddress());
 
@@ -30,7 +30,7 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
         trainerModel.setFirstName(entity.getFirstName());
         trainerModel.setLastName(entity.getLastName());
         trainerModel.setUsername(entity.getUsername());
-        trainerModel.setActive(entity.getIsActive());
+        trainerModel.setActive(entity.getActive());
 
         if (entity.getTrainers() != null) {
             List<ResponseTrainerModel> responseTrainerModels = new ArrayList<>();
@@ -57,7 +57,7 @@ public class TraineeMapper implements AbstractMapper<Trainee, TraineeModel> {
         trainee.setFirstName(model.getFirstName());
         trainee.setLastName(model.getLastName());
         trainee.setUsername(model.getUsername());
-        trainee.setIsActive(model.getActive());
+        trainee.setActive(model.getActive());
         trainee.setBirthday(model.getBirthday());
         trainee.setAddress(model.getAddress());
 

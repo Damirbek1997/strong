@@ -59,7 +59,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -96,7 +96,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -141,7 +141,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -184,7 +184,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
@@ -197,7 +197,7 @@ class TraineeServiceImplTest {
         trainer.setFirstName("Petya");
         trainer.setLastName("Petrov");
         trainer.setUsername("Petya.Petrov");
-        trainer.setIsActive(true);
+        trainer.setActive(true);
         trainer.setTrainingType(trainingType);
 
         ResponseTrainerModel responseTrainerModel = new ResponseTrainerModel();
@@ -239,7 +239,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(false);
+        trainee.setActive(false);
         trainee.setAddress("Moscow");
 
         when(traineeRepository.findByUsername("Ivan.Ivanov"))
@@ -248,7 +248,7 @@ class TraineeServiceImplTest {
                 .thenReturn(trainee);
 
         traineeService.activateByUsername("Ivan.Ivanov");
-        assertEquals(true, trainee.getIsActive());
+        assertEquals(true, trainee.getActive());
     }
 
     @Test
@@ -258,7 +258,7 @@ class TraineeServiceImplTest {
         trainee.setFirstName("Ivan");
         trainee.setLastName("Ivanov");
         trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         trainee.setAddress("Moscow");
 
         when(traineeRepository.findByUsername("Ivan.Ivanov"))
@@ -267,6 +267,6 @@ class TraineeServiceImplTest {
                 .thenReturn(trainee);
 
         traineeService.deactivateByUsername(trainee.getUsername());
-        assertEquals(false, trainee.getIsActive());
+        assertEquals(false, trainee.getActive());
     }
 }

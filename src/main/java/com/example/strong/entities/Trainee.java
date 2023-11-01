@@ -15,10 +15,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "trainees")
 public class Trainee extends User {
-    @Column(name = "birthday", nullable = false)
+    @Column(name = "birthday")
     private Date birthday;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     @ManyToMany

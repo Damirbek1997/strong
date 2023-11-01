@@ -16,10 +16,14 @@ public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
         TrainingModel trainingModel = new TrainingModel();
         trainingModel.setId(entity.getId());
         trainingModel.setTrainingName(entity.getTrainingName());
-        trainingModel.setTrainingTypeModel(trainingTypeMapper.toModel(entity.getTrainingType()));
         trainingModel.setTrainingDate(entity.getTrainingDate());
         trainingModel.setTrainingDuration(entity.getTrainingDuration());
         trainingModel.setTrainerName(entity.getTrainer().getFirstName());
+
+        if (entity.getTrainingType() != null) {
+            trainingModel.setTrainingTypeModel(trainingTypeMapper.toModel(entity.getTrainingType()));
+        }
+
         return trainingModel;
     }
 

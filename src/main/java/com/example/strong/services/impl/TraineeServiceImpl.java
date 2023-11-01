@@ -63,7 +63,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setLastName(createTraineeModel.getLastName());
         trainee.setUsername(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
         trainee.setPassword(userService.generatePassword());
-        trainee.setIsActive(true);
+        trainee.setActive(true);
 
         if (createTraineeModel.getBirthday() != null) {
             trainee.setBirthday(createTraineeModel.getBirthday());
@@ -96,13 +96,6 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setFirstName(updateTraineeModel.getFirstName());
         trainee.setLastName(updateTraineeModel.getLastName());
 
-        String username = userService.generateUsername(trainee.getFirstName(), trainee.getLastName());
-        Long amountOfUsers = traineeRepository.countByUsernameLike(username);
-
-        if (amountOfUsers > 0) {
-            trainee.setUsername(username + amountOfUsers);
-        }
-
         if (updateTraineeModel.getBirthday() == null) {
             trainee.setBirthday(updateTraineeModel.getBirthday());
         }
@@ -110,6 +103,10 @@ public class TraineeServiceImpl implements TraineeService {
         if (updateTraineeModel.getAddress() != null) {
             trainee.setAddress(updateTraineeModel.getAddress());
         }
+
+        String username = userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName());
+        Long amountOfUsers = traineeRepository.countByUsernameLike(username);
+        trainee.setUsername(amountOfUsers > 0 ? username + amountOfUsers : username);
 
         TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.save(trainee));
         log.info("Updated Trainee with model {}", updateTraineeModel);
@@ -141,7 +138,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void activateByUsername(String username) {
         Trainee trainee = getEntityByUsername(username);
-        trainee.setIsActive(true);
+        trainee.setActive(true);
         traineeRepository.save(trainee);
         log.debug("Activated User with username: {}", trainee.getUsername());
     }
@@ -150,7 +147,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void deactivateByUsername(String username) {
         Trainee trainee = getEntityByUsername(username);
-        trainee.setIsActive(false);
+        trainee.setActive(false);
         traineeRepository.save(trainee);
         log.debug("Activated User with username: {}", trainee.getUsername());
     }

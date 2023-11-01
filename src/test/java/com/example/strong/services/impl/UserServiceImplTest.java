@@ -72,7 +72,7 @@ class UserServiceImplTest {
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
         user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
+        user.setActive(true);
         user.setPassword("newPassword");
 
         when(userRepository.findByUsernameAndPassword(username, oldPassword))
@@ -95,7 +95,7 @@ class UserServiceImplTest {
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
         user.setUsername("Ivan.Ivanov");
-        user.setIsActive(true);
+        user.setActive(true);
         user.setPassword("newPassword");
 
         when(userRepository.findByUsernameAndPassword(username, oldPassword))
