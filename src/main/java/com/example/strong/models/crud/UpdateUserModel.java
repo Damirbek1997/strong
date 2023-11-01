@@ -8,4 +8,5 @@ import lombok.Setter;
 public class UpdateUserModel {
     private String firstName;
     private String lastName;
+    private Boolean active;
 }

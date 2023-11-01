@@ -1,12 +1,13 @@
 package com.example.strong.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TrainerModel extends UserModel {
-    private TrainingTypeModel trainingTypeModel;
+    private Long trainingTypeId;
+    private List<ResponseTraineeModel> traineeModels;
 }

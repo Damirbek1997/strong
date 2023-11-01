@@ -1,28 +1,22 @@
 package com.example.strong.services.impl;
 
-import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.entities.Training;
-import com.example.strong.enums.SecurityAuthentication;
-import com.example.strong.exceptions.BadRequestException;
-import com.example.strong.mappers.impl.TraineeMapper;
-import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.mappers.impl.TrainingMapper;
-import com.example.strong.models.TraineeModel;
-import com.example.strong.models.TrainerModel;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.repository.TrainingRepository;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.TrainingService;
-import com.example.strong.services.TrainingTypeService;
+import com.example.strong.specifications.TrainingSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,61 +25,32 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainingRepository trainingRepository;
     private final TraineeService traineeService;
     private final TrainerService trainerService;
-    private final TrainingTypeService trainingTypeService;
     private final TrainingMapper trainingMapper;
-    private final TraineeMapper traineeMapper;
-    private final TrainerMapper trainerMapper;
+    private final TrainingSpecification trainingSpecification;
 
     @Override
-    @PreAuthenticated
-    public List<TrainingModel> getAll(SecurityAuthentication authentication) {
-        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.findAll());
-        log.debug("Getting all Trainings: {}", trainingModels);
+    public List<TrainingModel> getAllByTraineeUsername(String traineeUsername, Date periodFrom, Date periodTo, String trainerName, Long trainingTypeId) {
+        Specification<Training> specification = trainingSpecification.getTraineeSpecificationBy(traineeUsername, periodFrom, periodTo, trainerName, trainingTypeId);
+        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.findAll(specification));
+        log.debug("Getting all Trainings: {}, by trainee username: {}", trainingModels, traineeUsername);
         return trainingModels;
     }
 
     @Override
-    @PreAuthenticated
-    public List<TrainingModel> getAllTrainersByUsername(String username, SecurityAuthentication authentication) {
-        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTrainersByUsername(username));
-        log.debug("Getting all Trainings: {}, by trainer username: {}", trainingModels, username);
+    public List<TrainingModel> getAllByTrainerUsername(String trainerUsername, Date periodFrom, Date periodTo, String traineeName) {
+        Specification<Training> specification = trainingSpecification.getTrainerSpecificationBy(trainerUsername, periodFrom, periodTo, traineeName);
+        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.findAll(specification));
+        log.debug("Getting all Trainings: {}, by trainer username: {}", trainingModels, trainerUsername);
         return trainingModels;
-    }
-
-    @Override
-    @PreAuthenticated
-    public List<TrainingModel> getAllTraineesByUsername(String username, SecurityAuthentication authentication) {
-        List<TrainingModel> trainingModels = trainingMapper.toModelList(trainingRepository.getAllTraineesByUsername(username));
-        log.debug("Getting all Trainings: {}, by trainee username: {}", trainingModels, username);
-        return trainingModels;
-    }
-
-    @Override
-    @PreAuthenticated
-    public TrainingModel getById(Long id, SecurityAuthentication authentication) {
-        Optional<Training> trainingOptional = trainingRepository.findById(id);
-
-        if (trainingOptional.isPresent()) {
-            TrainingModel trainingModel = trainingMapper.toModel(trainingOptional.get());
-            log.debug("Getting Training: {}, by id: {}", trainingModel, id);
-            return trainingModel;
-        }
-
-        log.error("There is no Training with id {}", id);
-        throw new BadRequestException("There is no Training with id: " + id);
     }
 
     @Override
     @Transactional
-    @PreAuthenticated
-    public TrainingModel create(CreateTrainingModel createTrainingModel, SecurityAuthentication authentication) {
+    public TrainingModel create(CreateTrainingModel createTrainingModel) {
         Training training = new Training();
-        TraineeModel traineeModel = traineeService.getById(createTrainingModel.getTraineeId(), null);
-        TrainerModel trainerModel = trainerService.getById(createTrainingModel.getTrainerId(), null);
-        training.setTrainee(traineeMapper.toEntity(traineeModel));
-        training.setTrainer(trainerMapper.toEntity(trainerModel));
+        training.setTrainee(traineeService.getEntityByUsername(createTrainingModel.getTraineeUsername()));
+        training.setTrainer(trainerService.getEntityByUsername(createTrainingModel.getTrainerUsername()));
         training.setTrainingName(createTrainingModel.getTrainingName());
-        training.setTrainingType(trainingTypeService.getById(createTrainingModel.getTrainingTypeId()));
         training.setTrainingDate(createTrainingModel.getTrainingDate());
         training.setTrainingDuration(createTrainingModel.getTrainingDuration());
         trainingRepository.save(training);

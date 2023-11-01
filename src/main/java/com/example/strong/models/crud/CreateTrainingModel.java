@@ -3,22 +3,14 @@ package com.example.strong.models.crud;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
 @Setter
 public class CreateTrainingModel {
-    @NotNull
-    private Long traineeId;
-    @NotNull
-    private Long trainerId;
-    @NotNull
+    private String traineeUsername;
+    private String trainerUsername;
     private String trainingName;
-    @NotNull
-    private Long trainingTypeId;
-    @NotNull
     private Date trainingDate;
-    @NotNull
     private Long trainingDuration;
 }

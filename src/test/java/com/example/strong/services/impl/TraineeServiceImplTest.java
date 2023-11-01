@@ -2,12 +2,13 @@ package com.example.strong.services.impl;
 
 import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
+import com.example.strong.entities.TrainingType;
 import com.example.strong.entities.User;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
+import com.example.strong.models.ResponseCredentialsModel;
+import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
-import com.example.strong.models.TrainerModel;
-import com.example.strong.models.UserCredentialsModel;
 import com.example.strong.models.UserModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
@@ -20,7 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -39,114 +43,6 @@ class TraineeServiceImplTest {
     TrainerService trainerService;
     @Mock
     UserService userService;
-
-    @Test
-    void getAll_shouldReturnAllTraineeModels() {
-        Date birthDate = new Date();
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        List<Trainee> trainees = new ArrayList<>();
-        trainees.add(trainee);
-
-        when(traineeRepository.findAll())
-                .thenReturn(Collections.singletonList(trainee));
-        when(traineeMapper.toModelList(trainees))
-                .thenReturn(Collections.singletonList(traineeModel));
-
-        List<TraineeModel> traineeModelList = traineeService.getAll(null);
-
-        assertEquals(1, traineeModelList.size());
-        verify(traineeRepository).findAll();
-    }
-
-    @Test
-    void getAllByIds_withValidListOfTrainerIds_shouldReturnAllTraineeModels() {
-        Date birthDate = new Date();
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        List<Trainee> trainees = new ArrayList<>();
-        trainees.add(trainee);
-
-        List<Long> traineeIds = new ArrayList<>();
-        traineeIds.add(1L);
-
-        when(traineeRepository.findAllByIdIn(traineeIds))
-                .thenReturn(Collections.singletonList(trainee));
-        when(traineeMapper.toModelList(trainees))
-                .thenReturn(Collections.singletonList(traineeModel));
-
-        List<TraineeModel> traineeModelList = traineeService.getAllByIds(traineeIds, null);
-
-        assertEquals(1, traineeModelList.size());
-        verify(traineeRepository).findAllByIdIn(traineeIds);
-    }
-
-    @Test
-    void getById_withValidId_shouldReturnTraineeModel() {
-        Date birthDate = new Date();
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        Optional<Trainee> traineeOptional = Optional.of(trainee);
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        when(traineeRepository.findById(1L))
-                .thenReturn(traineeOptional);
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
-
-        TraineeModel response = traineeService.getById(1L, null);
-        assertEquals(traineeModel, response);
-    }
 
     @Test
     void getByUsername_withValidUsername_shouldReturnTraineeModel() {
@@ -172,7 +68,7 @@ class TraineeServiceImplTest {
         traineeModel.setFirstName("Ivan");
         traineeModel.setLastName("Ivanov");
         traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
+        traineeModel.setActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
@@ -181,12 +77,12 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.getByUsername("Ivan.Ivanov", null);
+        TraineeModel response = traineeService.getByUsername("Ivan.Ivanov");
         assertEquals(traineeModel, response);
     }
 
     @Test
-    void create_withValidData_shouldReturnTraineeModel() {
+    void create_withValidData_shouldReturnResponseCredentialsModel() {
         Date birthDate = new Date();
 
         CreateTraineeModel createTraineeModel = new CreateTraineeModel();
@@ -209,7 +105,7 @@ class TraineeServiceImplTest {
         traineeModel.setFirstName("Ivan");
         traineeModel.setLastName("Ivanov");
         traineeModel.setUsername("Ivan.Ivanov1");
-        traineeModel.setIsActive(true);
+        traineeModel.setActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Moscow");
 
@@ -223,93 +119,18 @@ class TraineeServiceImplTest {
 
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.create(createTraineeModel);
-        assertEquals(traineeModel, response);
-    }
-
-    @Test
-    void create_withValidDataAndListTrainerIds_shouldReturnTraineeModel() {
-        Date birthDate = new Date();
-
-        List<Long> trainerIds = new ArrayList<>();
-        trainerIds.add(1L);
-
-        CreateTraineeModel createTraineeModel = new CreateTraineeModel();
-        createTraineeModel.setFirstName("Ivan");
-        createTraineeModel.setLastName("Ivanov");
-        createTraineeModel.setAddress("Moscow");
-        createTraineeModel.setBirthday(birthDate);
-        createTraineeModel.setTrainerIds(trainerIds);
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        Trainer trainer = new Trainer();
-        trainer.setId(2L);
-        trainer.setFirstName("Trainer");
-        trainer.setLastName("Trainer");
-        trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
-
-        List<Trainer> trainers = new ArrayList<>();
-        trainers.add(trainer);
-
-        List<TrainerModel> trainerModels = new ArrayList<>();
-        trainerModels.add(trainerModel);
-
-        when(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()))
-                .thenReturn(trainee.getUsername());
-        when(userService.generatePassword())
-                .thenReturn(any());
-
-        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
-                .thenReturn(0L);
-
-        when(trainerService.getAllByIds(trainerIds, null))
-                .thenReturn(trainerModels);
-        when(trainerMapper.toEntityList(trainerModels))
-                .thenReturn(trainers);
-
-        when(traineeRepository.save(any()))
-                .thenReturn(trainee);
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
-
-        TraineeModel response = traineeService.create(createTraineeModel);
-        assertEquals(traineeModel, response);
+        ResponseCredentialsModel response = traineeService.create(createTraineeModel);
+        assertEquals(traineeModel.getUsername(), response.getUsername());
     }
 
     @Test
     void update_withValidDataAndUser_shouldReturnTraineeModel() {
         Date birthDate = new Date();
 
+        Long id = 1L;
+
         UpdateTraineeModel updateTraineeModel = new UpdateTraineeModel();
-        updateTraineeModel.setId(1L);
         updateTraineeModel.setFirstName("Petya");
         updateTraineeModel.setLastName("Petrov");
         updateTraineeModel.setBirthday(birthDate);
@@ -329,11 +150,11 @@ class TraineeServiceImplTest {
         traineeModel.setFirstName("Petya");
         traineeModel.setLastName("Petrov");
         traineeModel.setUsername("Petya.Petrov");
-        traineeModel.setIsActive(true);
+        traineeModel.setActive(true);
         traineeModel.setBirthday(birthDate);
         traineeModel.setAddress("Bishkek");
 
-        when(traineeRepository.findById(updateTraineeModel.getId()))
+        when(traineeRepository.findById(id))
                 .thenReturn(Optional.of(trainee));
 
         when(userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName()))
@@ -346,22 +167,17 @@ class TraineeServiceImplTest {
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
-        TraineeModel response = traineeService.update(updateTraineeModel, null);
+        TraineeModel response = traineeService.update(id, updateTraineeModel);
         assertEquals(traineeModel, response);
     }
 
     @Test
-    void update_withValidDataListTrainerIds_shouldReturnTraineeModel() {
+    void updateTraineesTrainerList_withValidDataListTrainerUsernames_shouldReturnListResponseTrainerModel() {
         Date birthDate = new Date();
+        Long id = 1L;
 
-        List<Long> trainerIds = new ArrayList<>();
-        trainerIds.add(2L);
-
-        UpdateTraineeModel updateTraineeModel = new UpdateTraineeModel();
-        updateTraineeModel.setId(1L);
-        updateTraineeModel.setBirthday(birthDate);
-        updateTraineeModel.setAddress("Bishkek");
-        updateTraineeModel.setTrainerIds(trainerIds);
+        List<String> trainerUsernames = new ArrayList<>();
+        trainerUsernames.add("Petya.Petrov");
 
         Trainee trainee = new Trainee();
         trainee.setId(1L);
@@ -372,55 +188,39 @@ class TraineeServiceImplTest {
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Bishkek");
+        TrainingType trainingType = new TrainingType();
+        trainingType.setId(1L);
+        trainingType.setTypeName("trainingTypeName");
 
         Trainer trainer = new Trainer();
         trainer.setId(2L);
-        trainer.setFirstName("Vadim");
-        trainer.setLastName("Vadimov");
-        trainer.setUsername("Vadim.Vadimov");
+        trainer.setFirstName("Petya");
+        trainer.setLastName("Petrov");
+        trainer.setUsername("Petya.Petrov");
         trainer.setIsActive(true);
+        trainer.setTrainingType(trainingType);
 
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Vadim");
-        trainerModel.setLastName("Vadimov");
-        trainerModel.setUsername("Vadim.Vadimov");
-        trainerModel.setIsActive(true);
+        ResponseTrainerModel responseTrainerModel = new ResponseTrainerModel();
+        responseTrainerModel.setFirstName("Petya");
+        responseTrainerModel.setLastName("Petrov");
+        responseTrainerModel.setUsername("Petya.Petrov");
+        responseTrainerModel.setSpecializationId(1L);
 
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
 
-        List<TrainerModel> trainerModels = new ArrayList<>();
-        trainerModels.add(trainerModel);
-
-        when(traineeRepository.findById(updateTraineeModel.getId()))
+        when(traineeRepository.findById(id))
                 .thenReturn(Optional.of(trainee));
-
-        when(trainerService.getAllByIds(trainerIds, null))
-                .thenReturn(trainerModels);
-        when(trainerMapper.toEntityList(trainerModels))
+        when(trainerService.getAllEntitiesByUsernames(trainerUsernames))
                 .thenReturn(trainers);
-
-        when(userService.generateUsername(trainee.getFirstName(), trainee.getLastName()))
-                .thenReturn(trainee.getUsername());
-        when(traineeRepository.countByUsernameLike(trainee.getUsername()))
-                .thenReturn(0L);
 
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
-        when(traineeMapper.toModel(trainee))
-                .thenReturn(traineeModel);
+        when(trainerMapper.toResponseModel(trainer))
+                .thenReturn(responseTrainerModel);
 
-        TraineeModel response = traineeService.update(updateTraineeModel, null);
-        assertEquals(traineeModel, response);
+        List<ResponseTrainerModel> response = traineeService.updateTrainerList(id, trainerUsernames);
+        assertEquals(1, response.size());
     }
 
     @Test
@@ -428,55 +228,12 @@ class TraineeServiceImplTest {
         doNothing()
                 .when(traineeRepository)
                 .deleteById(1L);
-        traineeService.deleteById(1L, null);
+        traineeService.deleteById(1L);
         verify(traineeRepository).deleteById(1L);
     }
 
     @Test
-    void deleteByUsername_withValidUsername_shouldReturnVoid() {
-        String username = "Ivan.Ivanov";
-        doNothing()
-                .when(traineeRepository)
-                .deleteByUsername(username);
-        traineeService.deleteByUsername(username, null);
-        verify(traineeRepository).deleteByUsername(username);
-    }
-
-    @Test
-    void changePassword_withValidData_shouldReturnVoid() {
-        UserCredentialsModel userCredentialsModel = new UserCredentialsModel();
-        userCredentialsModel.setId(1L);
-        userCredentialsModel.setNewPassword("newPassword");
-
-        Trainee currentTrainee = new Trainee();
-        currentTrainee.setId(1L);
-        currentTrainee.setFirstName("Ivan");
-        currentTrainee.setLastName("Ivanov");
-        currentTrainee.setUsername("Ivan.Ivanov");
-        currentTrainee.setIsActive(true);
-        currentTrainee.setPassword("oldPassword");
-        currentTrainee.setAddress("Moscow");
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setPassword("newPassword");
-        trainee.setAddress("Moscow");
-
-        when(traineeRepository.findById(1L))
-                .thenReturn(Optional.of(currentTrainee));
-        when(traineeRepository.save(any()))
-                .thenReturn(trainee);
-
-        traineeService.changePassword(userCredentialsModel, null);
-        assertEquals(userCredentialsModel.getNewPassword(), trainee.getPassword());
-    }
-
-    @Test
-    void activateById_withValidId_shouldReturnVoid() {
+    void activateByUsername_withValidUsername_shouldReturnVoid() {
         Trainee trainee = new Trainee();
         trainee.setId(1L);
         trainee.setFirstName("Ivan");
@@ -485,17 +242,17 @@ class TraineeServiceImplTest {
         trainee.setIsActive(false);
         trainee.setAddress("Moscow");
 
-        when(traineeRepository.findById(1L))
-                .thenReturn(Optional.of(trainee));
+        when(traineeRepository.findByUsername("Ivan.Ivanov"))
+                .thenReturn(trainee);
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
 
-        traineeService.activateById(1L, null);
+        traineeService.activateByUsername("Ivan.Ivanov");
         assertEquals(true, trainee.getIsActive());
     }
 
     @Test
-    void deactivateById_withValidId_shouldReturnVoid() {
+    void deactivateByUsername_withValidUsername_shouldReturnVoid() {
         Trainee trainee = new Trainee();
         trainee.setId(1L);
         trainee.setFirstName("Ivan");
@@ -504,30 +261,12 @@ class TraineeServiceImplTest {
         trainee.setIsActive(true);
         trainee.setAddress("Moscow");
 
-        when(traineeRepository.findById(1L))
-                .thenReturn(Optional.of(trainee));
+        when(traineeRepository.findByUsername("Ivan.Ivanov"))
+                .thenReturn(trainee);
         when(traineeRepository.save(any()))
                 .thenReturn(trainee);
 
-        traineeService.deactivateById(1L, null);
+        traineeService.deactivateByUsername(trainee.getUsername());
         assertEquals(false, trainee.getIsActive());
-    }
-
-    @Test
-    void authentication_withValidId_shouldReturnString() {
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setPassword("123456");
-        trainee.setIsActive(true);
-        trainee.setAddress("Moscow");
-
-        when(traineeRepository.findByUsernameAndPassword(trainee.getUsername(), trainee.getPassword()))
-                .thenReturn(trainee);
-
-        traineeService.authentication(trainee.getUsername(), trainee.getPassword());
-        verify(traineeRepository).findByUsernameAndPassword(trainee.getUsername(), trainee.getPassword());
     }
 }

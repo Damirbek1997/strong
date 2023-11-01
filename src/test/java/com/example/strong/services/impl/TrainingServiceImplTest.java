@@ -4,25 +4,25 @@ import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
 import com.example.strong.entities.Training;
 import com.example.strong.entities.TrainingType;
-import com.example.strong.mappers.impl.TraineeMapper;
-import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.mappers.impl.TrainingMapper;
-import com.example.strong.models.TraineeModel;
-import com.example.strong.models.TrainerModel;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.repository.TrainingRepository;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
-import com.example.strong.services.TrainingTypeService;
+import com.example.strong.specifications.TrainingSpecification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -38,18 +38,17 @@ class TrainingServiceImplTest {
     @Mock
     TrainerService trainerService;
     @Mock
-    TrainingTypeService trainingTypeService;
-    @Mock
-    TraineeMapper traineeMapper;
-    @Mock
-    TrainerMapper trainerMapper;
-    @Mock
     TrainingMapper trainingMapper;
+    @Mock
+    TrainingSpecification trainingSpecification;
 
     @Test
-    void getAll_shouldReturnAllTrainingModels() {
+    void getAllByTraineesUsername_withValidUsername_shouldReturnTrainingModels() {
         Date birthDate = new Date();
         Date trainingDate = new Date();
+
+        Date periodFrom = new Date();
+        Date periodTo = new Date();
 
         Trainee trainee = new Trainee();
         trainee.setId(1L);
@@ -60,15 +59,6 @@ class TrainingServiceImplTest {
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
         Trainer trainer = new Trainer();
         trainer.setId(2L);
         trainer.setFirstName("Trainer");
@@ -76,12 +66,13 @@ class TrainingServiceImplTest {
         trainer.setUsername("Trainer.Trainer");
         trainer.setIsActive(true);
 
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
+        TrainingType trainingType = new TrainingType();
+        trainingType.setId(1L);
+        trainingType.setTypeName("TypeName");
+
+        TrainingTypeModel trainingTypeModel = new TrainingTypeModel();
+        trainingTypeModel.setId(1L);
+        trainingTypeModel.setTypeName("TypeName");
 
         Training training = new Training();
         training.setId(1L);
@@ -90,78 +81,12 @@ class TrainingServiceImplTest {
         training.setTrainingName("Training");
         training.setTrainingDate(trainingDate);
         training.setTrainingDuration(10L);
+        training.setTrainingType(trainingType);
 
         TrainingModel trainingModel = new TrainingModel();
         trainingModel.setId(1L);
-        trainingModel.setTraineeModel(traineeModel);
-        trainingModel.setTrainerModel(trainerModel);
-        trainingModel.setTrainingName("Training");
-        trainingModel.setTrainingDate(trainingDate);
-        trainingModel.setTrainingDuration(10L);
-
-        List<Training> trainings = new ArrayList<>();
-        trainings.add(training);
-
-        when(trainingRepository.findAll())
-                .thenReturn(Collections.singletonList(training));
-        when(trainingMapper.toModelList(trainings))
-                .thenReturn(Collections.singletonList(trainingModel));
-
-        List<TrainingModel> trainingModels = trainingService.getAll(null);
-
-        assertEquals(1, trainingModels.size());
-        verify(trainingRepository).findAll();
-    }
-
-    @Test
-    void getAllTraineesByUsername_withValidUsername_shouldReturnAllTrainingModels() {
-        Date birthDate = new Date();
-        Date trainingDate = new Date();
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        Trainer trainer = new Trainer();
-        trainer.setId(2L);
-        trainer.setFirstName("Trainer");
-        trainer.setLastName("Trainer");
-        trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
-
-        Training training = new Training();
-        training.setId(1L);
-        training.setTrainee(trainee);
-        training.setTrainer(trainer);
-        training.setTrainingName("Training");
-        training.setTrainingDate(trainingDate);
-        training.setTrainingDuration(10L);
-
-        TrainingModel trainingModel = new TrainingModel();
-        trainingModel.setId(1L);
-        trainingModel.setTraineeModel(traineeModel);
-        trainingModel.setTrainerModel(trainerModel);
+        trainingModel.setTrainerName(trainer.getFirstName());
+        trainingModel.setTrainingTypeModel(trainingTypeModel);
         trainingModel.setTrainingName("Training");
         trainingModel.setTrainingDate(trainingDate);
         trainingModel.setTrainingDuration(10L);
@@ -170,21 +95,28 @@ class TrainingServiceImplTest {
         trainings.add(training);
         String username = "Petya.Petrov";
 
-        when(trainingRepository.getAllTraineesByUsername(username))
+        Specification specification = mock(Specification.class);
+        when(trainingSpecification.getTraineeSpecificationBy(username, periodFrom, periodTo, trainer.getFirstName(), trainingType.getId()))
+                .thenReturn(specification);
+
+        when(trainingRepository.findAll(specification))
                 .thenReturn(Collections.singletonList(training));
         when(trainingMapper.toModelList(trainings))
                 .thenReturn(Collections.singletonList(trainingModel));
 
-        List<TrainingModel> trainingModels = trainingService.getAllTraineesByUsername(username, null);
+        List<TrainingModel> trainingModels = trainingService.getAllByTraineeUsername(username, periodFrom, periodTo, trainer.getFirstName(), trainingType.getId());
 
         assertEquals(1, trainingModels.size());
-        verify(trainingRepository).getAllTraineesByUsername(username);
+        verify(trainingRepository).findAll(specification);
     }
 
     @Test
-    void getAllTrainersByUsername_withValidUsername_shouldReturnAllTrainingModels() {
+    void getAllByTrainersUsername_withValidUsername_shouldReturnAllTrainingModels() {
         Date birthDate = new Date();
         Date trainingDate = new Date();
+
+        Date periodFrom = new Date();
+        Date periodTo = new Date();
 
         Trainee trainee = new Trainee();
         trainee.setId(1L);
@@ -195,15 +127,6 @@ class TrainingServiceImplTest {
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
         Trainer trainer = new Trainer();
         trainer.setId(2L);
         trainer.setFirstName("Trainer");
@@ -211,104 +134,48 @@ class TrainingServiceImplTest {
         trainer.setUsername("Trainer.Trainer");
         trainer.setIsActive(true);
 
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
+        TrainingType trainingType = new TrainingType();
+        trainingType.setId(1L);
+        trainingType.setTypeName("TypeName");
+
+        TrainingTypeModel trainingTypeModel = new TrainingTypeModel();
+        trainingTypeModel.setId(1L);
+        trainingTypeModel.setTypeName("TypeName");
 
         Training training = new Training();
         training.setId(1L);
         training.setTrainee(trainee);
         training.setTrainer(trainer);
+        training.setTrainingType(trainingType);
         training.setTrainingName("Training");
         training.setTrainingDate(trainingDate);
         training.setTrainingDuration(10L);
 
         TrainingModel trainingModel = new TrainingModel();
         trainingModel.setId(1L);
-        trainingModel.setTraineeModel(traineeModel);
-        trainingModel.setTrainerModel(trainerModel);
+        trainingModel.setTrainerName(trainer.getFirstName());
+        trainingModel.setTrainingTypeModel(trainingTypeModel);
         trainingModel.setTrainingName("Training");
         trainingModel.setTrainingDate(trainingDate);
         trainingModel.setTrainingDuration(10L);
 
         List<Training> trainings = new ArrayList<>();
         trainings.add(training);
-        String username = "Ivan.Ivanov";
+        String username = "Trainer.Trainer";
 
-        when(trainingRepository.getAllTrainersByUsername(username))
+        Specification specification = mock(Specification.class);
+        when(trainingSpecification.getTrainerSpecificationBy(username, periodFrom, periodTo, trainee.getFirstName()))
+                .thenReturn(specification);
+
+        when(trainingRepository.findAll(specification))
                 .thenReturn(Collections.singletonList(training));
         when(trainingMapper.toModelList(trainings))
                 .thenReturn(Collections.singletonList(trainingModel));
 
-        List<TrainingModel> trainingModels = trainingService.getAllTrainersByUsername(username, null);
+        List<TrainingModel> trainingModels = trainingService.getAllByTrainerUsername(username, periodFrom, periodTo, trainee.getFirstName());
 
         assertEquals(1, trainingModels.size());
-        verify(trainingRepository).getAllTrainersByUsername(username);
-    }
-
-    @Test
-    void getById_withValidId_shouldReturnTrainingModel() {
-        Date birthDate = new Date();
-        Date trainingDate = new Date();
-
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setIsActive(true);
-        trainee.setBirthday(birthDate);
-        trainee.setAddress("Moscow");
-
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
-        Trainer trainer = new Trainer();
-        trainer.setId(2L);
-        trainer.setFirstName("Trainer");
-        trainer.setLastName("Trainer");
-        trainer.setUsername("Trainer.Trainer");
-        trainer.setIsActive(true);
-
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
-
-        Training training = new Training();
-        training.setId(1L);
-        training.setTrainee(trainee);
-        training.setTrainer(trainer);
-        training.setTrainingName("Training");
-        training.setTrainingDate(trainingDate);
-        training.setTrainingDuration(10L);
-
-        TrainingModel trainingModel = new TrainingModel();
-        trainingModel.setId(1L);
-        trainingModel.setTraineeModel(traineeModel);
-        trainingModel.setTrainerModel(trainerModel);
-        trainingModel.setTrainingName("Training");
-        trainingModel.setTrainingDate(trainingDate);
-        trainingModel.setTrainingDuration(10L);
-
-        when(trainingRepository.findById(1L))
-                .thenReturn(Optional.of(training));
-        when(trainingMapper.toModel(training))
-                .thenReturn(trainingModel);
-
-        TrainingModel response = trainingService.getById(1L, null);
-        assertEquals(trainingModel, response);
+        verify(trainingRepository).findAll(specification);
     }
 
     @Test
@@ -317,9 +184,8 @@ class TrainingServiceImplTest {
         Date trainingDate = new Date();
 
         CreateTrainingModel createTrainingModel = new CreateTrainingModel();
-        createTrainingModel.setTraineeId(1L);
-        createTrainingModel.setTrainerId(1L);
-        createTrainingModel.setTrainingTypeId(1L);
+        createTrainingModel.setTraineeUsername("Ivan.Ivanov");
+        createTrainingModel.setTrainerUsername("Trainer.Trainer");
         createTrainingModel.setTrainingDate(trainingDate);
         createTrainingModel.setTrainingName("Training");
         createTrainingModel.setTrainingDuration(10L);
@@ -333,15 +199,6 @@ class TrainingServiceImplTest {
         trainee.setBirthday(birthDate);
         trainee.setAddress("Moscow");
 
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Ivan");
-        traineeModel.setLastName("Ivanov");
-        traineeModel.setUsername("Ivan.Ivanov");
-        traineeModel.setIsActive(true);
-        traineeModel.setBirthday(birthDate);
-        traineeModel.setAddress("Moscow");
-
         Trainer trainer = new Trainer();
         trainer.setId(2L);
         trainer.setFirstName("Trainer");
@@ -349,56 +206,32 @@ class TrainingServiceImplTest {
         trainer.setUsername("Trainer.Trainer");
         trainer.setIsActive(true);
 
-        TrainerModel trainerModel = new TrainerModel();
-        trainerModel.setId(2L);
-        trainerModel.setFirstName("Trainer");
-        trainerModel.setLastName("Trainer");
-        trainerModel.setUsername("Trainer.Trainer");
-        trainerModel.setIsActive(true);
-
-        TrainingType trainingType = new TrainingType();
-        trainingType.setId(1L);
-        trainingType.setTypeName("type");
-
-        TrainingTypeModel trainingTypeModel = new TrainingTypeModel();
-        trainingTypeModel.setId(1L);
-        trainingTypeModel.setTypeName("type");
-
         Training training = new Training();
         training.setId(1L);
         training.setTrainee(trainee);
         training.setTrainer(trainer);
-        training.setTrainingType(trainingType);
         training.setTrainingName("Training");
         training.setTrainingDate(trainingDate);
         training.setTrainingDuration(10L);
 
         TrainingModel trainingModel = new TrainingModel();
         trainingModel.setId(1L);
-        trainingModel.setTraineeModel(traineeModel);
-        trainingModel.setTrainerModel(trainerModel);
-        trainingModel.setTrainingTypeModel(trainingTypeModel);
+        trainingModel.setTrainerName(trainer.getFirstName());
         trainingModel.setTrainingName("Training");
         trainingModel.setTrainingDate(trainingDate);
         trainingModel.setTrainingDuration(10L);
 
-        when(traineeService.getById(1L, null))
-                .thenReturn(traineeModel);
-        when(trainerService.getById(1L, null))
-                .thenReturn(trainerModel);
-        when(traineeMapper.toEntity(traineeModel))
+        when(traineeService.getEntityByUsername("Ivan.Ivanov"))
                 .thenReturn(trainee);
-        when(trainerMapper.toEntity(trainerModel))
+        when(trainerService.getEntityByUsername("Trainer.Trainer"))
                 .thenReturn(trainer);
-        when(trainingTypeService.getById(1L))
-                .thenReturn(trainingType);
 
         when(trainingRepository.save(any()))
                 .thenReturn(training);
         when(trainingMapper.toModel(any()))
                 .thenReturn(trainingModel);
 
-        TrainingModel response = trainingService.create(createTrainingModel, null);
+        TrainingModel response = trainingService.create(createTrainingModel);
         assertEquals(trainingModel, response);
     }
 }

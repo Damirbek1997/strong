@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,4 +28,7 @@ public class Trainee extends User {
             inverseJoinColumns = @JoinColumn(name = "trainer_id")
     )
     private Set<Trainer> trainers;
+
+    @OneToMany(mappedBy = "trainee", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Training> trainings;
 }
