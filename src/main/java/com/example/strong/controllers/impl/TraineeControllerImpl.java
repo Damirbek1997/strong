@@ -49,16 +49,4 @@ public class TraineeControllerImpl implements TraineeController {
         traineeService.deleteById(traineeService.getByUsername(username).getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @Override
-    @PreAuthenticated
-    public ResponseEntity<String> updateStatus(String username, Boolean isActive) {
-        if (isActive) {
-            traineeService.activateByUsername(username);
-        } else {
-            traineeService.deactivateByUsername(username);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

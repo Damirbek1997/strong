@@ -134,24 +134,6 @@ public class TraineeServiceImpl implements TraineeService {
         log.info("Deleted Trainee with id {}", id);
     }
 
-    @Override
-    @Transactional
-    public void activateByUsername(String username) {
-        Trainee trainee = getEntityByUsername(username);
-        trainee.setActive(true);
-        traineeRepository.save(trainee);
-        log.debug("Activated User with username: {}", trainee.getUsername());
-    }
-
-    @Override
-    @Transactional
-    public void deactivateByUsername(String username) {
-        Trainee trainee = getEntityByUsername(username);
-        trainee.setActive(false);
-        traineeRepository.save(trainee);
-        log.debug("Activated User with username: {}", trainee.getUsername());
-    }
-
     private Trainee getEntityById(Long id) {
         Optional<Trainee> traineeOptional = traineeRepository.findById(id);
 

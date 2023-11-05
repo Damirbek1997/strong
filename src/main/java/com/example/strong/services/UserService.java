@@ -10,4 +10,6 @@ public interface UserService {
     void changePassword(String username, String oldPassword, String newPassword);
     void validateFields(CreateUserModel createUserModel);
     void validateFields(UpdateUserModel updateUserModel);
+    void activateByUsername(String username);
+    void deactivateByUsername(String username);
 }

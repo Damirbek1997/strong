@@ -1,9 +1,9 @@
 package com.example.strong.services;
 
 import com.example.strong.entities.Trainer;
+import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
-import com.example.strong.models.ResponseCredentialsModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
 
@@ -16,6 +16,4 @@ public interface TrainerService {
     Trainer getEntityByUsername(String username);
     ResponseCredentialsModel create(CreateTrainerModel createTrainerModel);
     TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel);
-    void activateByUsername(String username);
-    void deactivateByUsername(String username);
 }

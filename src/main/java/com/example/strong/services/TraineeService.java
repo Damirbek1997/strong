@@ -16,6 +16,4 @@ public interface TraineeService {
     TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel);
     List<ResponseTrainerModel> updateTrainerList(Long id, List<String> usernames);
     void deleteById(Long id);
-    void activateByUsername(String username);
-    void deactivateByUsername(String username);
 }

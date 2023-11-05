@@ -231,42 +231,4 @@ class TraineeServiceImplTest {
         traineeService.deleteById(1L);
         verify(traineeRepository).deleteById(1L);
     }
-
-    @Test
-    void activateByUsername_withValidUsername_shouldReturnVoid() {
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setActive(false);
-        trainee.setAddress("Moscow");
-
-        when(traineeRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(trainee);
-        when(traineeRepository.save(any()))
-                .thenReturn(trainee);
-
-        traineeService.activateByUsername("Ivan.Ivanov");
-        assertEquals(true, trainee.getActive());
-    }
-
-    @Test
-    void deactivateByUsername_withValidUsername_shouldReturnVoid() {
-        Trainee trainee = new Trainee();
-        trainee.setId(1L);
-        trainee.setFirstName("Ivan");
-        trainee.setLastName("Ivanov");
-        trainee.setUsername("Ivan.Ivanov");
-        trainee.setActive(true);
-        trainee.setAddress("Moscow");
-
-        when(traineeRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(trainee);
-        when(traineeRepository.save(any()))
-                .thenReturn(trainee);
-
-        traineeService.deactivateByUsername(trainee.getUsername());
-        assertEquals(false, trainee.getActive());
-    }
 }

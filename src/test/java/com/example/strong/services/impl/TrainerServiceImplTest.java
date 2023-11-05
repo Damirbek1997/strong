@@ -246,40 +246,4 @@ class TrainerServiceImplTest {
         TrainerModel response = trainerService.update(id, updateTrainerModel);
         assertEquals(trainerModel, response);
     }
-
-    @Test
-    void activateByUsername_withValidUsername_shouldReturnVoid() {
-        Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setFirstName("Ivan");
-        trainer.setLastName("Ivanov");
-        trainer.setUsername("Ivan.Ivanov");
-        trainer.setActive(false);
-
-        when(trainerRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(trainer);
-        when(trainerRepository.save(any()))
-                .thenReturn(trainer);
-
-        trainerService.activateByUsername("Ivan.Ivanov");
-        assertEquals(true, trainer.getActive());
-    }
-
-    @Test
-    void deactivateByUsername_withValidUsername_shouldReturnVoid() {
-        Trainer trainer = new Trainer();
-        trainer.setId(1L);
-        trainer.setFirstName("Ivan");
-        trainer.setLastName("Ivanov");
-        trainer.setUsername("Ivan.Ivanov");
-        trainer.setActive(true);
-
-        when(trainerRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(trainer);
-        when(trainerRepository.save(any()))
-                .thenReturn(trainer);
-
-        trainerService.deactivateByUsername("Ivan.Ivanov");
-        assertEquals(false, trainer.getActive());
-    }
 }

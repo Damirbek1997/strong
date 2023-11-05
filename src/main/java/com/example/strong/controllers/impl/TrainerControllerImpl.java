@@ -42,16 +42,4 @@ public class TrainerControllerImpl implements TrainerController {
     public ResponseEntity<List<ResponseTrainerModel>> getAllNotBusyTrainers() {
         return new ResponseEntity<>(trainerService.getAllNotBusyTrainers(), HttpStatus.OK);
     }
-
-    @Override
-    @PreAuthenticated
-    public ResponseEntity<String> updateStatus(String username, Boolean isActive) {
-        if (isActive) {
-            trainerService.activateByUsername(username);
-        } else {
-            trainerService.deactivateByUsername(username);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

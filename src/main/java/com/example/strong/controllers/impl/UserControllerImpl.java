@@ -27,4 +27,16 @@ public class UserControllerImpl implements UserController {
         userService.changePassword(username, password, newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    @PreAuthenticated
+    public ResponseEntity<String> updateStatus(String username, Boolean active) {
+        if (active) {
+            userService.activateByUsername(username);
+        } else {
+            userService.deactivateByUsername(username);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -78,16 +78,4 @@ public interface TraineeController {
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
     ResponseEntity<String> deleteByUsername(@RequestHeader(name = "username", required = false) String username);
-
-    @PatchMapping("/status")
-    @Operation(summary = "Update trainee status")
-    @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated status of a trainee"),
-            @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
-            @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
-    })
-    ResponseEntity<String> updateStatus(@RequestHeader(value = "username", required = false) String username,
-                                        @RequestParam Boolean isActive);
 }

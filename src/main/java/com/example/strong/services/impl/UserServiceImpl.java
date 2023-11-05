@@ -83,4 +83,32 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("active must be filled!");
         }
     }
+
+    @Override
+    public void activateByUsername(String username) {
+        User user = getEntityByUser(username);
+
+        user.setActive(true);
+        userRepository.save(user);
+        log.debug("Activated User with username: {}", username);
+    }
+
+    @Override
+    public void deactivateByUsername(String username) {
+        User user = getEntityByUser(username);
+        user.setActive(false);
+        userRepository.save(user);
+        log.debug("Activated User with username: {}", username);
+    }
+
+    private User getEntityByUser(String username) {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            log.error("There is no user with username {}", username);
+            throw new BadRequestException("There is no user with username: " + username);
+        }
+
+        return user;
+    }
 }

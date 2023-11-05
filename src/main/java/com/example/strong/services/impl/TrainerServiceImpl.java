@@ -114,24 +114,6 @@ public class TrainerServiceImpl implements TrainerService {
         return trainerMapper.toModel(savedTrainer);
     }
 
-    @Override
-    @Transactional
-    public void activateByUsername(String username) {
-        Trainer trainer = getEntityByUsername(username);
-        trainer.setActive(true);
-        trainerRepository.save(trainer);
-        log.debug("Activated User with username: {}", trainer.getUsername());
-    }
-
-    @Override
-    @Transactional
-    public void deactivateByUsername(String username) {
-        Trainer trainer = getEntityByUsername(username);
-        trainer.setActive(false);
-        trainerRepository.save(trainer);
-        log.debug("Activated User with username: {}", trainer.getUsername());
-    }
-
     private Trainer getEntityById(Long id) {
         Optional<Trainer> trainerOptional = trainerRepository.findById(id);
 

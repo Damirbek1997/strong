@@ -32,18 +32,19 @@ public class TransactionLoggingFilter extends OncePerRequestFilter {
         Map<String, String> reqHeaders = getHeaders(request);
 
         try {
-            log.info("Transaction ({}) started: endpoint {} called; parameters {}; headers {}", transactionId, request.getRequestURI(), parameters, reqHeaders);
+            // todo: try to make logging easier
+            log.info("Transaction started: endpoint {} called; parameters {}; headers {}", request.getRequestURI(), parameters, reqHeaders);
             ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
             filterChain.doFilter(request, responseWrapper);
-            logResponse(transactionId, request.getRequestURI(), responseWrapper);
+            logResponse(request.getRequestURI(), responseWrapper);
         } finally {
             MDC.clear();
         }
     }
 
-    private void logResponse(String transactionId, String requestURI, ContentCachingResponseWrapper responseWrapper) throws IOException {
+    private void logResponse(String requestURI, ContentCachingResponseWrapper responseWrapper) throws IOException {
         String responseBody = new String(responseWrapper.getContentAsByteArray());
-        log.info("Transaction ({}) ended: endpoint {} called; response code {}; body {}", transactionId, requestURI, responseWrapper.getStatus(), responseBody);
+        log.info("Transaction ended: endpoint {} called; response code {}; body {}", requestURI, responseWrapper.getStatus(), responseBody);
         responseWrapper.copyBodyToResponse(); // Restore the response body for further processing
     }
 
