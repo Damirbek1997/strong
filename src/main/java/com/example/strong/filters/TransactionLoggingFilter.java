@@ -32,7 +32,6 @@ public class TransactionLoggingFilter extends OncePerRequestFilter {
         Map<String, String> reqHeaders = getHeaders(request);
 
         try {
-            // todo: try to make logging easier
             log.info("Transaction started: endpoint {} called; parameters {}; headers {}", request.getRequestURI(), parameters, reqHeaders);
             ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
             filterChain.doFilter(request, responseWrapper);
