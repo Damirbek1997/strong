@@ -144,8 +144,8 @@ class TrainerServiceImplTest {
 
         when(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()))
                 .thenReturn(trainingType);
-        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
-                .thenReturn(0L);
+        when(userService.getUniqueUsername(trainer.getUsername()))
+                .thenReturn(trainer.getUsername());
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
@@ -182,8 +182,8 @@ class TrainerServiceImplTest {
 
         when(userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName()))
                 .thenReturn(trainer.getUsername());
-        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
-                .thenReturn(0L);
+        when(userService.getUniqueUsername(trainer.getUsername()))
+                .thenReturn(trainer.getUsername());
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);
@@ -235,8 +235,8 @@ class TrainerServiceImplTest {
 
         when(userService.generateUsername(trainer.getFirstName(), trainer.getLastName()))
                 .thenReturn(trainer.getUsername());
-        when(trainerRepository.countByUsernameLike(trainer.getUsername()))
-                .thenReturn(0L);
+        when(userService.getUniqueUsername(trainer.getUsername()))
+                .thenReturn(trainer.getUsername());
 
         when(trainerRepository.save(any()))
                 .thenReturn(trainer);

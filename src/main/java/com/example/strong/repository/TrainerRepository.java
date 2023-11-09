@@ -16,5 +16,4 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
             "select t.trainer.id from Training t where " +
             "year(t.trainingDate) = year(current_date) and month(t.trainingDate) = month(current_date))")
     List<Trainer> getAllNotBusyTrainers();
-    Long countByUsernameLike(String username);
 }

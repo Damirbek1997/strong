@@ -64,6 +64,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setUsername(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
         trainee.setPassword(userService.generatePassword());
         trainee.setActive(true);
+        trainee.setUsername(userService.getUniqueUsername(trainee.getUsername()));
 
         if (createTraineeModel.getBirthday() != null) {
             trainee.setBirthday(createTraineeModel.getBirthday());
@@ -73,11 +74,6 @@ public class TraineeServiceImpl implements TraineeService {
             trainee.setAddress(createTraineeModel.getAddress());
         }
 
-        Long amountOfUsers = traineeRepository.countByUsernameLike(trainee.getUsername());
-
-        if (amountOfUsers > 0) {
-            trainee.setUsername(trainee.getUsername() + amountOfUsers);
-        }
 
         traineeRepository.save(trainee);
         log.info("Created Trainee with model {}", createTraineeModel);
@@ -105,8 +101,7 @@ public class TraineeServiceImpl implements TraineeService {
         }
 
         String username = userService.generateUsername(updateTraineeModel.getFirstName(), updateTraineeModel.getLastName());
-        Long amountOfUsers = traineeRepository.countByUsernameLike(username);
-        trainee.setUsername(amountOfUsers > 0 ? username + amountOfUsers : username);
+        trainee.setUsername(userService.getUniqueUsername(username));
 
         TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.save(trainee));
         log.info("Updated Trainee with model {}", updateTraineeModel);

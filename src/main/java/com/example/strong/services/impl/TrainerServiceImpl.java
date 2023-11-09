@@ -75,12 +75,7 @@ public class TrainerServiceImpl implements TrainerService {
         trainer.setPassword(userService.generatePassword());
         trainer.setActive(true);
         trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
-
-        Long amountOfUsers = trainerRepository.countByUsernameLike(trainer.getUsername());
-
-        if (amountOfUsers > 0) {
-            trainer.setUsername(trainer.getUsername() + amountOfUsers);
-        }
+        trainer.setUsername(userService.getUniqueUsername(trainer.getUsername()));
 
         trainerRepository.save(trainer);
         log.info("Created Trainer with model {}", createTrainerModel);
@@ -105,9 +100,7 @@ public class TrainerServiceImpl implements TrainerService {
         }
 
         String username = userService.generateUsername(updateTrainerModel.getFirstName(), updateTrainerModel.getLastName());
-        Long amountOfUsers = trainerRepository.countByUsernameLike(username);
-
-        trainer.setUsername(amountOfUsers > 0 ? username + amountOfUsers : username);
+        trainer.setUsername(userService.getUniqueUsername(username));
 
         Trainer savedTrainer = trainerRepository.save(trainer);
         log.info("Updated Trainer with model {}", updateTrainerModel);

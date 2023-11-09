@@ -87,7 +87,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void activateByUsername(String username) {
         User user = getEntityByUser(username);
-
         user.setActive(true);
         userRepository.save(user);
         log.debug("Activated User with username: {}", username);
@@ -99,6 +98,17 @@ public class UserServiceImpl implements UserService {
         user.setActive(false);
         userRepository.save(user);
         log.debug("Activated User with username: {}", username);
+    }
+
+    public String getUniqueUsername(String username) {
+        String usernameWithPercent = username + "%";
+        Long amountOfUsers = userRepository.countByUsernameLike(usernameWithPercent);
+
+        if (amountOfUsers > 0) {
+            username = username + amountOfUsers;
+        }
+
+        return username;
     }
 
     private User getEntityByUser(String username) {

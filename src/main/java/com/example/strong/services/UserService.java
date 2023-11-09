@@ -12,4 +12,5 @@ public interface UserService {
     void validateFields(UpdateUserModel updateUserModel);
     void activateByUsername(String username);
     void deactivateByUsername(String username);
+    String getUniqueUsername(String username);
 }

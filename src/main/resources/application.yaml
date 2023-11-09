@@ -6,12 +6,18 @@ spring:
 
 management:
   endpoint:
+    health:
+      show-details: always
     info:
       enabled: true
   endpoints:
     web:
       exposure:
-        include: health,metrics,prometheus,loggers
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
 logging:
   level:
