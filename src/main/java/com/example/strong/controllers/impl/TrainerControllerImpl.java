@@ -8,6 +8,7 @@ import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
 import com.example.strong.services.TrainerService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +26,7 @@ public class TrainerControllerImpl implements TrainerController {
     }
 
     @Override
+    @Timed(value = "trainer.creating.time", description = "Time taken to create trainer")
     public ResponseCredentialsModel create(CreateTrainerModel createTrainerModel) {
         return trainerService.create(createTrainerModel);
     }

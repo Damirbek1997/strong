@@ -1,15 +1,17 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/strong
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
+  profiles:
+    active: ${PROFILE}
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoint:
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,loggers
 
 logging:
   level:
