@@ -4,8 +4,6 @@ import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.controllers.UserController;
 import com.example.strong.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,28 +13,23 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<String> login() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public void login() {
+        // the business logic in HasRequestPermissionAspect
     }
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<String> changeCredentials(String username,
-                                                    String password,
-                                                    String newPassword) {
+    public void changeCredentials(String username, String password, String newPassword) {
         userService.changePassword(username, password, newPassword);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<String> updateStatus(String username, Boolean active) {
+    public void updateStatus(String username, Boolean active) {
         if (active) {
             userService.activateByUsername(username);
         } else {
             userService.deactivateByUsername(username);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

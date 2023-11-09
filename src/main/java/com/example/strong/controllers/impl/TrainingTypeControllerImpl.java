@@ -5,8 +5,6 @@ import com.example.strong.controllers.TrainingTypeController;
 import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.services.TrainingTypeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,7 +16,7 @@ public class TrainingTypeControllerImpl implements TrainingTypeController {
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<List<TrainingTypeModel>> getAll() {
-        return new ResponseEntity<>(trainingTypeService.getAll(), HttpStatus.OK);
+    public List<TrainingTypeModel> getAll() {
+        return trainingTypeService.getAll();
     }
 }

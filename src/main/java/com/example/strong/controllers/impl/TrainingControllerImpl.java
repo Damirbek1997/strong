@@ -6,8 +6,6 @@ import com.example.strong.models.TrainingModel;
 import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.services.TrainingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -20,21 +18,20 @@ public class TrainingControllerImpl implements TrainingController {
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<List<TrainingModel>> getAllByTraineeUsername(String username, Date periodFrom, Date periodTo,
-                                                                       String trainerName, Long trainingTypeId) {
-        return new ResponseEntity<>(trainingService.getAllByTraineeUsername(username, periodFrom, periodTo, trainerName, trainingTypeId), HttpStatus.OK);
+    public List<TrainingModel> getAllByTraineeUsername(String username, Date periodFrom, Date periodTo,
+                                                       String trainerName, Long trainingTypeId) {
+        return trainingService.getAllByTraineeUsername(username, periodFrom, periodTo, trainerName, trainingTypeId);
     }
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<List<TrainingModel>> getAllByTrainerUsername(String username, Date periodFrom, Date periodTo, String traineeName) {
-        return new ResponseEntity<>(trainingService.getAllByTrainerUsername(username, periodFrom, periodTo, traineeName), HttpStatus.OK);
+    public List<TrainingModel> getAllByTrainerUsername(String username, Date periodFrom, Date periodTo, String traineeName) {
+        return trainingService.getAllByTrainerUsername(username, periodFrom, periodTo, traineeName);
     }
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<String> create(CreateTrainingModel createTrainingModel) {
+    public void create(CreateTrainingModel createTrainingModel) {
         trainingService.create(createTrainingModel);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

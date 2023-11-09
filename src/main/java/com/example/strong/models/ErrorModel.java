@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ResponseModel<T> {
+public class ErrorModel {
     private String message;
 }

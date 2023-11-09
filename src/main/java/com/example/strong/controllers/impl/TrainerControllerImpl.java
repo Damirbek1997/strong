@@ -9,8 +9,6 @@ import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
 import com.example.strong.services.TrainerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,24 +20,24 @@ public class TrainerControllerImpl implements TrainerController {
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<TrainerModel> getProfile(String username) {
-        return new ResponseEntity<>(trainerService.getByUsername(username), HttpStatus.OK);
+    public TrainerModel getProfile(String username) {
+        return trainerService.getByUsername(username);
     }
 
     @Override
-    public ResponseEntity<ResponseCredentialsModel> create(CreateTrainerModel createTrainerModel) {
-        return new ResponseEntity<>(trainerService.create(createTrainerModel), HttpStatus.CREATED);
-    }
-
-    @Override
-    @PreAuthenticated
-    public ResponseEntity<TrainerModel> update(Long id, UpdateTrainerModel updateTrainerModel) {
-        return new ResponseEntity<>(trainerService.update(id, updateTrainerModel), HttpStatus.OK);
+    public ResponseCredentialsModel create(CreateTrainerModel createTrainerModel) {
+        return trainerService.create(createTrainerModel);
     }
 
     @Override
     @PreAuthenticated
-    public ResponseEntity<List<ResponseTrainerModel>> getAllNotBusyTrainers() {
-        return new ResponseEntity<>(trainerService.getAllNotBusyTrainers(), HttpStatus.OK);
+    public TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel) {
+        return trainerService.update(id, updateTrainerModel);
+    }
+
+    @Override
+    @PreAuthenticated
+    public List<ResponseTrainerModel> getAllNotBusyTrainers() {
+        return trainerService.getAllNotBusyTrainers();
     }
 }

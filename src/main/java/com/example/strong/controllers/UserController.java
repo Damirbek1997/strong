@@ -8,12 +8,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/user")
 public interface UserController {
     @GetMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Login")
     @Parameters({
             @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
@@ -24,8 +25,9 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    ResponseEntity<String> login();
+    void login();
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/change-credentials")
     @Operation(summary = "Update user credentials")
     @ApiResponses(value = {
@@ -34,11 +36,12 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    ResponseEntity<String> changeCredentials(@RequestHeader(value = "username", required = false) String username,
-                                             @RequestHeader(value = "password", required = false) String password,
-                                             @RequestParam String newPassword);
+    void changeCredentials(@RequestHeader(value = "username", required = false) String username,
+                           @RequestHeader(value = "password", required = false) String password,
+                           @RequestParam String newPassword);
 
     @PatchMapping("/status")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update user status")
     @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
     @ApiResponses(value = {
@@ -47,6 +50,6 @@ public interface UserController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    ResponseEntity<String> updateStatus(@RequestHeader(value = "username", required = false) String username,
-                                        @RequestParam Boolean active);
+    void updateStatus(@RequestHeader(value = "username", required = false) String username,
+                      @RequestParam Boolean active);
 }
