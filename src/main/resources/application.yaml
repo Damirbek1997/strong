@@ -1,6 +1,24 @@
-log4j:
-  rootLogger: DEBUG
+spring:
+  profiles:
+    active: ${PROFILE}
+  main:
+    allow-bean-definition-overriding: true
 
-storage:
-  file:
-    path:
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    root: info

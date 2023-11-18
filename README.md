@@ -1,1 +1,1 @@
-# Test task for part Spring core
+# Tesk task for Spring Boot part
