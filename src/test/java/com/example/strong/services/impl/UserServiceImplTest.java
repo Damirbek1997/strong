@@ -8,8 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +22,8 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
     @Mock
     UserRepository userRepository;
+    @Mock
+    BCryptPasswordEncoder encoder;
 
     @Test
     void generateUsername_withValidData_shouldReturnUsername() {
@@ -32,40 +37,18 @@ class UserServiceImplTest {
     }
 
     @Test
-    void isUserExist_withValidData_shouldReturnTrue() {
-        User user = new User();
-        user.setUsername("Ivan");
-        user.setPassword("Ivan");
-
-        String username = "Ivan";
-        String password = "Ivan";
-
-        when(userRepository.findByUsernameAndPassword(username, password))
-                .thenReturn(user);
-
-        boolean userExist = userService.isUserExist(username, password);
-
-        assertTrue(userExist);
-    }
-
-    @Test
-    void isUserExist_withValidData_shouldReturnFalse() {
-        String username = "Ivan";
-        String password = "Ivan";
-
-        when(userRepository.findByUsernameAndPassword(username, password))
-                .thenReturn(null);
-
-        boolean userExist = userService.isUserExist(username, password);
-
-        assertFalse(userExist);
-    }
-
-    @Test
     void changePassword_withValidData_shouldReturnVoid() {
         String username = "Ivan.Ivanov";
         String oldPassword = "oldPassword";
         String newPassword = "newPassword";
+
+        User oldUser = new User();
+        oldUser.setId(1L);
+        oldUser.setFirstName("Ivan");
+        oldUser.setLastName("Ivanov");
+        oldUser.setUsername("Ivan.Ivanov");
+        oldUser.setActive(true);
+        oldUser.setPassword(BCrypt.hashpw(oldPassword, BCrypt.gensalt()));
 
         User user = new User();
         user.setId(1L);
@@ -73,10 +56,12 @@ class UserServiceImplTest {
         user.setLastName("Ivanov");
         user.setUsername("Ivan.Ivanov");
         user.setActive(true);
-        user.setPassword("newPassword");
+        user.setPassword(newPassword);
 
-        when(userRepository.findByUsernameAndPassword(username, oldPassword))
-                .thenReturn(user);
+        when(userRepository.findByUsername(username))
+                .thenReturn(oldUser);
+        when(encoder.matches(oldPassword, oldUser.getPassword()))
+                .thenReturn(true);
         when(userRepository.save(any()))
                 .thenReturn(user);
 
@@ -98,7 +83,7 @@ class UserServiceImplTest {
         user.setActive(true);
         user.setPassword("newPassword");
 
-        when(userRepository.findByUsernameAndPassword(username, oldPassword))
+        when(userRepository.findByUsername(username))
                 .thenReturn(null);
 
         assertThrows(BadRequestException.class, () -> userService.changePassword(username, oldPassword, newPassword));

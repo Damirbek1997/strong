@@ -176,11 +176,11 @@ class TraineeServiceImplTest {
     }
 
     @Test
-    void deleteById_withValidId_shouldReturnVoid() {
+    void deleteByUsername_withValidUsername_shouldReturnVoid() {
         doNothing()
                 .when(traineeRepository)
-                .deleteById(1L);
+                .deleteByUsername("Trainer.Trainer");
         traineeService.deleteByUsername("Trainer.Trainer");
-        verify(traineeRepository).deleteById(1L);
+        verify(traineeRepository).deleteByUsername("Trainer.Trainer");
     }
 }

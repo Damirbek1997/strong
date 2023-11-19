@@ -40,15 +40,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserExist(String username, String password) {
-        User user = userRepository.findByUsernameAndPassword(username, password);
-        return user != null;
-    }
-
-    @Override
     @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) {
-        User user = userRepository.findByUsernameAndPassword(username, oldPassword);
+        User user = userRepository.findByUsername(username);
 
         if (user == null) {
             log.error("Incorrect username or password!");
