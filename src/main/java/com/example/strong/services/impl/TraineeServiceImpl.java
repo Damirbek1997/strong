@@ -5,11 +5,11 @@ import com.example.strong.entities.Trainer;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TraineeRepository;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
@@ -57,12 +57,13 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public ResponseCredentialsModel create(CreateTraineeModel createTraineeModel) {
         validateFields(createTraineeModel);
+        String password = userService.generatePassword();
 
         Trainee trainee = new Trainee();
         trainee.setFirstName(createTraineeModel.getFirstName());
         trainee.setLastName(createTraineeModel.getLastName());
         trainee.setUsername(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
-        trainee.setPassword(userService.generatePassword());
+        trainee.setPassword(userService.encode(password));
         trainee.setActive(true);
         trainee.setUsername(userService.getUniqueUsername(trainee.getUsername()));
 
@@ -79,7 +80,7 @@ public class TraineeServiceImpl implements TraineeService {
         log.info("Created Trainee with model {}", createTraineeModel);
         return ResponseCredentialsModel.builder()
                 .username(trainee.getUsername())
-                .password(trainee.getPassword())
+                .password(password)
                 .build();
     }
 
@@ -124,9 +125,9 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        traineeRepository.deleteById(id);
-        log.info("Deleted Trainee with id {}", id);
+    public void deleteByUsername(String username) {
+        traineeRepository.deleteByUsername(username);
+        log.info("Deleted Trainee with username {}", username);
     }
 
     private Trainee getEntityById(Long id) {

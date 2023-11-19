@@ -2,11 +2,7 @@ package com.example.strong.controllers;
 
 import com.example.strong.models.TrainingTypeModel;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -21,10 +17,6 @@ public interface TrainingTypeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all training type list")
-    @Parameters({
-            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
-            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved training type list"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),

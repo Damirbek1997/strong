@@ -3,8 +3,8 @@ package com.example.strong.mappers.impl;
 import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
 import com.example.strong.mappers.AbstractMapper;
-import com.example.strong.models.ResponseTraineeModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseTraineeModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import org.springframework.stereotype.Component;
 

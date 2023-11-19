@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     Trainee findByUsername(String username);
+    void deleteByUsername(String username);
 }

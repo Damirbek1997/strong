@@ -1,9 +1,8 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.configs.annotations.PreAuthenticated;
 import com.example.strong.controllers.TrainerController;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
@@ -20,7 +19,6 @@ public class TrainerControllerImpl implements TrainerController {
     private final TrainerService trainerService;
 
     @Override
-    @PreAuthenticated
     public TrainerModel getProfile(String username) {
         return trainerService.getByUsername(username);
     }
@@ -32,13 +30,11 @@ public class TrainerControllerImpl implements TrainerController {
     }
 
     @Override
-    @PreAuthenticated
     public TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel) {
         return trainerService.update(id, updateTrainerModel);
     }
 
     @Override
-    @PreAuthenticated
     public List<ResponseTrainerModel> getAllNotBusyTrainers() {
         return trainerService.getAllNotBusyTrainers();
     }

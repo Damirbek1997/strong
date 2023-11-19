@@ -3,11 +3,11 @@ package com.example.strong.services.impl;
 import com.example.strong.entities.Trainer;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainerMapper;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TrainerRepository;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.TrainingTypeService;
@@ -68,11 +68,12 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public ResponseCredentialsModel create(CreateTrainerModel createTrainerModel) {
         validateFields(createTrainerModel);
+        String password = userService.generatePassword();
         Trainer trainer = new Trainer();
         trainer.setFirstName(createTrainerModel.getFirstName());
         trainer.setLastName(createTrainerModel.getLastName());
         trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
-        trainer.setPassword(userService.generatePassword());
+        trainer.setPassword(userService.encode(password));
         trainer.setActive(true);
         trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
         trainer.setUsername(userService.getUniqueUsername(trainer.getUsername()));
@@ -81,7 +82,7 @@ public class TrainerServiceImpl implements TrainerService {
         log.info("Created Trainer with model {}", createTrainerModel);
         return ResponseCredentialsModel.builder()
                 .username(trainer.getUsername())
-                .password(trainer.getPassword())
+                .password(password)
                 .build();
     }
 

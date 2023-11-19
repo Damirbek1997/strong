@@ -1,4 +1,4 @@
-package com.example.strong.models;
+package com.example.strong.models.response;
 
 import lombok.Builder;
 import lombok.Getter;

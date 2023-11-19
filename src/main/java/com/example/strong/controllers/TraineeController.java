@@ -1,16 +1,12 @@
 package com.example.strong.controllers;
 
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -23,14 +19,13 @@ public interface TraineeController {
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get profile of current trainee")
-    @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainee profile"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    TraineeModel getProfile(@RequestHeader(name = "username", required = false) String username);
+    TraineeModel getProfile(@RequestParam String username);
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,10 +40,6 @@ public interface TraineeController {
     @PutMapping("/{id:\\d+}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a trainee")
-    @Parameters({
-            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
-            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated a trainee"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
@@ -60,10 +51,6 @@ public interface TraineeController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id:\\d+}/trainer-list")
     @Operation(summary = "Update a trainee's trainer list")
-    @Parameters({
-            @Parameter(name = "username", in = ParameterIn.HEADER, schema = @Schema(type = "string")),
-            @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated a trainee's trainer list"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
@@ -75,12 +62,11 @@ public interface TraineeController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete trainee by username")
-    @Parameter(name = "password", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully deleted a trainee"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource", content = @Content),
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    void deleteByUsername(@RequestHeader(name = "username", required = false) String username);
+    void deleteByUsername(@RequestParam String username);
 }

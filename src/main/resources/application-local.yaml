@@ -14,3 +14,7 @@ spring:
 logging:
   level:
     root: info
+
+protect:
+  attempt:
+    brute-force: 3

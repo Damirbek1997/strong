@@ -1,8 +1,8 @@
 package com.example.strong.services;
 
 import com.example.strong.entities.Trainer;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;

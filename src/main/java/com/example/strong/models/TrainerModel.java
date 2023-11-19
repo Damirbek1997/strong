@@ -1,5 +1,6 @@
 package com.example.strong.models;
 
+import com.example.strong.models.response.ResponseTraineeModel;
 import lombok.Getter;
 import lombok.Setter;
 

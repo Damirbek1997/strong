@@ -6,8 +6,8 @@ import com.example.strong.entities.TrainingType;
 import com.example.strong.entities.User;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.UserModel;
 import com.example.strong.models.crud.CreateTraineeModel;
@@ -180,7 +180,7 @@ class TraineeServiceImplTest {
         doNothing()
                 .when(traineeRepository)
                 .deleteById(1L);
-        traineeService.deleteById(1L);
+        traineeService.deleteByUsername("Trainer.Trainer");
         verify(traineeRepository).deleteById(1L);
     }
 }

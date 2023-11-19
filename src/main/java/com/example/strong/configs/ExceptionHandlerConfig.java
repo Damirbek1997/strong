@@ -1,10 +1,10 @@
 package com.example.strong.configs;
 
 import com.example.strong.exceptions.BadRequestException;
-import com.example.strong.exceptions.UnauthorizedRequestException;
 import com.example.strong.models.ErrorModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,17 +22,17 @@ public class ExceptionHandlerConfig extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(value = UnauthorizedRequestException.class)
-    protected ErrorModel handleNotAuthorizedRequestException(UnauthorizedRequestException ex) {
-        log.error("Incorrect request, msg: {}", ex.getMessage());
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = BadCredentialsException.class)
+    protected ErrorModel handleRuntimeException(BadCredentialsException ex) {
+        log.error("Something went wrong, msg: {}", ex.getMessage());
         return ErrorModel.builder()
                 .message(ex.getMessage())
                 .build();
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(value = Throwable.class)
+    @ExceptionHandler(value = RuntimeException.class)
     protected ErrorModel handleRuntimeException(RuntimeException ex) {
         log.error("Something went wrong, msg: {}", ex.getMessage());
         return ErrorModel.builder()

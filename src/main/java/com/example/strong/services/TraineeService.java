@@ -1,8 +1,8 @@
 package com.example.strong.services;
 
 import com.example.strong.entities.Trainee;
-import com.example.strong.models.ResponseCredentialsModel;
-import com.example.strong.models.ResponseTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
@@ -15,5 +15,5 @@ public interface TraineeService {
     ResponseCredentialsModel create(CreateTraineeModel createTraineeModel);
     TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel);
     List<ResponseTrainerModel> updateTrainerList(Long id, List<String> usernames);
-    void deleteById(Long id);
+    void deleteByUsername(String username);
 }
