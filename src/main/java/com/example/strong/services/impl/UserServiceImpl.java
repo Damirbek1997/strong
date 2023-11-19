@@ -45,12 +45,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            log.error("Incorrect username or password!");
             throw new BadRequestException("Incorrect username or password!");
         }
 
         if (!encoder.matches(oldPassword, user.getPassword())) {
-            log.error("Old password does not match!");
             throw new BadRequestException("Old password does not match!");
         }
 
@@ -118,7 +116,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            log.error("There is no user with username {}", username);
             throw new BadRequestException("There is no user with username: " + username);
         }
 

@@ -1,54 +1,87 @@
 package com.example.strong.controllers.impl;
 
 import com.example.strong.models.TrainingTypeModel;
+import com.example.strong.services.JwtService;
+import com.example.strong.services.impl.CustomUserDetailsService;
 import com.example.strong.services.impl.TrainingTypeServiceImpl;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(TrainingTypeControllerImpl.class)
 class TrainingTypeControllerImplTest {
-    @InjectMocks
-    private TrainingTypeControllerImpl trainingTypeController;
-    @Mock
-    TrainingTypeServiceImpl trainingTypeService;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private TrainingTypeServiceImpl trainingTypeService;
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private CustomUserDetailsService userDetailsService;
 
+    private String username;
+    private String contentType;
 
     @BeforeEach
     void beforeAll() {
-        RestAssuredMockMvc.standaloneSetup(trainingTypeController);
+        username = "Ivan.Ivanov";
+        contentType = "application/json";
+    }
+
+    @AfterEach
+    void afterEach() {
+        username = null;
+        contentType = null;
     }
 
     @Test
-    void getAll() {
+    @WithMockUser
+    void getAll_withValidData_shouldReturnTrainingTypeModelList() throws Exception {
         TrainingTypeModel trainingTypeModel = new TrainingTypeModel();
         trainingTypeModel.setId(1L);
         trainingTypeModel.setTypeName("type");
 
-        when(trainingTypeService.getAll())
-                .thenReturn(Collections.singletonList(trainingTypeModel));
+        List<TrainingTypeModel> trainingTypeModels = new ArrayList<>();
+        trainingTypeModels.add(trainingTypeModel);
 
-        RestAssuredMockMvc.given()
-                .when()
-                .get("/training-type")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value())
-                .body("$.size()", Matchers.equalTo(1))
-                .body("[0].id", Matchers.notNullValue())
-                .body("[0].typeName", Matchers.equalTo("type"));
+        mockAuthorization();
+        when(trainingTypeService.getAll())
+                .thenReturn(trainingTypeModels);
+
+        mockMvc.perform(get("/training-type")
+                        .header("Authorization", "Bearer token"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$[0].id").value(trainingTypeModel.getId()))
+                .andExpect(jsonPath("$[0].typeName").value(trainingTypeModel.getTypeName()));
 
         verify(trainingTypeService)
                 .getAll();
+    }
+
+    private void mockAuthorization() {
+        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+
+        when(jwtService.extractUsername("token"))
+                .thenReturn(username);
+        when(userDetailsService.loadUserByUsername(username))
+                .thenReturn(userDetails);
+        when(jwtService.validateToken("token", userDetails))
+                .thenReturn(true);
     }
 }

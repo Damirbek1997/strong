@@ -60,7 +60,6 @@ public class TrainerServiceImpl implements TrainerService {
             return trainer;
         }
 
-        log.error("There is no Trainer with username {}", username);
         throw new BadRequestException("There is no Trainer with username: " + username);
     }
 
@@ -115,7 +114,6 @@ public class TrainerServiceImpl implements TrainerService {
             return trainerOptional.get();
         }
 
-        log.error("There is no Trainer with id {}", id);
         throw new BadRequestException("There is no Trainer with id: " + id);
     }
 

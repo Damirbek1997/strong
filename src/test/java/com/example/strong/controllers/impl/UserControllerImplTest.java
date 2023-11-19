@@ -1,100 +1,160 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.services.impl.UserServiceImpl;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import com.example.strong.models.response.ResponseAuthenticationModel;
+import com.example.strong.services.BruteForceProtectService;
+import com.example.strong.services.JwtService;
+import com.example.strong.services.UserService;
+import com.example.strong.services.impl.CustomUserDetailsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import java.util.ArrayList;
 
-@ExtendWith(MockitoExtension.class)
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(UserControllerImpl.class)
 class UserControllerImplTest {
-    @InjectMocks
-    private UserControllerImpl userController;
-    @Mock
-    UserServiceImpl userService;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private BruteForceProtectService protectService;
+    @MockBean
+    private AuthenticationManager authenticationManager;
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private CustomUserDetailsService userDetailsService;
 
     private String username;
+    private String contentType;
 
     @BeforeEach
     void beforeAll() {
-        RestAssuredMockMvc.standaloneSetup(userController);
         username = "Ivan.Ivanov";
+        contentType = "application/json";
     }
 
     @AfterEach
     void afterEach() {
         username = null;
+        contentType = null;
     }
 
     @Test
-    void login() {
-        RestAssuredMockMvc.given()
-                .when()
-                .get("/user/login")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value());
+    @WithMockUser
+    void login_withValidData_shouldReturnResponseAuthenticationModel() throws Exception {
+        ResponseAuthenticationModel responseAuthenticationModel = new ResponseAuthenticationModel();
+        responseAuthenticationModel.setUsername(username);
+        responseAuthenticationModel.setToken("token");
+
+        var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, "password");
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                new User(username, "password", new ArrayList<>()),
+                "password",
+                new ArrayList<>()
+        );
+        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+
+        when(protectService.isBlocked(username))
+                .thenReturn(false);
+        when(authenticationManager.authenticate(usernamePasswordAuthenticationToken))
+                .thenReturn(authentication);
+        when(userDetailsService.loadUserByUsername(username))
+                .thenReturn(userDetails);
+        when(jwtService.generateToken(userDetails))
+                .thenReturn("token");
+
+        mockMvc.perform(get("/user/login")
+                        .param("username", username)
+                        .param("password", "password"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.username").value(responseAuthenticationModel.getUsername()))
+                .andExpect(jsonPath("$.token").value(responseAuthenticationModel.getToken()));
     }
 
     @Test
-    void changeCredentials() {
+    @WithMockUser
+    void changeCredentials_withValidData_shouldReturnVoid() throws Exception {
+        mockAuthorization();
         doNothing()
                 .when(userService)
                 .changePassword(username, "123123", "321321");
 
-        RestAssuredMockMvc.given()
-                .header("username", username)
-                .header("password", 123123)
-                .param("newPassword", 321321)
-                .when()
-                .put("/user/change-credentials")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value());
+        mockMvc.perform(put("/user/change-credentials")
+                        .header("Authorization", "Bearer token")
+                        .with(csrf())
+                        .param("username", username)
+                        .param("oldPassword", "123123")
+                        .param("newPassword", "321321"))
+                .andExpect(status().isOk());
 
         verify(userService)
                 .changePassword(username, "123123", "321321");
     }
 
     @Test
-    void updateStatus_withTrueArgument_shouldReturnOk() {
+    @WithMockUser
+    void updateStatus_withTrueArgument_shouldReturnOk() throws Exception {
+        mockAuthorization();
         doNothing()
                 .when(userService)
                 .activateByUsername(username);
 
-        RestAssuredMockMvc.given()
-                .header("username", username)
-                .param("active", true)
-                .when()
-                .patch("/user/status")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value());
+        mockMvc.perform(patch("/user/status")
+                        .header("Authorization", "Bearer token")
+                        .with(csrf())
+                        .param("username", username)
+                        .param("active", "true"))
+                .andExpect(status().isOk());
 
         verify(userService)
                 .activateByUsername(username);
     }
 
     @Test
-    void updateStatus_withFalseArgument_shouldReturnOk() {
+    @WithMockUser
+    void updateStatus_withFalseArgument_shouldReturnOk() throws Exception {
+        mockAuthorization();
         doNothing()
                 .when(userService)
                 .deactivateByUsername(username);
 
-        RestAssuredMockMvc.given()
-                .header("username", username)
-                .param("active", false)
-                .when()
-                .patch("/user/status")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value());
+        mockMvc.perform(patch("/user/status")
+                        .header("Authorization", "Bearer token")
+                        .with(csrf())
+                        .param("username", username)
+                        .param("active", "false"))
+                .andExpect(status().isOk());
 
         verify(userService)
                 .deactivateByUsername(username);
+    }
+
+    private void mockAuthorization() {
+        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+
+        when(jwtService.extractUsername("token"))
+                .thenReturn(username);
+        when(userDetailsService.loadUserByUsername(username))
+                .thenReturn(userDetails);
+        when(jwtService.validateToken("token", userDetails))
+                .thenReturn(true);
     }
 }

@@ -29,17 +29,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             String authz = getAuthorizationHeader(request);
 
-            if (authz == null) {
-                return;
-            }
+            if (authz != null) {
+                UserDetails userDetails = retrieveUserDetails(request);
+                String token = extractToken(request);
 
-            UserDetails userDetails = retrieveUserDetails(request);
-            String token = extractToken(request);
-
-            if (isTokenValid(token, userDetails)) {
-                setAuthenticationToContext(userDetails, request);
-            } else {
-                log.error("There is no Authentication in Headers");
+                if (isTokenValid(token, userDetails)) {
+                    setAuthenticationToContext(userDetails, request);
+                } else {
+                    log.error("There is no Authentication in Headers");
+                }
             }
         } catch (Exception ex) {
             log.error("Something went wrong", ex);

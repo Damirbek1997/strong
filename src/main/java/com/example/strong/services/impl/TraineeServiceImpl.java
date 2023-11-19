@@ -49,7 +49,6 @@ public class TraineeServiceImpl implements TraineeService {
             return trainee;
         }
 
-        log.error("There is no Trainee with username {}", username);
         throw new BadRequestException("There is no Trainee with username: " + username);
     }
 
@@ -137,7 +136,6 @@ public class TraineeServiceImpl implements TraineeService {
             return traineeOptional.get();
         }
 
-        log.error("There is no Trainee with id {}", id);
         throw new BadRequestException("There is no Trainee with id: " + id);
     }
 

@@ -34,7 +34,6 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
             return trainingTypeOptional.get();
         }
 
-        log.error("There is no TrainingType with id {}", id);
         throw new BadRequestException("There is no TrainingType with id: " + id);
     }
 }

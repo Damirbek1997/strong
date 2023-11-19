@@ -4,7 +4,6 @@ import com.example.strong.entities.User;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -34,7 +32,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            log.error("There is no user with username {}", username);
             throw new BadRequestException("There is no user with username: " + username);
         }
 

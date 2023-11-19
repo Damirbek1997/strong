@@ -3,48 +3,64 @@ package com.example.strong.controllers.impl;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
+import com.example.strong.services.JwtService;
+import com.example.strong.services.impl.CustomUserDetailsService;
 import com.example.strong.services.impl.TraineeServiceImpl;
-import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import org.hamcrest.Matchers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(TraineeControllerImpl.class)
 class TraineeControllerImplTest {
-    @InjectMocks
-    private TraineeControllerImpl traineeController;
-    @Mock
-    TraineeServiceImpl traineeService;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @MockBean
+    private TraineeServiceImpl traineeService;
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private CustomUserDetailsService userDetailsService;
 
     private String username;
+    private String contentType;
 
     @BeforeEach
     void beforeAll() {
-        RestAssuredMockMvc.standaloneSetup(traineeController);
         username = "Ivan.Ivanov";
+        contentType = "application/json";
     }
 
     @AfterEach
     void afterEach() {
         username = null;
+        contentType = null;
     }
 
     @Test
-    void getProfile_withUsernameAndPassword_shouldReturnTraineeModel() {
+    @WithMockUser
+    void getProfile_withUsernameAndPassword_shouldReturnTraineeModel() throws Exception {
         TraineeModel traineeModel = new TraineeModel();
         traineeModel.setId(1L);
         traineeModel.setFirstName("Ivan");
@@ -52,27 +68,28 @@ class TraineeControllerImplTest {
         traineeModel.setUsername("Ivan.Ivanov");
         traineeModel.setActive(true);
 
+        mockAuthorization();
         when(traineeService.getByUsername(username))
                 .thenReturn(traineeModel);
 
-        RestAssuredMockMvc.given()
-                .header("username", username)
-                .when()
-                .get("/trainee/profile")
-                .then()
-                .log().all().assertThat().statusCode(HttpStatus.OK.value())
-                .body("id", Matchers.notNullValue())
-                .body("firstName", Matchers.equalTo("Ivan"))
-                .body("lastName", Matchers.equalTo("Ivanov"))
-                .body("active", Matchers.equalTo(true))
-                .body("username", Matchers.equalTo("Ivan.Ivanov"));
+        mockMvc.perform(get("/trainee/profile")
+                        .header("Authorization", "Bearer token")
+                        .param("username", username))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id").value(traineeModel.getId()))
+                .andExpect(jsonPath("$.firstName").value(traineeModel.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(traineeModel.getLastName()))
+                .andExpect(jsonPath("$.username").value(traineeModel.getUsername()))
+                .andExpect(jsonPath("$.active").value(traineeModel.getActive()));
 
         verify(traineeService)
                 .getByUsername(username);
     }
 
     @Test
-    void create_withValidData() {
+    @WithMockUser
+    void create_withValidData_shouldReturnResponseCredentialsModel() throws Exception {
         Date birthDate = new Date();
 
         CreateTraineeModel createTraineeModel = new CreateTraineeModel();
@@ -81,41 +98,35 @@ class TraineeControllerImplTest {
         createTraineeModel.setAddress("address");
         createTraineeModel.setBirthday(birthDate);
 
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Petya");
-        traineeModel.setLastName("Petrov");
-        traineeModel.setUsername("Petya.Petrov");
-        traineeModel.setActive(true);
+        ResponseCredentialsModel responseCredentialsModel = new ResponseCredentialsModel();
+        responseCredentialsModel.setUsername("Petya.Petrov");
 
-        RestAssuredMockMvc.given()
-                .contentType(ContentType.JSON)
-                .body(createTraineeModel)
-                .when()
-                .post("/trainee")
-                .then()
-                .log().all().statusCode(HttpStatus.CREATED.value());
+        when(traineeService.create(any(CreateTraineeModel.class)))
+                .thenReturn(responseCredentialsModel);
 
-        when(traineeService.getByUsername("Petya.Petrov"))
-                .thenReturn(traineeModel);
+        mockMvc.perform(post("/trainee")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(createTraineeModel))
+                        .contentType(contentType))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.username").value(responseCredentialsModel.getUsername()));
 
-        RestAssuredMockMvc.given()
-                .contentType(ContentType.JSON)
-                .header("username", "Petya.Petrov")
-                .when()
-                .get("/trainee/profile")
-                .then()
-                .log().all().statusCode(HttpStatus.OK.value())
-                .body("id", Matchers.notNullValue())
-                .body("firstName", Matchers.equalTo("Petya"))
-                .body("lastName", Matchers.equalTo("Petrov"))
-                .body("active", Matchers.equalTo(true))
-                .body("username", Matchers.equalTo("Petya.Petrov"));
+        verify(traineeService)
+                .create(any(CreateTraineeModel.class));
     }
 
     @Test
-    void update_withValidData() {
+    @WithMockUser
+    void update_withValidData_shouldReturnTraineeModel() throws Exception {
         Date birthDate = new Date();
+
+        TraineeModel traineeModel = new TraineeModel();
+        traineeModel.setId(1L);
+        traineeModel.setFirstName("Ivan");
+        traineeModel.setLastName("Ivanov");
+        traineeModel.setUsername("Ivan.Ivanov");
+        traineeModel.setActive(true);
 
         UpdateTraineeModel updateTraineeModel = new UpdateTraineeModel();
         updateTraineeModel.setFirstName("Petya");
@@ -123,47 +134,82 @@ class TraineeControllerImplTest {
         updateTraineeModel.setAddress("address");
         updateTraineeModel.setBirthday(birthDate);
 
-        RestAssuredMockMvc.given()
-                .contentType(ContentType.JSON)
-                .body(updateTraineeModel)
-                .when()
-                .put("/trainee/1")
-                .then()
-                .log().all().statusCode(HttpStatus.OK.value());
+        mockAuthorization();
+        when(traineeService.update(eq(1L), any(UpdateTraineeModel.class)))
+                .thenReturn(traineeModel);
+
+        mockMvc.perform(put("/trainee/{id}", 1L)
+                        .header("Authorization", "Bearer token")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(updateTraineeModel))
+                        .contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id").value(traineeModel.getId()))
+                .andExpect(jsonPath("$.firstName").value(traineeModel.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(traineeModel.getLastName()))
+                .andExpect(jsonPath("$.username").value(traineeModel.getUsername()))
+                .andExpect(jsonPath("$.active").value(traineeModel.getActive()));
+
+        verify(traineeService)
+                .update(eq(1L), any(UpdateTraineeModel.class));
     }
 
     @Test
-    void updateTrainerList_withValidData() {
+    @WithMockUser
+    void updateTrainerList_withValidData_shouldReturnResponseTrainerModelList() throws Exception {
         List<String> trainerUsernames = new ArrayList<>();
         trainerUsernames.add("Petya.Petrov");
 
-        RestAssuredMockMvc.given()
-                .contentType(ContentType.JSON)
-                .body(trainerUsernames)
-                .when()
-                .put("/trainee/1/trainer-list")
-                .then()
-                .log().all().statusCode(HttpStatus.OK.value());
+        ResponseTrainerModel responseTrainerModel = new ResponseTrainerModel();
+        responseTrainerModel.setUsername("Petya.Petrov");
+
+        List<ResponseTrainerModel> responseTrainerModels = new ArrayList<>();
+        responseTrainerModels.add(responseTrainerModel);
+
+        mockAuthorization();
+        when(traineeService.updateTrainerList(eq(1L), anyList()))
+                .thenReturn(responseTrainerModels);
+
+        mockMvc.perform(put("/trainee/{id}/trainer-list", 1L)
+                        .header("Authorization", "Bearer token")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(trainerUsernames))
+                        .contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.[0].username").value("Petya.Petrov"));
+
+        verify(traineeService)
+                .updateTrainerList(eq(1L), anyList());
     }
 
     @Test
-    void deleteByUsername_withValidData_shouldReturnVoid() {
-        TraineeModel traineeModel = new TraineeModel();
-        traineeModel.setId(1L);
-        traineeModel.setFirstName("Petya");
-        traineeModel.setLastName("Petrov");
-        traineeModel.setUsername("Petya.Petrov");
-        traineeModel.setActive(true);
+    @WithMockUser
+    void deleteByUsername_withValidData_shouldReturnVoid() throws Exception {
+        mockAuthorization();
+        doNothing()
+                .when(traineeService)
+                .deleteByUsername(username);
 
-        when(traineeService.getByUsername("Petya.Petrov"))
-                .thenReturn(traineeModel);
+        mockMvc.perform(delete("/trainee")
+                        .with(csrf())
+                        .header("Authorization", "Bearer token")
+                        .param("username", username))
+                .andExpect(status().isOk());
 
-        RestAssuredMockMvc.given()
-                .contentType(ContentType.JSON)
-                .header("username", "Petya.Petrov")
-                .when()
-                .delete("/trainee")
-                .then()
-                .log().all().statusCode(HttpStatus.OK.value());
+        verify(traineeService)
+                .deleteByUsername(username);
+    }
+
+    private void mockAuthorization() {
+        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+
+        when(jwtService.extractUsername("token"))
+                .thenReturn(username);
+        when(userDetailsService.loadUserByUsername(username))
+                .thenReturn(userDetails);
+        when(jwtService.validateToken("token", userDetails))
+                .thenReturn(true);
     }
 }
