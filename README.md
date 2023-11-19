@@ -1,1 +1,1 @@
-# Tesk task for Spring Boot part
+# Tesk task for Spring Security part
