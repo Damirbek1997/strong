@@ -142,11 +142,11 @@ class TrainingControllerImplTest {
     private void mockAuthorization() {
         UserDetails userDetails = new User("username", "password", new ArrayList<>());
 
+        when(jwtService.validateToken("token"))
+                .thenReturn(true);
         when(jwtService.extractUsername("token"))
                 .thenReturn(username);
         when(userDetailsService.loadUserByUsername(username))
                 .thenReturn(userDetails);
-        when(jwtService.validateToken("token", userDetails))
-                .thenReturn(true);
     }
 }

@@ -9,6 +9,7 @@ import com.example.strong.models.crud.UpdateTrainerModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
 import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TrainerRepository;
+import com.example.strong.services.EncryptionService;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.TrainingTypeService;
 import com.example.strong.services.UserService;
@@ -29,6 +30,7 @@ public class TrainerServiceImpl implements TrainerService {
     private final TrainerMapper trainerMapper;
     private final UserService userService;
     private final TrainingTypeService trainingTypeService;
+    private final EncryptionService encryptionService;
 
     @Override
     public List<Trainer> getAllEntitiesByUsernames(List<String> usernames) {
@@ -72,7 +74,7 @@ public class TrainerServiceImpl implements TrainerService {
         trainer.setFirstName(createTrainerModel.getFirstName());
         trainer.setLastName(createTrainerModel.getLastName());
         trainer.setUsername(userService.generateUsername(createTrainerModel.getFirstName(), createTrainerModel.getLastName()));
-        trainer.setPassword(userService.encode(password));
+        trainer.setPassword(encryptionService.encode(password));
         trainer.setActive(true);
         trainer.setTrainingType(trainingTypeService.getById(createTrainerModel.getTrainingTypeId()));
         trainer.setUsername(userService.getUniqueUsername(trainer.getUsername()));

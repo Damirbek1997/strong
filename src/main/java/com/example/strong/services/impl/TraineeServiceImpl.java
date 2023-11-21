@@ -11,6 +11,7 @@ import com.example.strong.models.crud.UpdateTraineeModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
 import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TraineeRepository;
+import com.example.strong.services.EncryptionService;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.UserService;
@@ -33,6 +34,7 @@ public class TraineeServiceImpl implements TraineeService {
     private final TrainerMapper trainerMapper;
     private final TrainerService trainerService;
     private final UserService userService;
+    private final EncryptionService encryptionService;
 
     @Override
     public TraineeModel getByUsername(String username) {
@@ -62,7 +64,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setFirstName(createTraineeModel.getFirstName());
         trainee.setLastName(createTraineeModel.getLastName());
         trainee.setUsername(userService.generateUsername(createTraineeModel.getFirstName(), createTraineeModel.getLastName()));
-        trainee.setPassword(userService.encode(password));
+        trainee.setPassword(encryptionService.encode(password));
         trainee.setActive(true);
         trainee.setUsername(userService.getUniqueUsername(trainee.getUsername()));
 

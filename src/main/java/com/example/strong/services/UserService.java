@@ -14,5 +14,4 @@ public interface UserService {
     void deactivateByUsername(String username);
     String getUniqueUsername(String username);
     User getEntityByUsername(String username);
-    String encode(String password);
 }

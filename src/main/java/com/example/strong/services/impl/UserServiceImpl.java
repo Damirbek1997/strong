@@ -5,10 +5,10 @@ import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.models.crud.CreateUserModel;
 import com.example.strong.models.crud.UpdateUserModel;
 import com.example.strong.repository.UserRepository;
+import com.example.strong.services.EncryptionService;
 import com.example.strong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final EncryptionService encryptionService;
 
     @Override
     public String generateUsername(String firstName, String lastName) {
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Incorrect username or password!");
         }
 
-        if (!encoder.matches(oldPassword, user.getPassword())) {
+        if (!encryptionService.matches(oldPassword, user.getPassword())) {
             throw new BadRequestException("Old password does not match!");
         }
 
@@ -120,10 +120,5 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
-    }
-
-    @Override
-    public String encode(String password) {
-        return encoder.encode(password);
     }
 }

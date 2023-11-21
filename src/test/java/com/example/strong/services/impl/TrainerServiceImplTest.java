@@ -37,6 +37,8 @@ class TrainerServiceImplTest {
     @Mock
     UserService userService;
     @Mock
+    EncryptionServiceImpl encoder;
+    @Mock
     TrainingTypeService trainingTypeService;
 
     @Test

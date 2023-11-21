@@ -6,11 +6,11 @@ import com.example.strong.entities.TrainingType;
 import com.example.strong.entities.User;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
-import com.example.strong.models.response.ResponseCredentialsModel;
-import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.UserModel;
 import com.example.strong.models.crud.CreateTraineeModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TraineeRepository;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.UserService;
@@ -42,6 +42,8 @@ class TraineeServiceImplTest {
     TrainerService trainerService;
     @Mock
     UserService userService;
+    @Mock
+    EncryptionServiceImpl encoder;
 
     @Test
     void getByUsername_withValidUsername_shouldReturnTraineeModel() {
