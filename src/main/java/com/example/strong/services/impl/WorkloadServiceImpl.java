@@ -1,12 +1,12 @@
 package com.example.strong.services.impl;
 
+import com.example.strong.clients.workload.WorkloadServiceClient;
 import com.example.strong.entities.Training;
 import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.exceptions.UnexpectedException;
 import com.example.strong.models.WorkloadModel;
 import com.example.strong.models.crud.CreateWorkloadModel;
 import com.example.strong.services.WorkloadService;
-import com.example.strong.clients.WorkloadServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
