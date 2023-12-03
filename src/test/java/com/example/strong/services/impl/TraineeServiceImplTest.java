@@ -1,12 +1,11 @@
 package com.example.strong.services.impl;
 
-import com.example.strong.entities.Trainee;
-import com.example.strong.entities.Trainer;
-import com.example.strong.entities.TrainingType;
-import com.example.strong.entities.User;
+import com.example.strong.entities.*;
+import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TraineeModel;
+import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.models.UserModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
@@ -14,16 +13,14 @@ import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TraineeRepository;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.UserService;
+import com.example.strong.services.WorkloadService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -40,6 +37,8 @@ class TraineeServiceImplTest {
     TrainerMapper trainerMapper;
     @Mock
     TrainerService trainerService;
+    @Mock
+    WorkloadService workloadService;
     @Mock
     UserService userService;
     @Mock
@@ -179,10 +178,44 @@ class TraineeServiceImplTest {
 
     @Test
     void deleteByUsername_withValidUsername_shouldReturnVoid() {
+        Date birthDate = new Date();
+        Date trainingDate = new Date();
+
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
+        trainee.setFirstName("Ivan");
+        trainee.setLastName("Ivanov");
+        trainee.setUsername("Ivan.Ivanov");
+        trainee.setActive(true);
+        trainee.setBirthday(birthDate);
+        trainee.setAddress("Moscow");
+
+        TrainingType trainingType = new TrainingType();
+        trainingType.setId(1L);
+        trainingType.setTypeName("TypeName");
+
+        TrainingTypeModel trainingTypeModel = new TrainingTypeModel();
+        trainingTypeModel.setId(1L);
+        trainingTypeModel.setTypeName("TypeName");
+
+        Training training = new Training();
+        training.setId(1L);
+        training.setTrainingName("Training");
+        training.setTrainingDate(trainingDate);
+        training.setTrainingDuration(10L);
+        training.setTrainingType(trainingType);
+
+        trainee.setTrainings(Collections.singletonList(training));
+
+        when(traineeRepository.findByUsername(trainee.getUsername()))
+                .thenReturn(trainee);
         doNothing()
                 .when(traineeRepository)
-                .deleteByUsername("Trainer.Trainer");
-        traineeService.deleteByUsername("Trainer.Trainer");
-        verify(traineeRepository).deleteByUsername("Trainer.Trainer");
+                .deleteByUsername(trainee.getUsername());
+        doNothing()
+                .when(workloadService)
+                .create(Collections.singletonList(training), WorkloadActionType.DELETE);
+        traineeService.deleteByUsername(trainee.getUsername());
+        verify(traineeRepository).deleteByUsername(trainee.getUsername());
     }
 }

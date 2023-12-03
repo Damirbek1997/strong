@@ -1,6 +1,5 @@
 package com.example.strong.controllers;
 
-import com.example.strong.models.response.ResponseAuthenticationModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -13,16 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/user")
 public interface UserController {
-    @GetMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Login")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully logged in"),
-            @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
-    })
-    ResponseAuthenticationModel login(@RequestParam String username, @RequestParam String password);
-
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/change-credentials")
     @Operation(summary = "Update user credentials")

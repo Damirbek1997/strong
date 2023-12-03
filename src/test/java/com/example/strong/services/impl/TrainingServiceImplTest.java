@@ -4,6 +4,7 @@ import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
 import com.example.strong.entities.Training;
 import com.example.strong.entities.TrainingType;
+import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.mappers.impl.TrainingMapper;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.TrainingTypeModel;
@@ -11,6 +12,7 @@ import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.repository.TrainingRepository;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
+import com.example.strong.services.WorkloadService;
 import com.example.strong.specifications.TrainingSpecification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,8 @@ class TrainingServiceImplTest {
     TrainingMapper trainingMapper;
     @Mock
     TrainingSpecification trainingSpecification;
+    @Mock
+    WorkloadService workloadService;
 
     @Test
     void getAllByTraineesUsername_withValidUsername_shouldReturnTrainingModels() {
@@ -228,6 +232,9 @@ class TrainingServiceImplTest {
 
         when(trainingRepository.save(any()))
                 .thenReturn(training);
+        doNothing()
+                .when(workloadService)
+                .create(any(Training.class), eq(WorkloadActionType.ADD));
         when(trainingMapper.toModel(any()))
                 .thenReturn(trainingModel);
 

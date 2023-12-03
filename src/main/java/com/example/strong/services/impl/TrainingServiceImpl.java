@@ -1,6 +1,7 @@
 package com.example.strong.services.impl;
 
 import com.example.strong.entities.Training;
+import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainingMapper;
 import com.example.strong.models.TrainingModel;
@@ -9,6 +10,7 @@ import com.example.strong.repository.TrainingRepository;
 import com.example.strong.services.TraineeService;
 import com.example.strong.services.TrainerService;
 import com.example.strong.services.TrainingService;
+import com.example.strong.services.WorkloadService;
 import com.example.strong.specifications.TrainingSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainerService trainerService;
     private final TrainingMapper trainingMapper;
     private final TrainingSpecification trainingSpecification;
+    private final WorkloadService workloadService;
 
     @Override
     public List<TrainingModel> getAllByTraineeUsername(String traineeUsername, Date periodFrom, Date periodTo, String trainerName, Long trainingTypeId) {
@@ -59,6 +62,7 @@ public class TrainingServiceImpl implements TrainingService {
 
         trainingRepository.save(training);
         log.info("Created training with model {}", createTrainingModel);
+        workloadService.create(training, WorkloadActionType.ADD);
         return trainingMapper.toModel(training);
     }
 

@@ -1,4 +1,4 @@
-package com.example.strong.configs;
+package com.example.strong.configs.handlers;
 
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.models.ErrorModel;

@@ -2,6 +2,7 @@ package com.example.strong.services.impl;
 
 import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
+import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
@@ -11,10 +12,7 @@ import com.example.strong.models.crud.UpdateTraineeModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
 import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.repository.TraineeRepository;
-import com.example.strong.services.EncryptionService;
-import com.example.strong.services.TraineeService;
-import com.example.strong.services.TrainerService;
-import com.example.strong.services.UserService;
+import com.example.strong.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,7 @@ public class TraineeServiceImpl implements TraineeService {
     private final TrainerService trainerService;
     private final UserService userService;
     private final EncryptionService encryptionService;
+    private final WorkloadService workloadService;
 
     @Override
     public TraineeModel getByUsername(String username) {
@@ -75,7 +74,6 @@ public class TraineeServiceImpl implements TraineeService {
         if (createTraineeModel.getAddress() != null) {
             trainee.setAddress(createTraineeModel.getAddress());
         }
-
 
         traineeRepository.save(trainee);
         log.info("Created Trainee with model {}", createTraineeModel);
@@ -127,7 +125,9 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public void deleteByUsername(String username) {
+        Trainee trainee = getEntityByUsername(username);
         traineeRepository.deleteByUsername(username);
+        workloadService.create(trainee.getTrainings(), WorkloadActionType.DELETE);
         log.info("Deleted Trainee with username {}", username);
     }
 

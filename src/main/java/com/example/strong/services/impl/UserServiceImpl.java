@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Old password does not match!");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(encryptionService.encode(newPassword));
         userRepository.save(user);
         log.debug("Changed password to User with username: {}", user.getUsername());
     }

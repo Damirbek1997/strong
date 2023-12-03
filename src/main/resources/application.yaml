@@ -3,6 +3,8 @@ spring:
     active: ${PROFILE}
   main:
     allow-bean-definition-overriding: true
+  application:
+    name: strong-service
 
 management:
   endpoint:
@@ -24,10 +26,6 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
 
-logging:
-  level:
-    root: info
-
 web:
   cors:
     allowed-origins:
@@ -48,3 +46,24 @@ web:
       - "Authorization"
     exposed-headers:
       - "X-Get-Header"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+feign:
+  client:
+    config:
+      postFeignClient:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
+        requestInterceptors:
+          - com.example.strong.configs.FeignClientInterceptor
+        decode404: false
+
+server:
+  port: 8082
+  servlet:
+    context-path: /strong

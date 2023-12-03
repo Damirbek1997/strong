@@ -1,7 +1,5 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.models.response.ResponseAuthenticationModel;
-import com.example.strong.services.BruteForceProtectService;
 import com.example.strong.services.JwtService;
 import com.example.strong.services.UserService;
 import com.example.strong.services.impl.CustomUserDetailsService;
@@ -11,9 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -23,8 +18,9 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserControllerImpl.class)
 class UserControllerImplTest {
@@ -33,60 +29,20 @@ class UserControllerImplTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private BruteForceProtectService protectService;
-    @MockBean
-    private AuthenticationManager authenticationManager;
-    @MockBean
     private JwtService jwtService;
     @MockBean
     private CustomUserDetailsService userDetailsService;
 
     private String username;
-    private String contentType;
 
     @BeforeEach
     void beforeAll() {
         username = "Ivan.Ivanov";
-        contentType = "application/json";
     }
 
     @AfterEach
     void afterEach() {
         username = null;
-        contentType = null;
-    }
-
-    @Test
-    @WithMockUser
-    void login_withValidData_shouldReturnResponseAuthenticationModel() throws Exception {
-        ResponseAuthenticationModel responseAuthenticationModel = new ResponseAuthenticationModel();
-        responseAuthenticationModel.setUsername(username);
-        responseAuthenticationModel.setToken("token");
-
-        var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, "password");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                new User(username, "password", new ArrayList<>()),
-                "password",
-                new ArrayList<>()
-        );
-        UserDetails userDetails = new User("username", "password", new ArrayList<>());
-
-        when(protectService.isBlocked(username))
-                .thenReturn(false);
-        when(authenticationManager.authenticate(usernamePasswordAuthenticationToken))
-                .thenReturn(authentication);
-        when(userDetailsService.loadUserByUsername(username))
-                .thenReturn(userDetails);
-        when(jwtService.generateToken(userDetails))
-                .thenReturn("token");
-
-        mockMvc.perform(get("/user/login")
-                        .param("username", username)
-                        .param("password", "password"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.username").value(responseAuthenticationModel.getUsername()))
-                .andExpect(jsonPath("$.token").value(responseAuthenticationModel.getToken()));
     }
 
     @Test

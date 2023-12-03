@@ -11,27 +11,24 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 @Component
 @WebFilter(filterName = "transactionLoggingFilter", urlPatterns = "/*")
 public class MdcLoggingFilter extends OncePerRequestFilter {
+    private static final String TRANSACTION_NAME = "transactionId";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String transactionId = generateTransactionId();
-        MDC.put("transactionId", transactionId);
+        String transactionId = request.getHeader(TRANSACTION_NAME);
+        MDC.put(TRANSACTION_NAME, transactionId);
 
         try {
             log.info("Request came: endpoint {} called", request.getRequestURI());
-            response.setHeader("transactionId", transactionId);
+            response.setHeader(TRANSACTION_NAME, transactionId);
             filterChain.doFilter(request, response);
         } finally {
             MDC.clear();
         }
-    }
-
-    private String generateTransactionId() {
-        return UUID.randomUUID().toString();
     }
 }
