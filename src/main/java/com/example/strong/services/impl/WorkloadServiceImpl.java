@@ -1,17 +1,16 @@
 package com.example.strong.services.impl;
 
+import com.example.strong.clients.workload.WorkloadServiceClient;
 import com.example.strong.entities.Training;
 import com.example.strong.enums.WorkloadActionType;
+import com.example.strong.exceptions.UnexpectedException;
+import com.example.strong.models.WorkloadModel;
 import com.example.strong.models.crud.CreateWorkloadModel;
 import com.example.strong.services.WorkloadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessageType;
 import org.springframework.stereotype.Service;
 
-import javax.jms.ObjectMessage;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +18,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WorkloadServiceImpl implements WorkloadService {
-    private final JmsTemplate jmsTemplate;
+    private final WorkloadServiceClient workloadServiceClient;
 
     @Override
     public void create(Training training, WorkloadActionType workloadActionType) {
         CreateWorkloadModel createWorkloadModel = toCreateWorkloadModel(training, workloadActionType);
-        sendMessage("workload-create", createWorkloadModel);
-        log.info("Sent a workload with a model {} to Workload service", createWorkloadModel);
+        WorkloadModel workloadModel = workloadServiceClient.create(createWorkloadModel);
+
+        if (workloadModel == null) {
+            throw new UnexpectedException("Smth went wrong while trying to create workload");
+        }
+
+        log.debug("Created a workload with a model {}", createWorkloadModel);
     }
 
     @Override
@@ -36,16 +40,12 @@ public class WorkloadServiceImpl implements WorkloadService {
             createWorkloadModels.add(toCreateWorkloadModel(training, workloadActionType));
         }
 
-        sendMessage("workload-create-list", createWorkloadModels);
-        log.info("Sent workload list with a model {} to Workload service", createWorkloadModels);
-    }
+        List<WorkloadModel> workloadModels = workloadServiceClient.create(createWorkloadModels);
 
-    private void sendMessage(String destination, Object value) {
-        jmsTemplate.send(destination, session -> {
-            ObjectMessage objectMessage = session.createObjectMessage();
-            objectMessage.setObject((Serializable) value);
-            return objectMessage;
-        });
+        if (workloadModels == null || workloadModels.isEmpty()) {
+            throw new UnexpectedException("Smth went wrong while trying to create workload");
+        }
+        log.debug("Created workloads with models {}", createWorkloadModels);
     }
 
     private CreateWorkloadModel toCreateWorkloadModel(Training training, WorkloadActionType workloadActionType) {
