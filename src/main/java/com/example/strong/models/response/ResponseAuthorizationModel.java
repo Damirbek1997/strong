@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseAuthenticationModel {
+public class ResponseAuthorizationModel {
     private String username;
-    private String token;
+    private String authorities;
 }

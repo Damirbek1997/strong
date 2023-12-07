@@ -1,12 +1,12 @@
 package com.example.strong.controllers.impl;
 
+import com.example.strong.clients.workload.AuthServiceClient;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
+import com.example.strong.models.response.ResponseAuthorizationModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
 import com.example.strong.models.response.ResponseTrainerModel;
-import com.example.strong.services.JwtService;
-import com.example.strong.services.impl.CustomUserDetailsService;
 import com.example.strong.services.impl.TrainerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,9 +40,7 @@ class TrainerControllerImplTest {
     @MockBean
     private TrainerServiceImpl trainerService;
     @MockBean
-    private JwtService jwtService;
-    @MockBean
-    private CustomUserDetailsService userDetailsService;
+    private AuthServiceClient authServiceClient;
 
     private String username;
     private String contentType;
@@ -179,13 +175,11 @@ class TrainerControllerImplTest {
     }
 
     private void mockAuthorization() {
-        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+        ResponseAuthorizationModel responseAuthorizationModel = new ResponseAuthorizationModel();
+        responseAuthorizationModel.setUsername(username);
+        responseAuthorizationModel.setAuthorities("[USER]");
 
-        when(jwtService.validateToken("token"))
-                .thenReturn(true);
-        when(jwtService.extractUsername("token"))
-                .thenReturn(username);
-        when(userDetailsService.loadUserByUsername(username))
-                .thenReturn(userDetails);
+        when(authServiceClient.getAuthorities("token"))
+                .thenReturn(responseAuthorizationModel);
     }
 }

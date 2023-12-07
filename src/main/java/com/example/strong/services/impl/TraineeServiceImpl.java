@@ -53,10 +53,12 @@ public class TraineeServiceImpl implements TraineeService {
         throw new BadRequestException("There is no Trainee with username: " + username);
     }
 
+    // clean this class
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTraineeModel createTraineeModel) {
         validateFields(createTraineeModel);
+        // try to implement it in another method or class
         String password = userService.generatePassword();
 
         Trainee trainee = new Trainee();

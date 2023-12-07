@@ -1,20 +1,16 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.services.JwtService;
+import com.example.strong.clients.workload.AuthServiceClient;
+import com.example.strong.models.response.ResponseAuthorizationModel;
 import com.example.strong.services.UserService;
-import com.example.strong.services.impl.CustomUserDetailsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -29,9 +25,7 @@ class UserControllerImplTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private JwtService jwtService;
-    @MockBean
-    private CustomUserDetailsService userDetailsService;
+    private AuthServiceClient authServiceClient;
 
     private String username;
 
@@ -104,13 +98,11 @@ class UserControllerImplTest {
     }
 
     private void mockAuthorization() {
-        UserDetails userDetails = new User("username", "password", new ArrayList<>());
+        ResponseAuthorizationModel responseAuthorizationModel = new ResponseAuthorizationModel();
+        responseAuthorizationModel.setUsername(username);
+        responseAuthorizationModel.setAuthorities("[USER]");
 
-        when(jwtService.validateToken("token"))
-                .thenReturn(true);
-        when(jwtService.extractUsername("token"))
-                .thenReturn(username);
-        when(userDetailsService.loadUserByUsername(username))
-                .thenReturn(userDetails);
+        when(authServiceClient.getAuthorities("token"))
+                .thenReturn(responseAuthorizationModel);
     }
 }
