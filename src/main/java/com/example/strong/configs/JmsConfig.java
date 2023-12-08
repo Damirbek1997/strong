@@ -1,6 +1,6 @@
 package com.example.strong.configs;
 
-import lombok.RequiredArgsConstructor;
+import com.example.strong.models.crud.CreateWorkloadModel;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +11,9 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
 import javax.jms.ConnectionFactory;
+import java.util.Collections;
 
 @Configuration
-@RequiredArgsConstructor
 public class JmsConfig {
     @Bean
     public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory, DefaultJmsListenerContainerFactoryConfigurer configurer) {
@@ -27,6 +27,7 @@ public class JmsConfig {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
+        converter.setTypeIdMappings(Collections.singletonMap("CreateWorkloadModel", CreateWorkloadModel.class));
         return converter;
     }
 }
