@@ -3,8 +3,6 @@ package com.example.strong.services.impl;
 import com.example.strong.clients.workload.WorkloadServiceClient;
 import com.example.strong.entities.Training;
 import com.example.strong.enums.WorkloadActionType;
-import com.example.strong.exceptions.UnexpectedException;
-import com.example.strong.models.WorkloadModel;
 import com.example.strong.models.crud.CreateWorkloadModel;
 import com.example.strong.services.WorkloadService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +21,7 @@ public class WorkloadServiceImpl implements WorkloadService {
     @Override
     public void create(Training training, WorkloadActionType workloadActionType) {
         CreateWorkloadModel createWorkloadModel = toCreateWorkloadModel(training, workloadActionType);
-        WorkloadModel workloadModel = workloadServiceClient.create(createWorkloadModel);
-
-        if (workloadModel == null) {
-            throw new UnexpectedException("Smth went wrong while trying to create workload");
-        }
-
+        workloadServiceClient.create(createWorkloadModel);
         log.debug("Created a workload with a model {}", createWorkloadModel);
     }
 
@@ -40,11 +33,7 @@ public class WorkloadServiceImpl implements WorkloadService {
             createWorkloadModels.add(toCreateWorkloadModel(training, workloadActionType));
         }
 
-        List<WorkloadModel> workloadModels = workloadServiceClient.create(createWorkloadModels);
-
-        if (workloadModels == null || workloadModels.isEmpty()) {
-            throw new UnexpectedException("Smth went wrong while trying to create workload");
-        }
+        workloadServiceClient.create(createWorkloadModels);
         log.debug("Created workloads with models {}", createWorkloadModels);
     }
 
