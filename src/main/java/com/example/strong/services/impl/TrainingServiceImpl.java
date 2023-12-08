@@ -61,8 +61,8 @@ public class TrainingServiceImpl implements TrainingService {
         training.setTrainingDuration(createTrainingModel.getTrainingDuration());
 
         trainingRepository.save(training);
-        log.info("Created training with model {}", createTrainingModel);
         workloadService.create(training, WorkloadActionType.ADD);
+        log.info("Created training with model {}", createTrainingModel);
         return trainingMapper.toModel(training);
     }
 

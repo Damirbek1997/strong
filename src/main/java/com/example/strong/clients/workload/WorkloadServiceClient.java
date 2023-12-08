@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "workload-service", url = "http://localhost:8083", fallback = WorkloadServiceFallback.class)
+@FeignClient(name = "workload-service", url = "http://localhost:8083")
 public interface WorkloadServiceClient {
     @PostMapping("/workload")
     WorkloadModel create(@RequestBody CreateWorkloadModel createWorkloadModel);

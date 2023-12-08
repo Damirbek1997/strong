@@ -1,12 +1,12 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.clients.workload.AuthServiceClient;
 import com.example.strong.models.TraineeModel;
 import com.example.strong.models.crud.CreateTraineeModel;
 import com.example.strong.models.crud.UpdateTraineeModel;
 import com.example.strong.models.response.ResponseAuthorizationModel;
 import com.example.strong.models.response.ResponseCredentialsModel;
 import com.example.strong.models.response.ResponseTrainerModel;
+import com.example.strong.services.AuthService;
 import com.example.strong.services.impl.TraineeServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -37,7 +37,7 @@ class TraineeControllerImplTest {
     @MockBean
     private TraineeServiceImpl traineeService;
     @MockBean
-    private AuthServiceClient authServiceClient;
+    private AuthService authService;
 
     private String username;
     private String contentType;
@@ -203,7 +203,7 @@ class TraineeControllerImplTest {
         responseAuthorizationModel.setUsername(username);
         responseAuthorizationModel.setAuthorities("[USER]");
 
-        when(authServiceClient.getAuthorities("token"))
+        when(authService.getAuthorities("token"))
                 .thenReturn(responseAuthorizationModel);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.clients.workload.AuthServiceClient;
 import com.example.strong.models.response.ResponseAuthorizationModel;
+import com.example.strong.services.AuthService;
 import com.example.strong.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ class UserControllerImplTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private AuthServiceClient authServiceClient;
+    private AuthService authService;
 
     private String username;
 
@@ -102,7 +102,7 @@ class UserControllerImplTest {
         responseAuthorizationModel.setUsername(username);
         responseAuthorizationModel.setAuthorities("[USER]");
 
-        when(authServiceClient.getAuthorities("token"))
+        when(authService.getAuthorities("token"))
                 .thenReturn(responseAuthorizationModel);
     }
 }

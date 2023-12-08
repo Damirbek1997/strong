@@ -1,7 +1,7 @@
 package com.example.strong.configs.filters;
 
-import com.example.strong.clients.workload.AuthServiceClient;
 import com.example.strong.models.response.ResponseAuthorizationModel;
+import com.example.strong.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
-    private final AuthServiceClient authServiceClient;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             putUserToContext(request);
         } catch (Exception ex) {
-            log.warn("Something went wrong e {}", ex.getMessage());
+            log.error("Something went wrong, error: {}", ex.getMessage());
         } finally {
             filterChain.doFilter(request, response);
         }
@@ -55,7 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private ResponseAuthorizationModel getAuthorities(String token) {
-        return authServiceClient.getAuthorities(token);
+        return authService.getAuthorities(token);
     }
 
     private Set<SimpleGrantedAuthority> convertAuthorities(String authorities) {

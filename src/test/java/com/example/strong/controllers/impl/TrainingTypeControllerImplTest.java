@@ -1,8 +1,8 @@
 package com.example.strong.controllers.impl;
 
-import com.example.strong.clients.workload.AuthServiceClient;
 import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.models.response.ResponseAuthorizationModel;
+import com.example.strong.services.AuthService;
 import com.example.strong.services.impl.TrainingTypeServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class TrainingTypeControllerImplTest {
     @MockBean
     private TrainingTypeServiceImpl trainingTypeService;
     @MockBean
-    private AuthServiceClient authServiceClient;
+    private AuthService authService;
 
     private String username;
     private String contentType;
@@ -75,7 +75,7 @@ class TrainingTypeControllerImplTest {
         responseAuthorizationModel.setUsername(username);
         responseAuthorizationModel.setAuthorities("[USER]");
 
-        when(authServiceClient.getAuthorities("token"))
+        when(authService.getAuthorities("token"))
                 .thenReturn(responseAuthorizationModel);
     }
 }
