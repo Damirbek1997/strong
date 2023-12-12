@@ -1,6 +1,5 @@
 package com.example.strong.models.crud;
 
-import com.example.strong.enums.WorkloadActionType;
 import lombok.*;
 
 import java.io.Serializable;
@@ -19,5 +18,4 @@ public class CreateWorkloadModel implements Serializable {
     private Boolean isActive;
     private Date trainingDate;
     private Long trainingDuration;
-    private WorkloadActionType actionType;
 }

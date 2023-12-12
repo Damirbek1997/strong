@@ -1,7 +1,6 @@
 package com.example.strong.services.impl;
 
 import com.example.strong.entities.Training;
-import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TrainingMapper;
 import com.example.strong.models.TrainingModel;
@@ -52,17 +51,13 @@ public class TrainingServiceImpl implements TrainingService {
     @Transactional
     public TrainingModel create(CreateTrainingModel createTrainingModel) {
         validateFields(createTrainingModel);
-
-        Training training = new Training();
+        Training training = trainingMapper.toEntity(createTrainingModel);
         training.setTrainee(traineeService.getEntityByUsername(createTrainingModel.getTraineeUsername()));
         training.setTrainer(trainerService.getEntityByUsername(createTrainingModel.getTrainerUsername()));
-        training.setTrainingName(createTrainingModel.getTrainingName());
-        training.setTrainingDate(createTrainingModel.getTrainingDate());
-        training.setTrainingDuration(createTrainingModel.getTrainingDuration());
 
         trainingRepository.save(training);
-        workloadService.create(training, WorkloadActionType.ADD);
-        log.info("Created training with model {}", createTrainingModel);
+        workloadService.create(training);
+        log.debug("Created training with model {}", createTrainingModel);
         return trainingMapper.toModel(training);
     }
 

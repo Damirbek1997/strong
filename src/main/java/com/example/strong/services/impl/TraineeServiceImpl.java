@@ -2,7 +2,6 @@ package com.example.strong.services.impl;
 
 import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
-import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,21 +42,14 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Trainee getEntityByUsername(String username) {
-        Trainee trainee = traineeRepository.findByUsername(username);
-
-        if (trainee != null) {
-            return trainee;
-        }
-
-        throw new BadRequestException("There is no Trainee with username: " + username);
+        return traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new BadRequestException("There is no Trainee with username: " + username));
     }
 
-    // clean this class
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTraineeModel createTraineeModel) {
         validateFields(createTraineeModel);
-        // try to implement it in another method or class
         String password = userService.generatePassword();
 
         Trainee trainee = new Trainee();
@@ -78,7 +69,7 @@ public class TraineeServiceImpl implements TraineeService {
         }
 
         traineeRepository.save(trainee);
-        log.info("Created Trainee with model {}", createTraineeModel);
+        log.debug("Created Trainee with model {}", createTraineeModel);
         return ResponseCredentialsModel.builder()
                 .username(trainee.getUsername())
                 .password(password)
@@ -106,11 +97,12 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setUsername(userService.getUniqueUsername(username));
 
         TraineeModel traineeModel = traineeMapper.toModel(traineeRepository.save(trainee));
-        log.info("Updated Trainee with model {}", updateTraineeModel);
+        log.debug("Updated Trainee with model {}", updateTraineeModel);
         return traineeModel;
     }
 
     @Override
+    @Transactional
     public List<ResponseTrainerModel> updateTrainerList(Long id, List<String> usernames) {
         Trainee trainee = getEntityById(id);
 
@@ -118,7 +110,7 @@ public class TraineeServiceImpl implements TraineeService {
         trainee.setTrainers(new HashSet<>(trainer));
         traineeRepository.save(trainee);
 
-        log.info("Added Trainee's trainer list with usernames: {}", usernames);
+        log.debug("Added Trainee's trainer list with usernames: {}", usernames);
         return trainer.stream()
                 .map(trainerMapper::toResponseModel)
                 .collect(Collectors.toList());
@@ -129,18 +121,13 @@ public class TraineeServiceImpl implements TraineeService {
     public void deleteByUsername(String username) {
         Trainee trainee = getEntityByUsername(username);
         traineeRepository.deleteByUsername(username);
-        workloadService.create(trainee.getTrainings(), WorkloadActionType.DELETE);
-        log.info("Deleted Trainee with username {}", username);
+        workloadService.delete(trainee.getTrainings());
+        log.debug("Deleted Trainee with username {}", username);
     }
 
     private Trainee getEntityById(Long id) {
-        Optional<Trainee> traineeOptional = traineeRepository.findById(id);
-
-        if (traineeOptional.isPresent()) {
-            return traineeOptional.get();
-        }
-
-        throw new BadRequestException("There is no Trainee with id: " + id);
+        return traineeRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("There is no Trainee with id: " + id));
     }
 
     private void validateFields(CreateTraineeModel createTraineeModel) {

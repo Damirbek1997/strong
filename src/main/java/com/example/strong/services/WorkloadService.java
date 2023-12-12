@@ -1,11 +1,10 @@
 package com.example.strong.services;
 
 import com.example.strong.entities.Training;
-import com.example.strong.enums.WorkloadActionType;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface WorkloadService {
-    void create(Training training, WorkloadActionType workloadActionType);
-    void create(List<Training> trainings, WorkloadActionType workloadActionType);
+    void create(Training training);
+    void delete(Collection<Training> trainings);
 }

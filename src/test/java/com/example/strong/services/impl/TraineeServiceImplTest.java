@@ -1,7 +1,6 @@
 package com.example.strong.services.impl;
 
 import com.example.strong.entities.*;
-import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.mappers.impl.TraineeMapper;
 import com.example.strong.mappers.impl.TrainerMapper;
 import com.example.strong.models.TraineeModel;
@@ -73,7 +72,7 @@ class TraineeServiceImplTest {
         traineeModel.setAddress("Moscow");
 
         when(traineeRepository.findByUsername("Ivan.Ivanov"))
-                .thenReturn(trainee);
+                .thenReturn(Optional.of(trainee));
         when(traineeMapper.toModel(trainee))
                 .thenReturn(traineeModel);
 
@@ -208,13 +207,13 @@ class TraineeServiceImplTest {
         trainee.setTrainings(Collections.singletonList(training));
 
         when(traineeRepository.findByUsername(trainee.getUsername()))
-                .thenReturn(trainee);
+                .thenReturn(Optional.of(trainee));
         doNothing()
                 .when(traineeRepository)
                 .deleteByUsername(trainee.getUsername());
         doNothing()
                 .when(workloadService)
-                .create(Collections.singletonList(training), WorkloadActionType.DELETE);
+                .delete(Collections.singletonList(training));
         traineeService.deleteByUsername(trainee.getUsername());
         verify(traineeRepository).deleteByUsername(trainee.getUsername());
     }

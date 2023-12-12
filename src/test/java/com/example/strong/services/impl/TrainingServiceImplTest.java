@@ -4,7 +4,6 @@ import com.example.strong.entities.Trainee;
 import com.example.strong.entities.Trainer;
 import com.example.strong.entities.Training;
 import com.example.strong.entities.TrainingType;
-import com.example.strong.enums.WorkloadActionType;
 import com.example.strong.mappers.impl.TrainingMapper;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.TrainingTypeModel;
@@ -225,6 +224,8 @@ class TrainingServiceImplTest {
         trainingModel.setTrainingDate(trainingDate);
         trainingModel.setTrainingDuration(10L);
 
+        when(trainingMapper.toEntity(createTrainingModel))
+                .thenReturn(training);
         when(traineeService.getEntityByUsername("Ivan.Ivanov"))
                 .thenReturn(trainee);
         when(trainerService.getEntityByUsername("Trainer.Trainer"))
@@ -234,7 +235,7 @@ class TrainingServiceImplTest {
                 .thenReturn(training);
         doNothing()
                 .when(workloadService)
-                .create(any(Training.class), eq(WorkloadActionType.ADD));
+                .create(any(Training.class));
         when(trainingMapper.toModel(any()))
                 .thenReturn(trainingModel);
 

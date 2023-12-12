@@ -3,6 +3,7 @@ package com.example.strong.mappers.impl;
 import com.example.strong.entities.Training;
 import com.example.strong.mappers.AbstractMapper;
 import com.example.strong.models.TrainingModel;
+import com.example.strong.models.crud.CreateTrainingModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +37,13 @@ public class TrainingMapper implements AbstractMapper<Training, TrainingModel> {
         trainee.setTrainingDate(model.getTrainingDate());
         trainee.setTrainingDuration(model.getTrainingDuration());
         return trainee;
+    }
+
+    public Training toEntity(CreateTrainingModel createTrainingModel) {
+        return Training.builder()
+                .trainingName(createTrainingModel.getTrainingName())
+                .trainingDate(createTrainingModel.getTrainingDate())
+                .trainingDuration(createTrainingModel.getTrainingDuration())
+                .build();
     }
 }
