@@ -1,17 +1,19 @@
 package com.example.strong.controllers;
 
-import com.example.strong.models.response.ResponseCredentialsModel;
-import com.example.strong.models.response.ResponseTrainerModel;
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
 import com.example.strong.models.crud.UpdateTrainerModel;
+import com.example.strong.models.response.ResponseCredentialsModel;
+import com.example.strong.models.response.ResponseTrainerModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/trainer")
@@ -35,7 +37,7 @@ public interface TrainerController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    ResponseCredentialsModel create(@RequestBody CreateTrainerModel createTrainerModel);
+    ResponseCredentialsModel create(@RequestBody @Valid CreateTrainerModel createTrainerModel, BindingResult bindingResult);
 
     @PutMapping("/{id:\\d+}")
     @ResponseStatus(HttpStatus.OK)
@@ -46,7 +48,7 @@ public interface TrainerController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    TrainerModel update(@PathVariable Long id, @RequestBody UpdateTrainerModel updateTrainerModel);
+    TrainerModel update(@PathVariable Long id, @Valid @RequestBody UpdateTrainerModel updateTrainerModel, BindingResult bindingResult);
 
     @GetMapping("/not-busy")
     @ResponseStatus(HttpStatus.OK)

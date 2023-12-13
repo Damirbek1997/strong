@@ -68,7 +68,6 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTrainerModel createTrainerModel) {
-        validateFields(createTrainerModel);
         String password = userService.generatePassword();
         Trainer trainer = new Trainer();
         trainer.setFirstName(createTrainerModel.getFirstName());
@@ -90,8 +89,6 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public TrainerModel update(Long id, UpdateTrainerModel updateTrainerModel) {
-        validateFields(updateTrainerModel);
-
         Trainer trainer = getEntityById(id);
         trainer.setFirstName(updateTrainerModel.getFirstName());
         trainer.setLastName(updateTrainerModel.getLastName());
@@ -117,33 +114,5 @@ public class TrainerServiceImpl implements TrainerService {
         }
 
         throw new BadRequestException("There is no Trainer with id: " + id);
-    }
-
-    private void validateFields(CreateTrainerModel createTrainerModel) {
-        if (createTrainerModel.getFirstName() == null) {
-            throw new BadRequestException("firstName must be filled!");
-        }
-
-        if (createTrainerModel.getLastName() == null) {
-            throw new BadRequestException("lastName must be filled!");
-        }
-
-        if (createTrainerModel.getTrainingTypeId() == null) {
-            throw new BadRequestException("training type must be filled!");
-        }
-    }
-
-    private void validateFields(UpdateTrainerModel updateTrainerModel) {
-        if (updateTrainerModel.getFirstName() == null) {
-            throw new BadRequestException("firstName must be filled!");
-        }
-
-        if (updateTrainerModel.getLastName() == null) {
-            throw new BadRequestException("lastName must be filled!");
-        }
-
-        if (updateTrainerModel.getActive() == null) {
-            throw new BadRequestException("active must be filled!");
-        }
     }
 }

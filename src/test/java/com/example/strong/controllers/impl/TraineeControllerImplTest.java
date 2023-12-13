@@ -128,6 +128,7 @@ class TraineeControllerImplTest {
         updateTraineeModel.setFirstName("Petya");
         updateTraineeModel.setLastName("Petrov");
         updateTraineeModel.setAddress("address");
+        updateTraineeModel.setActive(true);
         updateTraineeModel.setBirthday(birthDate);
 
         mockAuthorization();

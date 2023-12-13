@@ -49,7 +49,6 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public ResponseCredentialsModel create(CreateTraineeModel createTraineeModel) {
-        validateFields(createTraineeModel);
         String password = userService.generatePassword();
 
         Trainee trainee = new Trainee();
@@ -79,8 +78,6 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public TraineeModel update(Long id, UpdateTraineeModel updateTraineeModel) {
-        validateFields(updateTraineeModel);
-
         Trainee trainee = getEntityById(id);
         trainee.setFirstName(updateTraineeModel.getFirstName());
         trainee.setLastName(updateTraineeModel.getLastName());
@@ -128,13 +125,5 @@ public class TraineeServiceImpl implements TraineeService {
     private Trainee getEntityById(Long id) {
         return traineeRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("There is no Trainee with id: " + id));
-    }
-
-    private void validateFields(CreateTraineeModel createTraineeModel) {
-        userService.validateFields(createTraineeModel);
-    }
-
-    private void validateFields(UpdateTraineeModel updateTraineeModel) {
-        userService.validateFields(updateTraineeModel);
     }
 }

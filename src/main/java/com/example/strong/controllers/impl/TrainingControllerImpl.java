@@ -1,14 +1,17 @@
 package com.example.strong.controllers.impl;
 
 import com.example.strong.controllers.TrainingController;
+import com.example.strong.exceptions.BadRequestException;
 import com.example.strong.models.TrainingModel;
 import com.example.strong.models.crud.CreateTrainingModel;
 import com.example.strong.services.TrainingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +30,10 @@ public class TrainingControllerImpl implements TrainingController {
     }
 
     @Override
-    public void create(CreateTrainingModel createTrainingModel) {
+    public void create(CreateTrainingModel createTrainingModel, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException("Validation error, e: " + Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         trainingService.create(createTrainingModel);
     }
 }

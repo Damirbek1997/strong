@@ -2,8 +2,6 @@ package com.example.strong.services.impl;
 
 import com.example.strong.entities.User;
 import com.example.strong.exceptions.BadRequestException;
-import com.example.strong.models.crud.CreateUserModel;
-import com.example.strong.models.crud.UpdateUserModel;
 import com.example.strong.repository.UserRepository;
 import com.example.strong.services.EncryptionService;
 import com.example.strong.services.UserService;
@@ -55,32 +53,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encryptionService.encode(newPassword));
         userRepository.save(user);
         log.debug("Changed password to User with username: {}", user.getUsername());
-    }
-
-    @Override
-    public void validateFields(CreateUserModel createUserModel) {
-        if (createUserModel.getFirstName() == null) {
-            throw new BadRequestException("firstName must be filled!");
-        }
-
-        if (createUserModel.getLastName() == null) {
-            throw new BadRequestException("lastName must be filled!");
-        }
-    }
-
-    @Override
-    public void validateFields(UpdateUserModel updateUserModel) {
-        if (updateUserModel.getFirstName() == null) {
-            throw new BadRequestException("firstName must be filled!");
-        }
-
-        if (updateUserModel.getLastName() == null) {
-            throw new BadRequestException("lastName must be filled!");
-        }
-
-        if (updateUserModel.getActive() == null) {
-            throw new BadRequestException("active must be filled!");
-        }
     }
 
     @Override

@@ -92,6 +92,7 @@ class TrainerControllerImplTest {
         CreateTrainerModel createTrainerModel = new CreateTrainerModel();
         createTrainerModel.setFirstName("Petya");
         createTrainerModel.setLastName("Petrov");
+        createTrainerModel.setTrainingTypeId(1L);
 
         ResponseCredentialsModel responseCredentialsModel = new ResponseCredentialsModel();
         responseCredentialsModel.setUsername("Petya.Petrov");
@@ -124,6 +125,7 @@ class TrainerControllerImplTest {
         UpdateTrainerModel updateTrainerModel = new UpdateTrainerModel();
         updateTrainerModel.setFirstName("Petya");
         updateTrainerModel.setLastName("Petrov");
+        updateTrainerModel.setActive(false);
 
         mockAuthorization();
         when(trainerService.update(eq(1L), any(UpdateTrainerModel.class)))

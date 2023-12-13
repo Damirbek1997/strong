@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -51,5 +53,5 @@ public interface TrainingController {
             @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Application failed to process the request", content = @Content),
     })
-    void create(@RequestBody CreateTrainingModel createTrainingModel);
+    void create(@RequestBody @Valid CreateTrainingModel createTrainingModel, BindingResult bindingResult);
 }
