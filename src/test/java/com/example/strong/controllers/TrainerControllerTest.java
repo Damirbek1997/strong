@@ -1,4 +1,4 @@
-package com.example.strong.controllers.impl;
+package com.example.strong.controllers;
 
 import com.example.strong.models.TrainerModel;
 import com.example.strong.models.crud.CreateTrainerModel;
@@ -31,8 +31,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TrainerControllerImpl.class)
-class TrainerControllerImplTest {
+@WebMvcTest(TrainerController.class)
+class TrainerControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired

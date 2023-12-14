@@ -1,4 +1,4 @@
-package com.example.strong.controllers.impl;
+package com.example.strong.controllers;
 
 import com.example.strong.models.TrainingTypeModel;
 import com.example.strong.models.response.ResponseAuthorizationModel;
@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TrainingTypeControllerImpl.class)
-class TrainingTypeControllerImplTest {
+@WebMvcTest(TrainingTypeController.class)
+class TrainingTypeControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean

@@ -1,4 +1,4 @@
-package com.example.strong.controllers.impl;
+package com.example.strong.controllers;
 
 import com.example.strong.models.response.ResponseAuthorizationModel;
 import com.example.strong.services.AuthService;
@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserControllerImpl.class)
-class UserControllerImplTest {
+@WebMvcTest(UserController.class)
+class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
